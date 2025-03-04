@@ -12,7 +12,7 @@ const MainLayout = () => {
         </header>
         <main className="flex-1 overflow-auto p-6 bg-white">
           {/* Your app content goes here */}
-          <Outlet/>
+          <Outlet />
         </main>
       </div>
     </div>
