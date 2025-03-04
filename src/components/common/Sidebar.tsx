@@ -2,7 +2,7 @@
 const Sidebar = () => {
     return (
         <div className="flex">
-            sidebar
+            
         </div>
     );
 };
