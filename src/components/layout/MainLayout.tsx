@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "../common/Sidebar";
 import TopNav from "../common/TopNav";
 
@@ -11,7 +12,7 @@ const MainLayout = () => {
         </header>
         <main className="flex-1 overflow-auto p-6 bg-white">
           {/* Your app content goes here */}
-          Hello from MainLayout!
+          <Outlet/>
         </main>
       </div>
     </div>
