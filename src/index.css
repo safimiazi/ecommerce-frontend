@@ -1,1 +1,20 @@
 @import "tailwindcss";
+/* Custom Scrollbar with Brand Color */
+::-webkit-scrollbar {
+    width: 8px; /* Width of scrollbar */
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9; /* Light gray track */
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #3b82f6; /* Blue-500 (Your Brand Color) */
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2563eb; /* Darker Blue on Hover */
+  }
+  
