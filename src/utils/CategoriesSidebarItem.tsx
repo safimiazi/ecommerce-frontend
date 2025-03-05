@@ -1,44 +1,62 @@
-import { Monitor, Shirt } from "lucide-react";
-import { ReactNode } from "react";
+import { LucideIcon, Monitor } from "lucide-react";
+
 type ISubCategories = {
   name: string;
+  icon?: LucideIcon;
+  subcategories?: ISubCategories[];
 };
 
 type ICategoriesItems = {
   name: string;
-  icon: ReactNode;
+  icon: LucideIcon;
   subcategories?: ISubCategories[];
 };
 
 export const CategoriesSidebarItems: ICategoriesItems[] = [
   {
     name: "Electronics",
-    icon: <Monitor />,
-    subcategories: [
-      {
-        name: "Mobile Phones",
-      },
-      {
-        name: "Laptops",
-      },
-      {
-        name: "Accessories",
-      },
-    ],
+    icon: Monitor,
   },
   {
-    name: "Fashion",
-    icon: <Shirt />,
+    name: "Electronics",
+    icon: Monitor,
+  },
+  {
+    name: "Electronics",
+    icon: Monitor,
+  },
+  {
+    name: "Electronics",
+    icon: Monitor,
+  },
+  {
+    name: "Electronics",
+    icon: Monitor,
+  },
+  {
+    name: "Mobile Phones",
+    icon: Monitor,
     subcategories: [
       {
-        name: "Men's Clothing",
+        name: "Smartphones",
+        icon: Monitor,
+        subcategories: [
+          {
+            name: "Smartphones",
+            icon: Monitor,
+            subcategories: [
+              {
+                name: "Smartphones",
+                icon: Monitor,
+        
+        
+              },]
+    
+          },]
+
       },
-      {
-        name: "Women's Clothing",
-      },
-      {
-        name: "Footwear",
-      },
+    
     ],
   },
+ 
 ];

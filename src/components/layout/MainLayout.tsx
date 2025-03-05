@@ -21,20 +21,20 @@ const MainLayout = () => {
     <>
       <div>
         {/* top */}
-        <div className=" md:block border-b md:z-50 sticky top-0 border-gray-200">
+        <div className=" md:block border-b md:z-50  sticky top-0 border-gray-200">
           <Top
-          showCart={showCart}
+            showCart={showCart}
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
           />
         </div>
-        <div className="flex h-[1000px]">
+        <div className="flex h-screen">
           <Sidebar
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
           />
           <div className="w-full min-w-0 flex  flex-col flex-1 ">
-            <header className="h-16 border-b border-gray-200 ">
+            <header className="h-16 ">
               <TopNav />
             </header>
             <main className="flex-1 overflow-auto p-6 bg-white">
