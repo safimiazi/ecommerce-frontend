@@ -29,10 +29,12 @@ const MainLayout = () => {
           />
         </div>
         <div className="flex h-screen">
-          <Sidebar
+          <div className="md:w-64">
+            <Sidebar
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
           />
+          </div>
           <div className="w-full min-w-0 flex  flex-col flex-1 ">
             <header className="h-16 ">
               <TopNav />
