@@ -1,12 +1,28 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Heart, ShoppingCart, User2 } from "lucide-react";
 
-const BottomNav = () => {
+const BottomNav = ({showCart}: any) => {
     return (
         <div className="h-14 border-t border-gray-200 fixed bottom-0 w-full bg-white flex justify-around items-center md:hidden shadow-lg">
-            <Heart className="text-gray-600 hover:text-red-500 transition cursor-pointer" size={28} />
-            <User2 className="text-gray-600 hover:text-blue-500 transition cursor-pointer" size={28} />
-            <ShoppingCart className="text-gray-600 hover:text-green-500 transition cursor-pointer" size={28} />
+            <div className="p-2 rounded-full hover:bg-gray-200">
+          <Heart
+            className="text-gray-600 hover:text-blue-500 transition duration-300 cursor-pointer"
+            size={24}
+          />
+        </div>
+        <div className="p-2 rounded-full hover:bg-gray-200">
+          <User2
+            className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
+            size={24}
+          />
+        </div>
+        <div className="p-2 rounded-full hover:bg-gray-200">
+          <ShoppingCart
+            className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
+            size={24}
+            onClick={showCart}
+          />
+          </div>
         </div>
     );
 };

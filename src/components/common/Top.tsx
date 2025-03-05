@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Search, Heart, ShoppingCart, User2, MenuIcon } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
-const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen }: any) => {
+const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen, showCart }: any) => {
   return (
     <div className="h-16 border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
       <button
@@ -13,8 +14,11 @@ const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen }: any) => {
       </button>
 
       {/* Left: Logo */}
-      <div className="text-2xl font-bold text-gray-800">🛍️ MyShop</div>
-
+      <NavLink to={"/"}>
+        <div className="text-2xl font-bold hover:cursor-pointer text-gray-800">
+          🛍️ MyShop
+        </div>
+      </NavLink>
       {/* Middle: Search Bar */}
       <div className="flex-1 mx-4  md:flex">
         <div className="relative w-full">
@@ -32,18 +36,25 @@ const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen }: any) => {
 
       {/* Right: Wishlist, Login, Cart (Hidden in Mobile) */}
       <div className="hidden md:flex gap-6 items-center">
-        <Heart
-          className="text-gray-600 hover:text-red-500 transition cursor-pointer"
-          size={24}
-        />
-        <User2
-          className="text-gray-600 hover:text-blue-500 transition cursor-pointer"
-          size={24}
-        />
-        <ShoppingCart
-          className="text-gray-600 hover:text-green-500 transition cursor-pointer"
-          size={24}
-        />
+        <div className="p-2 rounded-full hover:bg-gray-200">
+          <Heart
+            className="text-gray-600 hover:text-blue-500 transition duration-300 cursor-pointer"
+            size={24}
+          />
+        </div>
+        <div className="p-2 rounded-full hover:bg-gray-200">
+          <User2
+            className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
+            size={24}
+          />
+        </div>
+        <div className="p-2 rounded-full hover:bg-gray-200">
+          <ShoppingCart
+            className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
+            size={24}
+            onClick={showCart}
+          />
+        </div>
       </div>
     </div>
   );
