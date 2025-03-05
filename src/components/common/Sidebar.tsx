@@ -7,7 +7,7 @@ const Sidebar = () => {
     <>
       <button
         type="button"
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-[#0F0F12] shadow-md"
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-[#0F0F12] shadow-md"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       >
         <MenuIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
