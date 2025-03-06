@@ -1,4 +1,3 @@
-import React from 'react';
 import { Carousel } from '../../components/common/Carousel';
 import BestSellingSection from '../../components/pages/Home/BestSellingSection';
 
