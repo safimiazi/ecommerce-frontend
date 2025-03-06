@@ -29,7 +29,7 @@ export const Carousel = () => {
       >
         {images.map((img, index) => (
           <SwiperSlide key={index}>
-            <div className="relative w-full  h-80 flex items-center justify-center bg-gray-100 rounded-2xl overflow-hidden">
+            <div className="relative w-full  max-h-80 flex items-center justify-center bg-gray-100 rounded-2xl overflow-hidden">
               <Image
                 src={img}
                 alt={`Slide ${index + 1}`}
