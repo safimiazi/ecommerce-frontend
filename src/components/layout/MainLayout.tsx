@@ -50,7 +50,7 @@ const MainLayout = () => {
           </div>
         </div>
         {/* bottom */}
-        <div className="border-t border-gray-200 sticky bottom-0 w-full bg-white md:hidden">
+        <div className=" sticky bottom-0 w-full bg-white md:hidden">
           <BottomNav showCart={showCart} />
         </div>
       </div>
