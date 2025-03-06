@@ -21,7 +21,7 @@ const ProductCard = ({ product }: any) => {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <div className="border group flex flex-col border-gray-200 rounded-xl p-4 h-full">
+    <div className="border hover:shadow transition-shadow duration-300 group flex flex-col border-gray-200 rounded-xl p-4 h-full">
       {/* Image Section with Hover Effects */}
       <div className="relative w-full h-40 rounded-2xl flex items-center justify-center mb-4 overflow-hidden group">
         <Swiper
