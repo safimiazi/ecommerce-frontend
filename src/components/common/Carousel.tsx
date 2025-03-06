@@ -1,54 +1,45 @@
-import { useRef } from 'react';
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Image } from "antd";
+import "swiper/css/bundle";
 
 
+export const Carousel = () => {
+  const images = [
+    "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/1181472/pexels-photo-1181472.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  ];
 
-import 'swiper/css/bundle';
-
-// import required modules
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-
-export  const Carousel =()=> {
-  const progressCircle = useRef(null);
-  const progressContent = useRef(null);
-//   const onAutoplayTimeLeft = (s, time, progress) => {
-//     progressCircle.current.style.setProperty('--progress', 1 - progress);
-//     progressContent.current.textContent = `${Math.ceil(time / 1000)}s`;
-//   };
   return (
-    <>
+    <div className="p-4">
       <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
-        centeredSlides={true}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        modules={[Autoplay, Pagination, Navigation]}
-        // onAutoplayTimeLeft={onAutoplayTimeLeft}
-        className="mySwiper"
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        loop
+        className="rounded-2xl shadow-lg"
       >
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide>
-        <div className="autoplay-progress" slot="container-end">
-          <svg viewBox="0 0 48 48" ref={progressCircle}>
-            <circle cx="24" cy="24" r="20"></circle>
-          </svg>
-          <span ref={progressContent}></span>
-        </div>
+        {images.map((img, index) => (
+          <SwiperSlide key={index}>
+            <div className="relative w-full  h-80 flex items-center justify-center bg-gray-100 rounded-2xl overflow-hidden">
+              <Image
+                src={img}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full object-cover"
+                preview={false}
+              />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
-    </>
+    </div>
   );
-}
+};
