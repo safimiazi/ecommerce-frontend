@@ -16,7 +16,7 @@ const categoriesMenu: MenuProps["items"] = CategoriesSidebarItems.map(
 
 const TopNav = () => {
   return (
-    <div className="px-3 sm:px-6 flex items-center justify-between bg-white border-b border-gray-200 h-full">
+    <div className="p-3 sm:px-6 flex items-center justify-between bg-white border-b border-gray-200 h-full">
       {/* Category Dropdown */}
       <Dropdown menu={{ items: categoriesMenu }}>
         <a onClick={(e) => e.preventDefault()}>
