@@ -2,17 +2,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { useRef } from "react";
-import { Modal, Tooltip, Image, Button } from "antd";
+import { Modal, Tooltip, Image } from "antd";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Heart,
-  ShoppingCart,
-  Scale,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Scale } from "lucide-react";
 
 const ProductQuickView = ({ isOpen, onClose, product }: any) => {
   const swiperRef = useRef<SwiperType | null>(null);
@@ -89,9 +83,12 @@ const ProductQuickView = ({ isOpen, onClose, product }: any) => {
 
             {/* Action Buttons */}
             <div className="mt-auto flex justify-between items-center pt-4">
-               <button className="py-1 px-2 rounded border text-blue-500">Wishlist</button >
-               <button className="py-1 px-2 rounded border text-blue-500">Add to Cart</button>
-              
+              <button className="py-1 px-2 rounded border text-blue-500">
+                Wishlist
+              </button>
+              <button className="py-1 px-2 rounded border text-blue-500">
+                Add to Cart
+              </button>
             </div>
           </div>
         </div>
