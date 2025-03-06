@@ -12,64 +12,6 @@ import RightNavigartionButton from "../../ui/RightNavigartionButton";
 import LeftNavigationButton from "../../ui/LeftNavigationButton";
 import SectionPadding from "../../../wrapper/SectionPadding";
 import ProductCard from "../../ui/ProductCart";
-// const products = [
-//   {
-//     id: 1,
-//     name: "Smart Watch",
-//     price: "$99",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-//   {
-//     id: 2,
-//     name: "Wireless Headphones",
-//     price: "$149",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-//   {
-//     id: 3,
-//     name: "Gaming Mouse",
-//     price: "$79",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-//   {
-//     id: 4,
-//     name: "Mechanical Keyboard",
-//     price: "$129",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-//   {
-//     id: 5,
-//     name: "4K Monitor",
-//     price: "$399",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-//   {
-//     id: 5,
-//     name: "4K Monitor",
-//     price: "$399",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-//   {
-//     id: 6,
-//     name: "4K Monitor",
-//     price: "$399",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-//   {
-//     id: 7,
-//     name: "4K Monitor",
-//     price: "$399",
-//     image:
-//       "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//   },
-// ];
 
 const products = [
     {
