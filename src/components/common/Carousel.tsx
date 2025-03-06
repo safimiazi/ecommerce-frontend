@@ -17,7 +17,6 @@ export const Carousel = () => {
   ];
 
   return (
-    <div className="p-4">
      <MaxWidth>
      <Swiper
         modules={[Navigation, Pagination, Autoplay]}
@@ -43,6 +42,5 @@ export const Carousel = () => {
         ))}
       </Swiper>
      </MaxWidth>
-    </div>
   );
 };
