@@ -99,7 +99,7 @@ const products = [
     ],
   },
 ];
-export default function BestSellingSection() {
+export default function OfferProductsSection() {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (

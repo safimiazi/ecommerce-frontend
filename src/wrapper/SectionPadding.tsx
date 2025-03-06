@@ -2,7 +2,7 @@
 
 const SectionPadding = ({children}: any) => {
     return (
-        <div className="py-20">
+        <div className="pt-20">
             {children}
         </div>
     );
