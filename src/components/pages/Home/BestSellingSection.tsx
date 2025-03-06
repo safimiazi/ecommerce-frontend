@@ -77,73 +77,86 @@ const products = [
       description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
       price: "$1199",
       colors: ["black", "blue", "pink", "green"],
-    },
-    {
-      name: "PlayStation 5 Slim Console",
-      description: "Up to 120fps with 120Hz output, 1TB HDD, 2 Controllers, Ray Tracing.",
-      price: "$499",
-      colors: ["black", "blue", "gray"],
-    },
-    {
-      name: "iPad Pro 13-Inch (M4): XDR Display",
-      description: "Ultra Retina XDR Display, 256GB, Landscape 12MP Front Camera/12MP.",
-      price: "$1199",
-      colors: ["black", "pink", "gray"],
+      image:[
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      ]
+       
     },
     {
       name: "Apple iMac 27\"",
       description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
       price: "$1199",
       colors: ["black", "blue", "pink", "green"],
-    },
-    {
-      name: "PlayStation 5 Slim Console",
-      description: "Up to 120fps with 120Hz output, 1TB HDD, 2 Controllers, Ray Tracing.",
-      price: "$499",
-      colors: ["black", "blue", "gray"],
-    },
-    {
-      name: "iPad Pro 13-Inch (M4): XDR Display",
-      description: "Ultra Retina XDR Display, 256GB, Landscape 12MP Front Camera/12MP.",
-      price: "$1199",
-      colors: ["black", "pink", "gray"],
+      image:[
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      ]
+       
     },
     {
       name: "Apple iMac 27\"",
       description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
       price: "$1199",
       colors: ["black", "blue", "pink", "green"],
-    },
-    {
-      name: "PlayStation 5 Slim Console",
-      description: "Up to 120fps with 120Hz output, 1TB HDD, 2 Controllers, Ray Tracing.",
-      price: "$499",
-      colors: ["black", "blue", "gray"],
-    },
-    {
-      name: "iPad Pro 13-Inch (M4): XDR Display",
-      description: "Ultra Retina XDR Display, 256GB, Landscape 12MP Front Camera/12MP.",
-      price: "$1199",
-      colors: ["black", "pink", "gray"],
+      image:[
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      ]
+       
     },
     {
       name: "Apple iMac 27\"",
       description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
       price: "$1199",
       colors: ["black", "blue", "pink", "green"],
+      image:[
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      ]
+       
     },
     {
-      name: "PlayStation 5 Slim Console",
-      description: "Up to 120fps with 120Hz output, 1TB HDD, 2 Controllers, Ray Tracing.",
-      price: "$499",
-      colors: ["black", "blue", "gray"],
-    },
-    {
-      name: "iPad Pro 13-Inch (M4): XDR Display",
-      description: "Ultra Retina XDR Display, 256GB, Landscape 12MP Front Camera/12MP.",
+      name: "Apple iMac 27\"",
+      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
       price: "$1199",
-      colors: ["black", "pink", "gray"],
+      colors: ["black", "blue", "pink", "green"],
+      image:[
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      ]
+       
     },
+    {
+      name: "Apple iMac 27\"",
+      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
+      price: "$1199",
+      colors: ["black", "blue", "pink", "green"],
+      image:[
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      ]
+       
+    },
+    {
+      name: "Apple iMac 27\"",
+      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
+      price: "$1199",
+      colors: ["black", "blue", "pink", "green"],
+      image:[
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      ]
+       
+    },
+   
   ];
 export default function BestSellingSection() {
   const swiperRef = useRef<SwiperType | null>(null);
