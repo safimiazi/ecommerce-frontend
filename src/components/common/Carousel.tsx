@@ -5,6 +5,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Image } from "antd";
 import "swiper/css/bundle";
+import MaxWidth from "./MaxWidth";
 
 
 export const Carousel = () => {
@@ -17,7 +18,8 @@ export const Carousel = () => {
 
   return (
     <div className="p-4">
-      <Swiper
+     <MaxWidth>
+     <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
         slidesPerView={1}
@@ -40,6 +42,7 @@ export const Carousel = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+     </MaxWidth>
     </div>
   );
 };

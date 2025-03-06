@@ -5,6 +5,7 @@ import Top from "../common/Top";
 import BottomNav from "../common/BottomNav";
 import { useState } from "react";
 import CartDrawer from "../ui/CartDrawer";
+import Footer from "../common/Footer";
 
 const MainLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -39,11 +40,16 @@ const MainLayout = () => {
             <header className="h-16 ">
               <TopNav />
             </header>
-            <main className="flex-1 overflow-auto p-6 bg-white">
+            <main className="flex-1  p-6 bg-white">
               <Outlet />
+
             </main>
+            {/* footer */}
+            <Footer/>
+
           </div>
         </div>
+        {/* bottom */}
         <div className="border-t border-gray-200 sticky bottom-0 w-full bg-white md:hidden">
           <BottomNav showCart={showCart} />
         </div>

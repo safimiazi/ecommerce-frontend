@@ -19,10 +19,10 @@
   }
   
   /* brand color */
-  .brand-color {
-    color: #3b82f6; /* Your Brand Color �� */
+  
+  .brand-color-bg {
+    background-color: #3b82f6; /* Your Brand Color �� */
   }
-
   /* text color */
   .text-color {
     color: #1a202c; /* Dark Gray Text Color */
