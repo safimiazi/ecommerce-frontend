@@ -15,13 +15,16 @@ import { Tooltip, Image } from "antd";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import ProductQuickView from "./ProductQuickView";
 
 const ProductCard = ({ product }: any) => {
   const swiperRef = useRef<SwiperType | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="border hover:shadow transition-shadow duration-300 group flex flex-col border-gray-200 rounded-xl p-4 h-full">
+  <div>
+      <div className="border hover:shadow transition-shadow duration-300 group flex flex-col border-gray-200 rounded-xl p-4 h-full">
       {/* Image Section with Hover Effects */}
       <div className="relative w-full h-40 rounded-2xl flex items-center justify-center mb-4 overflow-hidden group">
         <Swiper
@@ -48,7 +51,7 @@ const ProductCard = ({ product }: any) => {
         {/* Compare & Quick View Icons */}
         <div className="absolute z-50 bottom-2 left-1/2 transform -translate-x-1/2 translate-y-4 flex gap-4 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
           <Tooltip title="Quick View">
-            <div className="p-2 rounded-full  bg-blue-500 cursor-pointer">
+            <div onClick={() => setModalOpen(true)} className="p-2 rounded-full  bg-blue-500 cursor-pointer">
               <Eye className="text-white" size={15} />
             </div>
           </Tooltip>
@@ -114,6 +117,9 @@ const ProductCard = ({ product }: any) => {
         </div>
       </div>
     </div>
+    <ProductQuickView isOpen={modalOpen} onClose={() => setModalOpen(false)} product={product} />
+
+  </div>
   );
 };
 

@@ -164,6 +164,12 @@ export default function BestSellingSection() {
   return (
     <SectionPadding>
       <MaxWidth>
+       <div className="flex items-center justify-between mb-4">
+       <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">
+          Best Selling This Week
+        </h2>
+        <p className="text-blue-500 hover:underline transition-colors duration-500 cursor-pointer">All Products</p>
+       </div>
         <div className="relative">
           <LeftNavigationButton swiperRef={swiperRef} />
           <RightNavigartionButton swiperRef={swiperRef} />

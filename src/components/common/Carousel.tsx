@@ -18,7 +18,8 @@ export const Carousel = () => {
 
   return (
      <MaxWidth>
-     <Swiper
+    <div className="-z-20">
+    <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
         slidesPerView={1}
@@ -26,7 +27,7 @@ export const Carousel = () => {
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         loop
-        className="rounded-2xl shadow-lg"
+        className="rounded-2xl shadow-lg -z-20"
       >
         {images.map((img, index) => (
           <SwiperSlide key={index}>
@@ -34,13 +35,14 @@ export const Carousel = () => {
               <Image
                 src={img}
                 alt={`Slide ${index + 1}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover -z-20"
                 preview={false}
               />
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
+    </div>
      </MaxWidth>
   );
 };

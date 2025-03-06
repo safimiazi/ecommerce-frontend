@@ -22,7 +22,7 @@ const MainLayout = () => {
     <>
       <div>
         {/* top */}
-        <div className=" md:block border-b md:z-50  sticky top-0 border-gray-200">
+        <div className=" md:block border-b md:z-[1000] sticky top-0 border-gray-200">
           <Top
             showCart={showCart}
             isMobileMenuOpen={isMobileMenuOpen}
