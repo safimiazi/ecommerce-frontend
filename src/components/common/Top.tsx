@@ -6,10 +6,17 @@ import {
   ShoppingCart,
   User2,
   MenuIcon,
+  GitCompare,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
-const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen, showCart,setWishlistOpen }: any) => {
+const Top = ({
+  setIsMobileMenuOpen,
+  isMobileMenuOpen,
+  showCart,
+  setWishlistOpen,
+  setCompareOpen,
+}: any) => {
   return (
     <div className="h-16 border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
       <button
@@ -43,33 +50,40 @@ const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen, showCart,setWishlistOpen }
 
       {/* Right: Wishlist, Login, Cart (Hidden in Mobile) */}
       <div className="hidden md:flex gap-6 items-center">
-        <div className="p-2 rounded-full hover:bg-gray-200">
-          <Badge  color="blue" count={5}>
+        <Badge color="blue" count={5}>
+          <div className="p-2 rounded-full bg-gray-200">
+            <GitCompare
+              className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
+              size={24}
+              onClick={() => setCompareOpen(true)}
+            />
+          </div>
+        </Badge>
+        <Badge color="blue" count={5}>
+          <div className="p-2 rounded-full bg-gray-200">
             <Heart
-            onClick={() => setWishlistOpen(true) }
+              onClick={() => setWishlistOpen(true)}
               className="text-gray-600 hover:text-blue-500 transition duration-300 cursor-pointer"
               size={24}
             />
-          </Badge>
-        </div>
-        <div className="p-2 rounded-full hover:bg-gray-200">
+          </div>
+        </Badge>
+
+        <Badge color="blue" count={5}>
+          <div className="p-2 rounded-full bg-gray-200">
+            <ShoppingCart
+              className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
+              size={24}
+              onClick={showCart}
+            />
+          </div>
+        </Badge>
+
+        <div className="p-2 rounded-full bg-gray-200">
           <User2
             className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
             size={24}
           />
-        </div>
-        <div className="p-2 rounded-full hover:bg-gray-200">
-        <Badge  color="blue" count={5}>
-
-        <ShoppingCart
-            className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
-            size={24}
-            onClick={showCart}
-          />
-
-        </Badge>
-
-     
         </div>
       </div>
     </div>

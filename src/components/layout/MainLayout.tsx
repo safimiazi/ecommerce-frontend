@@ -8,6 +8,7 @@ import CartDrawer from "../ui/CartDrawer";
 import Footer from "../common/Footer";
 import WishlistDrawer from "../ui/WishlistDrawer";
 import CompareDrawer from "../ui/CompareDrawer";
+import ShopingBag from "../ui/ShopingBag";
 
 const MainLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,6 +33,7 @@ const MainLayout = () => {
             setWishlistOpen={setWishlistOpen}
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
+            setCompareOpen={setCompareOpen}
           />
         </div>
         <div className="flex h-screen">
@@ -62,6 +64,7 @@ const MainLayout = () => {
       <CartDrawer open={cartOpen} onClose={closeCart} />
       <WishlistDrawer open={wishlistOpen} onClose={setWishlistOpen} />
       <CompareDrawer open={compareOpen} onClose={setCompareOpen} />
+      <ShopingBag/>
     </>
   );
 };

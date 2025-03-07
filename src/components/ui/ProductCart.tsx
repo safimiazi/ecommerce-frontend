@@ -8,7 +8,7 @@ import {
   Heart,
   ShoppingCart,
   Eye,
-  Scale,
+  GitCompare,
 } from "lucide-react";
 import truncateText from "../../utils/truncateText";
 import { Tooltip, Image } from "antd";
@@ -57,7 +57,7 @@ const ProductCard = ({ product }: any) => {
           </Tooltip>
           <Tooltip title="Compare">
             <div className="p-2 rounded-full  bg-blue-500 cursor-pointer">
-              <Scale className="text-white" size={15} />
+              <GitCompare className="text-white" size={15} />
             </div>
           </Tooltip>
         </div>
