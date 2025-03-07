@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Search, Heart, ShoppingCart, User2, MenuIcon } from "lucide-react";
+import { Badge } from "antd";
+import {
+  Search,
+  Heart,
+  ShoppingCart,
+  User2,
+  MenuIcon,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 
-const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen, showCart }: any) => {
+const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen, showCart,setWishlistOpen }: any) => {
   return (
     <div className="h-16 border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
       <button
@@ -37,10 +44,13 @@ const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen, showCart }: any) => {
       {/* Right: Wishlist, Login, Cart (Hidden in Mobile) */}
       <div className="hidden md:flex gap-6 items-center">
         <div className="p-2 rounded-full hover:bg-gray-200">
-          <Heart
-            className="text-gray-600 hover:text-blue-500 transition duration-300 cursor-pointer"
-            size={24}
-          />
+          <Badge  color="blue" count={5}>
+            <Heart
+            onClick={() => setWishlistOpen(true) }
+              className="text-gray-600 hover:text-blue-500 transition duration-300 cursor-pointer"
+              size={24}
+            />
+          </Badge>
         </div>
         <div className="p-2 rounded-full hover:bg-gray-200">
           <User2
@@ -49,11 +59,17 @@ const Top = ({ setIsMobileMenuOpen, isMobileMenuOpen, showCart }: any) => {
           />
         </div>
         <div className="p-2 rounded-full hover:bg-gray-200">
-          <ShoppingCart
+        <Badge  color="blue" count={5}>
+
+        <ShoppingCart
             className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
             size={24}
             onClick={showCart}
           />
+
+        </Badge>
+
+     
         </div>
       </div>
     </div>

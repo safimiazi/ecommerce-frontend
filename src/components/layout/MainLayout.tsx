@@ -6,10 +6,14 @@ import BottomNav from "../common/BottomNav";
 import { useState } from "react";
 import CartDrawer from "../ui/CartDrawer";
 import Footer from "../common/Footer";
+import WishlistDrawer from "../ui/WishlistDrawer";
+import CompareDrawer from "../ui/CompareDrawer";
 
 const MainLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [compareOpen, setCompareOpen] = useState(false);
 
   const showCart = () => {
     setCartOpen(true);
@@ -25,6 +29,7 @@ const MainLayout = () => {
         <div className=" md:block border-b md:z-[1000] sticky top-0 border-gray-200">
           <Top
             showCart={showCart}
+            setWishlistOpen={setWishlistOpen}
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
           />
@@ -51,10 +56,12 @@ const MainLayout = () => {
         </div>
         {/* bottom */}
         <div className=" sticky bottom-0 w-full bg-white md:hidden">
-          <BottomNav showCart={showCart} />
+          <BottomNav showCart={showCart} setWishlistOpen={setWishlistOpen} setCompareOpen={setCompareOpen}/>
         </div>
       </div>
       <CartDrawer open={cartOpen} onClose={closeCart} />
+      <WishlistDrawer open={wishlistOpen} onClose={setWishlistOpen} />
+      <CompareDrawer open={compareOpen} onClose={setCompareOpen} />
     </>
   );
 };
