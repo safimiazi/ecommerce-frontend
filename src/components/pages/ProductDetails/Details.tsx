@@ -89,9 +89,12 @@ const Details = () => {
           </div>
         </div>
 
-        {/* Add to Cart Button */}
-        <button className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-          Add to Cart
+        <button className="mt-6 px-6 py-2 text-white bg-gradient-to-r from-blue-500 to-blue-700 border border-blue-500 rounded transition relative overflow-hidden shadow-lg shadow-blue-500/50 animate-pulse hover:scale-110 hover:shadow-blue-400 active:scale-95">
+          <span className="relative z-10 text-lg font-bold tracking-wide">
+            Add to Cart
+          </span>
+          {/* Glow Effect */}
+          <span className="absolute inset-0 bg-blue-400 opacity-50 blur-2xl animate-ping"></span>
         </button>
       </div>
     </div>
