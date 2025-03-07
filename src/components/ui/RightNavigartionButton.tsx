@@ -5,7 +5,7 @@ const RightNavigartionButton = ({ swiperRef }: any) => {
   return (
     <div
       onClick={() => swiperRef.current?.slideNext()}
-      className="p-1 border border-gray-200  bg-white  z-50  absolute -right-5  top-1/2   transform -translate-y-1/2 rounded-full transition"
+      className="p-1 cursor-pointer border border-gray-200  bg-white  z-50  absolute -right-5  top-1/2   transform -translate-y-1/2 rounded-full transition"
     >
       <ArrowRight className="text-blue-500" />
     </div>
