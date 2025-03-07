@@ -64,7 +64,9 @@ const MainLayout = () => {
       <CartDrawer open={cartOpen} onClose={closeCart} />
       <WishlistDrawer open={wishlistOpen} onClose={setWishlistOpen} />
       <CompareDrawer open={compareOpen} onClose={setCompareOpen} />
+      <div className="md:block hidden">
       <ShopingBag/>
+      </div>
     </>
   );
 };

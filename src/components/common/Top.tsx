@@ -4,11 +4,11 @@ import {
   Search,
   Heart,
   ShoppingCart,
-  User2,
   MenuIcon,
   GitCompare,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import Account from "../ui/Account";
 
 const Top = ({
   setIsMobileMenuOpen,
@@ -79,12 +79,9 @@ const Top = ({
           </div>
         </Badge>
 
-        <div className="p-2 rounded-full bg-gray-200">
-          <User2
-            className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
-            size={24}
-          />
-        </div>
+      <Account/>
+
+
       </div>
     </div>
   );
