@@ -108,6 +108,7 @@ const ProductCard = ({ product }: any) => {
               size={24}
             />
           </Tooltip>
+          <p className="text-blue-500 cursor-pointer underline">View Details</p>
           <Tooltip title="Add to Cart">
             <ShoppingCart
               className="text-blue-500 transition duration-300 cursor-pointer"
