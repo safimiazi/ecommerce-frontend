@@ -34,7 +34,7 @@ const Details = () => {
       {/* Product Image Section */}
       <div className="flex-1 flex flex-col gap-4 justify-center items-center  max-w-[500px]">
         {/* Image Zoom */}
-        <div className="h-96 w-96 border border-gray-200 flex items-center justify-center">
+        <div className="h-96 cursor-move w-96 border border-gray-200 flex items-center justify-center">
           <ImageZoom image={currentImage ? currentImage : product.image[0]} />
         </div>
 
