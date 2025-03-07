@@ -26,7 +26,7 @@ const MainLayout = () => {
     <>
       <div>
         {/* top */}
-        <div className=" md:block border-b md:z-[1000] sticky top-0 border-gray-200">
+        <div className=" md:block border-b z-10 md:z-[1000] sticky top-0 border-gray-200">
           <Top
             showCart={showCart}
             setWishlistOpen={setWishlistOpen}
@@ -55,7 +55,7 @@ const MainLayout = () => {
           </div>
         </div>
         {/* bottom */}
-        <div className=" sticky bottom-0 w-full bg-white md:hidden">
+        <div className=" sticky shadow-2xl z-50 bottom-0 w-full bg-white md:hidden">
           <BottomNav showCart={showCart} setWishlistOpen={setWishlistOpen} setCompareOpen={setCompareOpen}/>
         </div>
       </div>

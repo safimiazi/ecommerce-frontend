@@ -119,7 +119,7 @@ export default function BestSellingSection() {
           <Swiper
             modules={[Navigation, Pagination]}
             onSwiper={(swiper: any) => (swiperRef.current = swiper)}
-            spaceBetween={30}
+            spaceBetween={20}
             autoHeight={false}
             slidesPerView={2}
             breakpoints={{
