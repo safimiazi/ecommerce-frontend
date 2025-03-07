@@ -6,9 +6,10 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/react"; // ✅ Import SwiperType correctly
 import "swiper/css/bundle";
-import LeftNavigationButton from "../../components/ui/LeftNavigationButton";
-import RightNavigartionButton from "../../components/ui/RightNavigartionButton";
-import ImageZoom from "../../components/ui/ImageZoom";
+
+import LeftNavigationButton from "../../ui/LeftNavigationButton";
+import RightNavigartionButton from "../../ui/RightNavigartionButton";
+import ImageZoom from "../../ui/ImageZoom";
 
 const Details = () => {
   const [currentImage, setCurrentImage] = useState(null);
@@ -29,73 +30,71 @@ const Details = () => {
   };
 
   return (
-      <div className="flex gap-4 p-4 items-start justify-center md:flex-row flex-col">
-        {/* Product Image Section */}
-        <div className="flex-1 flex flex-col gap-4 justify-center items-center  max-w-[500px]">
-          {/* Image Zoom */}
-          <div className="h-96 w-96 border border-gray-200 flex items-center justify-center">
-            <ImageZoom image={currentImage ? currentImage : product.image[0]} />
-          </div>
-
-          {/* Thumbnail Slider */}
-          <div className="relative  w-2/3">
-            <LeftNavigationButton swiperRef={swiperRef} />
-            <RightNavigartionButton swiperRef={swiperRef} />
-
-            <Swiper
-              modules={[Navigation, Pagination]}
-              onSwiper={(swiper: any) => (swiperRef.current = swiper)}
-              spaceBetween={10}
-              slidesPerView={3}
-            >
-              {product.image.map((img, index) => (
-                <SwiperSlide key={index}>
-                  <div
-                    onClick={() => setCurrentImage(img)}
-                    className=" cursor-pointer h-20 border border-gray-200"
-                  >
-                    <img
-                      src={img}
-                      alt={`Slide ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
+    <div className="flex gap-4 p-4 items-start justify-center md:flex-row flex-col">
+      {/* Product Image Section */}
+      <div className="flex-1 flex flex-col gap-4 justify-center items-center  max-w-[500px]">
+        {/* Image Zoom */}
+        <div className="h-96 w-96 border border-gray-200 flex items-center justify-center">
+          <ImageZoom image={currentImage ? currentImage : product.image[0]} />
         </div>
 
-        {/* Product Details Section */}
-        <div className="flex-1 border border-gray-200 rounded p-6">
-          <h1 className="text-2xl font-bold text-gray-800">{product.name}</h1>
-          <p className="text-lg text-gray-600 mt-2">{product.description}</p>
-          <p className="text-xl font-semibold text-green-600 mt-4">
-            {product.price}
-          </p>
+        {/* Thumbnail Slider */}
+        <div className="relative  w-2/3">
+          <LeftNavigationButton swiperRef={swiperRef} />
+          <RightNavigartionButton swiperRef={swiperRef} />
 
-          {/* Color Options */}
-          <div className="mt-4">
-            <h3 className="text-gray-700 font-semibold mb-2">
-              Choose a Color:
-            </h3>
-            <div className="flex gap-3">
-              {product.colors.map((color, index) => (
-                <span
-                  key={index}
-                  className={`w-8 h-8 rounded-full border-2 border-gray-300 cursor-pointer transition hover:border-blue-500`}
-                  style={{ backgroundColor: color }}
-                ></span>
-              ))}
-            </div>
-          </div>
-
-          {/* Add to Cart Button */}
-          <button className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            Add to Cart
-          </button>
+          <Swiper
+            modules={[Navigation, Pagination]}
+            onSwiper={(swiper: any) => (swiperRef.current = swiper)}
+            spaceBetween={10}
+            slidesPerView={3}
+          >
+            {product.image.map((img, index) => (
+              <SwiperSlide key={index}>
+                <div
+                  onClick={() => setCurrentImage(img)}
+                  className=" cursor-pointer h-20 border border-gray-200"
+                >
+                  <img
+                    src={img}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </div>
+
+      {/* Product Details Section */}
+      <div className="flex-1 border border-gray-200 rounded p-6">
+        <h1 className="text-2xl font-bold text-gray-800">{product.name}</h1>
+        <p className="text-lg text-gray-600 mt-2">{product.description}</p>
+        <p className="text-xl font-semibold text-green-600 mt-4">
+          {product.price}
+        </p>
+
+        {/* Color Options */}
+        <div className="mt-4">
+          <h3 className="text-gray-700 font-semibold mb-2">Choose a Color:</h3>
+          <div className="flex gap-3">
+            {product.colors.map((color, index) => (
+              <span
+                key={index}
+                className={`w-8 h-8 rounded-full border-2 border-gray-300 cursor-pointer transition hover:border-blue-500`}
+                style={{ backgroundColor: color }}
+              ></span>
+            ))}
+          </div>
+        </div>
+
+        {/* Add to Cart Button */}
+        <button className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          Add to Cart
+        </button>
+      </div>
+    </div>
   );
 };
 
