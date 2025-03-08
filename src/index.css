@@ -10,12 +10,12 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    background: #3b82f6; /* Blue-500 (Your Brand Color) */
+    background: #3b82f6; /* blue-500 (Your Brand Color) */
     border-radius: 10px;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: #2563eb; /* Darker Blue on Hover */
+    background: #2563eb; /* Darker blue on Hover */
   }
   
   /* brand color */
@@ -51,6 +51,6 @@
 
   /* button hover color */
   .button-color:hover {
-    background-color: #2563eb; /* Darker Blue on Hover */
+    background-color: #2563eb; /* Darker blue on Hover */
     color: #f1f5f9; /* White Text Color */
   }

@@ -77,9 +77,9 @@ const ProductReviews = () => {
                     <div className="font-semibold text-gray-800">
                       {review.name}
                     </div>
-                    <div className="flex gap-1 text-yellow-500">
+                    <div className="flex gap-1 text-blue-500">
                       {Array.from({ length: review.rating }, (_, i) => (
-                        <Star key={i} size={16} fill="yellow" stroke="none" />
+                        <Star key={i} size={16} fill="blue" stroke="none" />
                       ))}
                     </div>
                   </div>
@@ -100,7 +100,7 @@ const ProductReviews = () => {
                 <Star
                   key={i}
                   size={20}
-                  fill={i < newRating ? "yellow" : "none"}
+                  fill={i < newRating ? "blue" : "none"}
                   stroke="gray"
                   className="cursor-pointer"
                   onClick={() => setNewRating(i + 1)}
