@@ -9,7 +9,6 @@ export default function LoginRegistration() {
 
   return (
     <div className="flex items-center justify-center min-h-screen  bg-gray-100 p-4">
-
       <MaxWidth>
         <div
           className={`bg-gray-900 shadow-xl rounded-lg overflow-hidden w-full flex flex-col md:flex-row 
