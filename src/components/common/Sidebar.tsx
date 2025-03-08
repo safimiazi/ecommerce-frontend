@@ -73,7 +73,6 @@ export const SubNavItem = ({ items, name, icon: Icon }: any) => {
 const Sidebar = ({ setIsMobileMenuOpen, isMobileMenuOpen }: any) => {
 
 
-
   return (
     <>
       <nav
