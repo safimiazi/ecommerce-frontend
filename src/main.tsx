@@ -4,6 +4,8 @@ import "./index.css";
 import { ConfigProvider } from "antd";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes/routes.tsx";
+import { Provider } from "react-redux";
+import { store } from "./redux/store.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -19,7 +21,9 @@ createRoot(document.getElementById("root")!).render(
         },
       }}
     >
-      <RouterProvider router={router}></RouterProvider>
+      <Provider store={store}>
+        <RouterProvider router={router}></RouterProvider>
+      </Provider>
     </ConfigProvider>
   </StrictMode>
 );
