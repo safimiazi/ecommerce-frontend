@@ -9,8 +9,7 @@ export default function LoginRegistration() {
 
   return (
     <div className="flex items-center justify-center min-h-screen  bg-gray-100 p-4">
- 
-      
+
       
       <MaxWidth>
         <div
