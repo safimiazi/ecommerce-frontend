@@ -3,7 +3,8 @@ import App from "../App";
 import Home from "../pages/user/home/Home";
 import ProductDetails from "../pages/user/ProductDetails/ProductDetails";
 import Admin from "../Admin";
-import Dashboard from "../pages/admin/dashboard/Dashboard";
+import { routeGenerator } from "../utils/routesGenerator";
+import { adminPaths } from "./admin.routes";
 
 const router = createBrowserRouter([
     {
@@ -23,13 +24,7 @@ const router = createBrowserRouter([
     {
         path: "/miazi",
         element: <Admin/>,
-        children: [
-            {
-                index: true,
-                element: <Dashboard />, 
-            },
-         
-        ]
+        children: routeGenerator(adminPaths)
     },
 ])
 
