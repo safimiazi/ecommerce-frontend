@@ -30,7 +30,8 @@ const Top = ({
       {/* Left: Logo */}
       <NavLink to={"/"}>
         <div className="text-2xl font-bold hover:cursor-pointer text-gray-800">
-          🛍️ MyShop
+          {/* 🛍️ MyShop */}
+          <img src="/brand-logo.png" width="120px" height="10px" alt="" />
         </div>
       </NavLink>
       {/* Middle: Search Bar */}
