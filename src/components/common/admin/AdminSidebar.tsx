@@ -45,7 +45,6 @@ export const SubNavItem: React.FC<SubNavItemProps> = ({ items, name, icon: Icon 
   const isOpen = openSubMenu === name;
 
 
-  console.log(sidebarGenerator(adminPaths))
   return (
     <div>
       <button
@@ -90,7 +89,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ setIsMobileMenuOpen, isMobi
       >
         <div className="h-full flex flex-col">
           <div className="flex-1 overflow-y-auto py-4 px-4 space-y-1">
-            {sidebarGenerator(adminPaths).map((item, index) => (
+            {sidebarGenerator(adminPaths, "admin").map((item, index) => (
               <div key={index} className="space-y-1">
                 {item.children ? (
                 //   <SubNavItem icon={item.icon} name={item.name} items={item.children} />

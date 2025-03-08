@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         ]
     },
     {
-        path: "/miazi",
+        path: "/admin",
         element: <Admin/>,
         children: routeGenerator(adminPaths)
     },
