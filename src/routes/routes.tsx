@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../pages/home/Home";
 import ProductDetails from "../pages/ProductDetails/ProductDetails";
+import Admin from "../Admin";
 
 const router = createBrowserRouter([
     {
@@ -10,12 +11,23 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home />, // Home component Outlet e render hobe
+                element: <Home />, 
             },
             {
                 path: "/details",
-                element: <ProductDetails />, // Home component Outlet e render hobe
+                element: <ProductDetails />, 
             }
+        ]
+    },
+    {
+        path: "/miazi",
+        element: <Admin/>,
+        children: [
+            {
+                index: true,
+                element: <Home />, 
+            },
+         
         ]
     },
 ])
