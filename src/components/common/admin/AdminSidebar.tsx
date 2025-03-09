@@ -3,8 +3,8 @@
 import { ChevronDown, ChevronRight, LogOut } from "lucide-react";
 import { useState } from "react";
 import { sidebarGenerator } from "../../../utils/sidebarGenerator";
-import { adminPaths } from "../../../routes/admin.routes";
 import { NavLink } from "react-router-dom";
+import { adminPaths } from "../../../routes/admin.routes";
 
 export type IAdminPath = {
   key: string;

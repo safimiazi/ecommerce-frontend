@@ -21,7 +21,7 @@ import {
   MessageSquare,
   DollarSign,
 } from "lucide-react";
-
+import Category from "../pages/admin/category/Category";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -69,6 +69,12 @@ export const adminPaths: IAdminPath[] = [
     icon: UserCheck,
     path: "customers",
     element: "CUSTOMERS",
+  },
+  {
+    name: "Category",
+    icon: UserCheck,
+    path: "category",
+    element: <Category/>,
   },
   {
     name: "Settings",
