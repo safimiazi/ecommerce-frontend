@@ -5,7 +5,7 @@ const CategoryApi = baseApi.injectEndpoints({
     categoryPost: build.mutation({
       query: (data) => {
         return {
-          url: "/category/post_category_data",
+          url: "/category/post_category",
           method: "POST",
           body: data,
         };
@@ -13,20 +13,20 @@ const CategoryApi = baseApi.injectEndpoints({
     }),
     categoryPut: build.mutation({
       query: ({ data, id }) => ({
-        url: `/category/put_category_data/${id}`,
+        url: `/category/put_category/${id}`,
         method: "PUT",
         body: data,
       }),
     }),
     categoryDelete: build.mutation({
       query: ({ id }) => ({
-        url: `/category/delete_category_data/${id}`,
+        url: `/category/delete_category/${id}`,
         method: "DELETE",
       }),
     }),
     getCategoryData: build.query({
       query: ({ pageIndex, pageSize, search }) => ({
-        url: "/category/get_category_data",
+        url: "/category/get_category",
         method: "GET",
         params: {
           limit: pageSize,
