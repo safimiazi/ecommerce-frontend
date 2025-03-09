@@ -16,12 +16,7 @@ import {
   Upload,
   Select,
 } from "antd";
-import {
-  DeleteOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../components/common/CustomTable";
 import {
   useCategoryDeleteMutation,
@@ -29,8 +24,6 @@ import {
   useCategoryPutMutation,
   useGetCategoryDataQuery,
 } from "../../../redux/api/categoryApi/CategoryApi";
-
-const { TextArea } = Input;
 
 const Category = () => {
   const [form] = Form.useForm();
