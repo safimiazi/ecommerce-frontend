@@ -10,16 +10,16 @@ import { store } from "./redux/store.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ConfigProvider
-      theme={{
-        token: {
-          // Seed Token
-          colorPrimary: "#00b96b",
-          borderRadius: 2,
+      // theme={{
+      //   token: {
+      //     // Seed Token
+      //     colorPrimary: "#00b96b",
+      //     borderRadius: 2,
 
-          // Alias Token
-          colorBgContainer: "#f6ffed",
-        },
-      }}
+      //     // Alias Token
+      //     colorBgContainer: "#f6ffed",
+      //   },
+      // }}
     >
       <Provider store={store}>
         <RouterProvider router={router}></RouterProvider>

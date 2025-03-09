@@ -38,7 +38,7 @@ const CustomTable = ({
           value={globalFilter}
           onChange={(e) => onFilterChange(e.target.value)}
           placeholder="Search..."
-          className={`p-2 border rounded w-52 ${
+          className={`p-2 border rounded-xl w-52 ${
             isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 border-gray-300"
           }`}
         />
@@ -53,8 +53,8 @@ const CustomTable = ({
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse border">
+      <div className="overflow-x-auto  rounded-xl  border border-gray-200">
+        <table className="w-full ">
           <thead>
             <tr>
               {columns.map((col) => (
