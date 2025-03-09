@@ -2,20 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
-import {
-  Form,
-  Input,
-  InputNumber,
-  Button,
-  message,
-  Space,
-  Modal,
-  Popconfirm,
-  Image,
-  notification,
-  Upload,
-  Select,
-} from "antd";
+import { Form, Input, Button, Modal, Popconfirm, notification } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../components/common/CustomTable";
 import {
@@ -61,11 +48,11 @@ const Category = () => {
       } else {
         res = await categoryPost(data).unwrap();
       }
-
-      notification.success({
-        message: res?.message,
-        placement: "topRight",
-      });
+      alert(res.message);
+      //   notification.success({
+      //     message: res?.message,
+      //     placement: "topRight",
+      //   });
 
       refetch();
       setIsModalOpen(false);
@@ -220,7 +207,13 @@ const Category = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" block>
+            <Button
+              loading={EditingCategory ? isEditLoading : isPostLoading}
+              type="primary"
+              htmlType="submit"
+              size="large"
+              block
+            >
               {EditingCategory ? "Edit Category" : "Add Category"}
             </Button>
           </Form.Item>
