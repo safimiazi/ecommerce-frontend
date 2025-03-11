@@ -25,13 +25,14 @@ const CategoryApi = baseApi.injectEndpoints({
       }),
     }),
     getCategoryData: build.query({
-      query: ({ pageIndex, pageSize, search }) => ({
+      query: ({ pageIndex, pageSize, search, isDelete }) => ({
         url: "/category/get_category",
         method: "GET",
         params: {
           limit: pageSize,
           page: pageIndex,
           searchTerm: search,
+          isDelete
         },
       }),
     }),

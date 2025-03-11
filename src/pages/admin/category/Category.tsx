@@ -24,6 +24,8 @@ const Category = () => {
   const { data: data, refetch } = useGetCategoryDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
+    isDelete: false,
+    search: globalFilter
   });
 
   const [categoryPost, { isLoading: isPostLoading }] =
