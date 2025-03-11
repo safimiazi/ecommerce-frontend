@@ -6,8 +6,7 @@ import {
   UserCheck,
   Settings,
   BarChart,
-  Layers,
-  Clipboard,
+
   CreditCard,
   Truck,
   Percent,
@@ -22,6 +21,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import Category from "../pages/admin/category/Category";
+import Products from "../pages/admin/products/Products";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -48,21 +48,8 @@ export const adminPaths: IAdminPath[] = [
     name: "Products",
     icon: Package,
     path: "products",
-    element: "PRODUCTS",
-    children: [
-      {
-        name: "Product Categories",
-        icon: Layers,
-        path: "categories",
-        element: "CATEGORIES",
-      },
-      {
-        name: "Stock Management",
-        icon: Clipboard,
-        path: "stock-management",
-        element: "STOCK_MANAGEMENT",
-      },
-    ],
+    element: <Products/>,
+  
   },
   {
     name: "Customers",

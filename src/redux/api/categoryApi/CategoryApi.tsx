@@ -30,8 +30,8 @@ const CategoryApi = baseApi.injectEndpoints({
         method: "GET",
         params: {
           limit: pageSize,
-          page: pageIndex,
-          searchTerm: search,
+          page: pageIndex ,
+          searchTerm: search ,
           isDelete
         },
       }),
