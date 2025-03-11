@@ -105,9 +105,9 @@ const Category = () => {
             onConfirm={() => handleDelete(row._id)} // Executes delete on confirm
             okText="Yes, Delete"
             cancelText="Cancel"
-            okButtonProps={{ danger: true }}
+            // okButtonProps={{ danger: true }}
           >
-            <Button type="primary" danger icon={<DeleteOutlined />}>
+            <Button type="primary"  icon={<DeleteOutlined />}>
               Delete
             </Button>
           </Popconfirm>

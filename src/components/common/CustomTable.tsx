@@ -74,15 +74,15 @@ const CustomTable = ({
               data.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
-                  className={`${
-                    isDarkMode
-                      ? rowIndex % 2 === 0
-                        ? "bg-gray-800"
-                        : "bg-gray-900"
-                      : rowIndex % 2 === 0
-                      ? "bg-sky-50"
-                      : "bg-white"
-                  }`}
+                  // className={`${
+                  //   isDarkMode
+                  //     ? rowIndex % 2 === 0
+                  //       ? "bg-gray-800"
+                  //       : "bg-gray-900"
+                  //     : rowIndex % 2 === 0
+                  //     ? "bg-sky-50"
+                  //     : "bg-white"
+                  // }`}
                 >
                   {columns.map((col) => (
                     <td
