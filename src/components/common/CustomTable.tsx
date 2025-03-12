@@ -90,7 +90,7 @@ const CustomTable = ({
                       className={`border p-2 ${
                         isDarkMode ? "border-gray-700" : "border-gray-300"
                       }`}
-                      style={{maxWidth: "250px", minWidth: '150px'}}
+                      style={{maxWidth: "250px",  overflowX: "auto", minWidth: '150px'}}
                     >
                       {col.Cell ? col.Cell({ row }) : row[col.accessorKey]}
                     </td>

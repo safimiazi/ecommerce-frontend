@@ -1,28 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { Button, Drawer, Form, Input, InputNumber, Upload, Select, message } from "antd";
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Upload,
+  Select,
+  message,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useGetCategoryDataQuery } from "../../../../redux/api/categoryApi/CategoryApi";
-import { useProductPostMutation } from "../../../../redux/api/productApi/ProductApi";
+import { useProductPostMutation, useProductPutMutation } from "../../../../redux/api/productApi/ProductApi";
 
 const { TextArea } = Input;
 
-const ProductModal: React.FC = () => {
+const ProductModal = ({
+  editingProduct,
+  openProductDrawer,
+  onClose,
+  form,
+}: any) => {
   const [globalFilter, setGlobalFilter] = useState("");
   const { data: categories } = useGetCategoryDataQuery({
     isDelete: false,
-    search: globalFilter
+    search: globalFilter,
   });
 
-  const [open, setOpen] = useState(false);
-  const [form] = Form.useForm();
   const [fileList, setFileList] = useState<any[]>([]);
+  const [productPut] = useProductPutMutation();
 
   // RTK Mutation Hook for creating product
   const [productPost, { isLoading }] = useProductPostMutation();
-
-  const showDrawer = () => setOpen(true);
-  const onClose = () => setOpen(false);
 
   // Handle Image Upload Change
   const handleUploadChange = ({ fileList }: any) => {
@@ -31,24 +41,37 @@ const ProductModal: React.FC = () => {
 
   // Handle Form Submit
   const onFinish = async (values: any) => {
-    const formData = new FormData();
     
+    
+    const formData = new FormData();
+
     // Append form fields
     formData.append("name", values.name);
     formData.append("description", values.description);
     formData.append("price", String(values.price));
-    formData.append("categoryId", values.categoryId);
+    formData.append("category", values.categoryId);
     formData.append("stock", String(values.stock));
-  
+
     // Append images
     fileList.forEach((file) => {
       formData.append("images", file.originFileObj);
     });
-  
+
     try {
-      const result = await productPost(formData).unwrap();
-      message.success("Product added successfully!"); // Success message
-  alert(result.message);
+
+
+      let result;
+      if (editingProduct) {
+        result = await productPut({
+          data: formData,
+          id: editingProduct._id,
+        }).unwrap();
+      } else {
+        result = await productPost(formData).unwrap();
+      }
+
+
+      alert(result.message);
       form.resetFields();
       setFileList([]);
       onClose();
@@ -57,20 +80,15 @@ const ProductModal: React.FC = () => {
       console.error(error);
     }
   };
-  
 
   return (
     <>
-      <Button type="primary" onClick={showDrawer}>
-        Add Product
-      </Button>
-
       <Drawer
-        title="Add New Product"
+        title={`${editingProduct ? "Edit Product" : "New Product"}`}
         placement="right"
         closable
         onClose={onClose}
-        open={open}
+        open={openProductDrawer}
         width={500}
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -85,7 +103,9 @@ const ProductModal: React.FC = () => {
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true, message: "Please enter product description" }]}
+            rules={[
+              { required: true, message: "Please enter product description" },
+            ]}
           >
             <TextArea rows={4} placeholder="Enter product description" />
           </Form.Item>
@@ -95,13 +115,18 @@ const ProductModal: React.FC = () => {
             label="Price"
             rules={[{ required: true, message: "Please enter product price" }]}
           >
-            <InputNumber style={{ width: "100%" }} min={0} placeholder="Enter price" />
+            <InputNumber
+              style={{ width: "100%" }}
+              min={0}
+              placeholder="Enter price"
+            />
           </Form.Item>
 
           <Form.Item
             name="categoryId"
             label="Category"
             rules={[{ required: true, message: "Please select a category" }]}
+            initialValue={editingProduct ? editingProduct?.category?._id : null}
           >
             <Select
               showSearch
@@ -109,10 +134,12 @@ const ProductModal: React.FC = () => {
               placeholder="Select category"
               options={categories?.data?.result?.map((category: any) => ({
                 label: category.name,
-                value: category._id
+                value: category._id,
               }))}
               filterOption={(input, option) =>
-                (option?.label as string).toLowerCase().includes(input.toLowerCase())
+                (option?.label as string)
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
               }
             />
           </Form.Item>
@@ -122,13 +149,19 @@ const ProductModal: React.FC = () => {
             label="Stock"
             rules={[{ required: true, message: "Please enter stock quantity" }]}
           >
-            <InputNumber style={{ width: "100%" }} min={0} placeholder="Enter stock quantity" />
+            <InputNumber
+              style={{ width: "100%" }}
+              min={0}
+              placeholder="Enter stock quantity"
+            />
           </Form.Item>
 
           <Form.Item
             name="images"
             label="Upload Images"
-            rules={[{ required: true, message: "Please upload product images" }]}
+            rules={[
+              { required: true, message: "Please upload product images" },
+            ]}
           >
             <Upload
               listType="picture-card"
@@ -148,7 +181,7 @@ const ProductModal: React.FC = () => {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={isLoading}>
-              Submit
+              {editingProduct ? "Edit Product" : "Create Product"}
             </Button>
           </Form.Item>
         </Form>
