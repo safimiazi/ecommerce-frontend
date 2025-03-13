@@ -1,19 +1,24 @@
 @import "tailwindcss";
 /* Custom Scrollbar with Brand Color */
+/* Styling the scrollbar */
 ::-webkit-scrollbar {
-  width: 4px; /* Even thinner scrollbar */
+  width: 5px; /* Even thinner scrollbar */
+  height: 5px; /* For horizontal scrollbar */
 }
 
+/* Track (background of the scrollbar) */
 ::-webkit-scrollbar-track {
   background: #f1f5f9; /* Light gray track */
   border-radius: 10px;
 }
 
+/* Handle (the part that the user drags) */
 ::-webkit-scrollbar-thumb {
-  background: #3b82f6; /* blue-500 */
+  background: #3b82f6; /* Blue color */
   border-radius: 10px;
 }
 
+/* Handle when hovered */
 ::-webkit-scrollbar-thumb:hover {
   background: #2563eb; /* Darker blue on hover */
 }

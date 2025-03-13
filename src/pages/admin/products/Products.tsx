@@ -216,8 +216,8 @@ const Products = () => {
           <Form.Item
             name="name"
             label="Product Name"
-            rules={[{ required: true, message: "Please enter product name" }]}
-          >
+            rules={[{ required: editingProduct ? true : false, message: "Please enter product name" }]}
+            >
             <Input placeholder="Enter product name" />
           </Form.Item>
 
