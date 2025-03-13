@@ -20,8 +20,8 @@ import {
   MessageSquare,
   DollarSign,
 } from "lucide-react";
-import Category from "../pages/admin/category/Category";
-import Products from "../pages/admin/products/Products";
+import Category from "../pages/admin/productManagement/category/Category";
+import Products from "../pages/admin/productManagement/products/Products";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -49,20 +49,35 @@ export const adminPaths: IAdminPath[] = [
     icon: Package,
     path: "products",
     element: <Products/>,
-  
+    children: [
+      {
+        name: "Category",
+        icon: UserCheck,
+        path: "category",
+        element: <Category/>,
+      },
+      {
+        name: "Attribute Option",
+        icon: MessageCircle,
+        path: "attribute-option",
+        element: "TICKET_SYSTEM",
+      },
+      {
+        name: "Live Chat",
+        icon: MessageSquare,
+        path: "live-chat",
+        element: "LIVE_CHAT",
+      },
+    ],
   },
+
   {
     name: "Customers",
     icon: UserCheck,
     path: "customers",
     element: "CUSTOMERS",
   },
-  {
-    name: "Category",
-    icon: UserCheck,
-    path: "category",
-    element: <Category/>,
-  },
+
   {
     name: "Settings",
     icon: Settings,

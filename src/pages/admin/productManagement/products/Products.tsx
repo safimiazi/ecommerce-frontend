@@ -12,15 +12,15 @@ import {
   notification,
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import CustomTable from "../../../components/common/CustomTable";
-import MaxWidth from "../../../wrapper/MaxWidth";
+import CustomTable from "../../../../components/common/CustomTable";
+import MaxWidth from "../../../../wrapper/MaxWidth";
 import {
   useGetproductDataQuery,
   useProductDeleteMutation,
   useProductPostMutation,
   useProductPutMutation,
-} from "../../../redux/api/productApi/ProductApi";
-import { useGetCategoryDataQuery } from "../../../redux/api/categoryApi/CategoryApi";
+} from "../../../../redux/api/productApi/ProductApi";
+import { useGetCategoryDataQuery } from "../../../../redux/api/categoryApi/CategoryApi";
 
 const { TextArea } = Input;
 

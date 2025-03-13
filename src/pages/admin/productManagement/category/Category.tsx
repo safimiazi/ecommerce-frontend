@@ -4,13 +4,13 @@ import { useState } from "react";
 
 import { Form, Input, Button, Modal, Popconfirm, notification } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import CustomTable from "../../../components/common/CustomTable";
+import CustomTable from "../../../../components/common/CustomTable";
 import {
   useCategoryDeleteMutation,
   useCategoryPostMutation,
   useCategoryPutMutation,
   useGetCategoryDataQuery,
-} from "../../../redux/api/categoryApi/CategoryApi";
+} from "../../../../redux/api/categoryApi/CategoryApi";
 
 const Category = () => {
   const [form] = Form.useForm();
