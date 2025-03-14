@@ -148,7 +148,7 @@ const Attribute = () => {
     if (Edit && Edit !== null) {
       const initialValues = {
         name: Edit.name,
-        type: Edit.type,
+        attributeOption: Edit.attributeOption.map((item : any) => item._id),
       };
       setiInitialValues(initialValues);
     }
@@ -156,9 +156,9 @@ const Attribute = () => {
 
   useEffect(() => {
     if (!isModalOpen) {
-      form.resetFields(); // ফর্ম রিসেট করে নতুন ফর্ম ফিল্ড খালি করবে
-      setEdit(null); // Edit মোড রিসেট করে দিবে
-      setiInitialValues(null); // initialValues রিসেট হবে
+      form.resetFields(); 
+      setEdit(null); 
+      setiInitialValues(null); 
     }
   }, [isModalOpen]);
 
