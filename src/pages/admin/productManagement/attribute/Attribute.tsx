@@ -2,20 +2,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 
-import { Form, Button, Modal, Popconfirm, notification } from "antd";
+import { Form, Button, Modal, Popconfirm } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../../components/common/CustomTable";
 
 import ReusableForm from "../../../../components/Reusable/ReusableForm";
-import {
-  useAttributeOptionDeleteMutation,
-  useAttributeOptionPostMutation,
-  useAttributeOptionPutMutation,
-  useGetattributeOptionDataQuery,
-} from "../../../../redux/api/attributeOptionApi/AttributeOptionApi";
-import Swal from "sweetalert2";
 
-const AttributeOption = () => {
+import Swal from "sweetalert2";
+import { useAttributeDeleteMutation, useAttributePostMutation, useAttributePutMutation, useGetattributeDataQuery } from "../../../../redux/api/attributeApi/AttributeApi";
+
+const Attribute = () => {
   const [form] = Form.useForm();
   const [Edit, setEdit] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,19 +20,19 @@ const AttributeOption = () => {
     pageSize: 10,
   });
   const [globalFilter, setGlobalFilter] = useState("");
-  const { data: data, refetch } = useGetattributeOptionDataQuery({
+  const { data: data, refetch } = useGetattributeDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
     isDelete: false,
     search: globalFilter,
   });
 
-  const [attributeOptionPost, { isLoading: isPostLoading }] =
-    useAttributeOptionPostMutation();
-  const [attributeOptionPut, { isLoading: isEditLoading }] =
-    useAttributeOptionPutMutation();
-  const [attributeOptionDelete, { isLoading: isDeleteLoading }] =
-    useAttributeOptionDeleteMutation();
+  const [attributePost, { isLoading: isPostLoading }] =
+  useAttributePostMutation();
+  const [attributePut, { isLoading: isEditLoading }] =
+    useAttributePutMutation();
+  const [attributeDelete, { isLoading: isDeleteLoading }] =
+    useAttributeDeleteMutation();
   const [initialValues, setiInitialValues] = useState<any | null>(null);
 
   const handleEdit = (editData: any) => {
@@ -46,7 +42,7 @@ const AttributeOption = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await attributeOptionDelete({ id }).unwrap();
+      const res = await attributeDelete({ id }).unwrap();
       Swal.fire({
         title: "Good job!",
         text: `${res.message}`,
@@ -225,7 +221,7 @@ const AttributeOption = () => {
     try {
       let res;
       if (Edit) {
-        res = await attributeOptionPut({
+        res = await attributePut({
           data: values,
           id: Edit._id,
         }).unwrap();
@@ -236,7 +232,7 @@ const AttributeOption = () => {
           icon: "success",
         });
       } else {
-        res = await attributeOptionPost(values).unwrap();
+        res = await attributePost(values).unwrap();
         Swal.fire({
           title: "Good job!",
           text: `${res.message}`,
@@ -259,7 +255,7 @@ const AttributeOption = () => {
     <div style={{ padding: 20 }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <Button type="primary" onClick={() => setIsModalOpen(true)}>
-          Add Attribute Option
+          Add Attribute 
         </Button>
 
         <CustomTable
@@ -276,7 +272,7 @@ const AttributeOption = () => {
       </div>
 
       <Modal
-        title={Edit ? "Edit Attribute Option" : "Add Attribute Option"}
+        title={Edit ? "Edit Attribute" : "Add Attribute"}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
@@ -292,4 +288,4 @@ const AttributeOption = () => {
   );
 };
 
-export default AttributeOption;
+export default Attribute;
