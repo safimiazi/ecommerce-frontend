@@ -103,12 +103,12 @@ const AttributeOption = () => {
       ),
     },
     {
-      header: "DESCRIPTION",
+      header: "TYPE",
       Cell: ({ row }: any) => (
         <div>
           <div className="flex flex-col gap-1 text-sm">
             <p>
-              <span className="capitalize">{row.description}</span>
+              <span className="capitalize">{row.type}</span>
             </p>
           </div>
         </div>
@@ -133,17 +133,26 @@ const AttributeOption = () => {
   useEffect(() => {
     if (Edit && Edit !== null) {
       const initialValues = {
-        name: "John Doe",
-        email: "johndoe@example.com",
-        age: 25,
-        gender: "male",
-        type: "color",
-        country: "bd",
-        acceptTerms: true,
+        name: Edit.name,
+        type: Edit.type,
       };
       setiInitialValues(initialValues);
     }
   }, [Edit]);
+
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      form.resetFields(); // ফর্ম রিসেট করে নতুন ফর্ম ফিল্ড খালি করবে
+      setEdit(null); // Edit মোড রিসেট করে দিবে
+      setiInitialValues(null); // initialValues রিসেট হবে
+    }
+  }, [isModalOpen]);
+  
+
+
+
+
 
   //   const fields = [
   //     {
@@ -216,20 +225,43 @@ const AttributeOption = () => {
   ];
 
   const handleSubmit = async (values: any) => {
-    console.log("Form Submitted:", values);
-
-    let res;
-    if (Edit) {
-      res = await attributeOptionPut({
-        data: data,
-        id: Edit._id,
-      }).unwrap();
-    } else {
-      res = await attributeOptionPost(data).unwrap();
+    try {
+      console.log("Form Submitted:", values);
+      
+      let res;
+      if (Edit) {
+        res = await attributeOptionPut({
+          data: values,
+          id: Edit._id,
+        }).unwrap();
+        console.log("result:", res);
+ 
+      } else {
+        res = await attributeOptionPost(values).unwrap();
+        notification.success({
+          message: "Success!",
+          description: "Attribute option added successfully.",
+          placement: "topRight",
+        });
+      }
+  
+      console.log("Form Submitted:", res);
+      setIsModalOpen(false); // সাবমিশন সফল হলে মডাল ক্লোজ করবে
+      form.resetFields(); // ফর্ম রিসেট করবে
+    } catch (error: any) {
+      console.error("Error:", error);
+      notification.error({
+        message: "Error!",
+        description: error?.data?.message || "Something went wrong!",
+        placement: "topRight",
+      });
     }
-
-    console.log("Form Submitted:", res);
   };
+
+
+
+
+  
   return (
     <div style={{ padding: 20 }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

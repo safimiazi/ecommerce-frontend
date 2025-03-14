@@ -3,13 +3,12 @@ import { baseApi } from "../baseApi";
 const AttributeOptionApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     attributeOptionPost: build.mutation({
-      query: (data) => {
-        return {
-          url: "/attributeOption/post_attributeOption",
-          method: "POST",
-          body: data,
-        };
-      },
+      query: (data) => ({
+        url: "/attributeOption/post_attributeOption",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["attributeOption"], // নতুন ডাটা যোগ হলে পুরনো ক্যাশ ইনভ্যালিড হবে
     }),
     attributeOptionPut: build.mutation({
       query: ({ data, id }) => ({
@@ -17,12 +16,14 @@ const AttributeOptionApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["attributeOption"], // আপডেট হলে ক্যাশ রিফ্রেশ হবে
     }),
     attributeOptionDelete: build.mutation({
       query: ({ id }) => ({
         url: `/attributeOption/delete_attributeOption/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["attributeOption"], // ডিলিট হলে ক্যাশ রিফ্রেশ হবে
     }),
     getattributeOptionData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
@@ -30,11 +31,12 @@ const AttributeOptionApi = baseApi.injectEndpoints({
         method: "GET",
         params: {
           limit: pageSize,
-          page: pageIndex ,
-          searchTerm: search ,
-          isDelete
+          page: pageIndex,
+          searchTerm: search,
+          isDelete,
         },
       }),
+      providesTags: ["attributeOption"], // ক্যাশিং এনাবল করবে
     }),
   }),
 
@@ -42,8 +44,8 @@ const AttributeOptionApi = baseApi.injectEndpoints({
 });
 
 export const {
-useAttributeOptionDeleteMutation,
-useAttributeOptionPostMutation,
-useAttributeOptionPutMutation,
-useGetattributeOptionDataQuery
+  useAttributeOptionDeleteMutation,
+  useAttributeOptionPostMutation,
+  useAttributeOptionPutMutation,
+  useGetattributeOptionDataQuery,
 } = AttributeOptionApi;
