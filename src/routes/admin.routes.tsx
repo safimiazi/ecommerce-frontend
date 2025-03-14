@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Category from "../pages/admin/productManagement/category/Category";
 import Products from "../pages/admin/productManagement/products/Products";
+import AttributeOption from "../pages/admin/productManagement/attributeOption/AttributeOption";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -45,9 +46,9 @@ export const adminPaths: IAdminPath[] = [
     element: "ORDERS",
   },
   {
-    name: "Products",
+    name: "Product Management",
     icon: Package,
-    path: "products",
+    path: "product-management",
     element: <Products/>,
     children: [
       {
@@ -60,7 +61,7 @@ export const adminPaths: IAdminPath[] = [
         name: "Attribute Option",
         icon: MessageCircle,
         path: "attribute-option",
-        element: "TICKET_SYSTEM",
+        element: <AttributeOption/>,
       },
       {
         name: "Live Chat",
