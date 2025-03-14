@@ -9,7 +9,12 @@ import CustomTable from "../../../../components/common/CustomTable";
 import ReusableForm from "../../../../components/Reusable/ReusableForm";
 
 import Swal from "sweetalert2";
-import { useAttributeDeleteMutation, useAttributePostMutation, useAttributePutMutation, useGetattributeDataQuery } from "../../../../redux/api/attributeApi/AttributeApi";
+import {
+  useAttributeDeleteMutation,
+  useAttributePostMutation,
+  useAttributePutMutation,
+  useGetattributeDataQuery,
+} from "../../../../redux/api/attributeApi/AttributeApi";
 
 const Attribute = () => {
   const [form] = Form.useForm();
@@ -28,7 +33,7 @@ const Attribute = () => {
   });
 
   const [attributePost, { isLoading: isPostLoading }] =
-  useAttributePostMutation();
+    useAttributePostMutation();
   const [attributePut, { isLoading: isEditLoading }] =
     useAttributePutMutation();
   const [attributeDelete, { isLoading: isDeleteLoading }] =
@@ -46,7 +51,7 @@ const Attribute = () => {
       Swal.fire({
         title: "Good job!",
         text: `${res.message}`,
-        icon: "success"
+        icon: "success",
       });
       setTimeout(() => {
         refetch();
@@ -255,7 +260,7 @@ const Attribute = () => {
     <div style={{ padding: 20 }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <Button type="primary" onClick={() => setIsModalOpen(true)}>
-          Add Attribute 
+          Add Attribute
         </Button>
 
         <CustomTable
