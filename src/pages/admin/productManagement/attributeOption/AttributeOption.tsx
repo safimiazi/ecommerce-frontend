@@ -38,40 +38,6 @@ const AttributeOption = () => {
     useAttributeOptionDeleteMutation();
   const [initialValues, setiInitialValues] = useState<any | null>(null);
 
-  const handleAddOrUpdate = async (values: any) => {
-    try {
-      const data = {
-        name: values.name,
-        description: values.description,
-      };
-
-      let res;
-      if (Edit) {
-        res = await categoryPut({
-          data: data,
-          id: Edit._id,
-        }).unwrap();
-      } else {
-        res = await categoryPost(data).unwrap();
-      }
-      alert(res.message);
-      //   notification.success({
-      //     message: res?.message,
-      //     placement: "topRight",
-      //   });
-
-      refetch();
-      setIsModalOpen(false);
-      form.resetFields();
-      setEdit(null);
-    } catch (error: any) {
-      notification.error({
-        message: error?.message || "Something went wrong!",
-        placement: "topRight",
-      });
-    }
-  };
-
   const handleEdit = (editData: any) => {
     setEdit(editData);
     setIsModalOpen(true);
@@ -79,7 +45,7 @@ const AttributeOption = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await categoryDelete({ id }).unwrap();
+      const res = await attributeOptionDelete({ id }).unwrap();
       notification.success({
         message: res?.message,
         placement: "topRight",
@@ -249,18 +215,20 @@ const AttributeOption = () => {
     },
   ];
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = async (values: any) => {
     console.log("Form Submitted:", values);
 
     let res;
     if (Edit) {
-      res = await categoryPut({
+      res = await attributeOptionPut({
         data: data,
         id: Edit._id,
       }).unwrap();
     } else {
-      res = await categoryPost(data).unwrap();
+      res = await attributeOptionPost(data).unwrap();
     }
+
+    console.log("Form Submitted:", res);
   };
   return (
     <div style={{ padding: 20 }}>
