@@ -23,6 +23,7 @@ import {
 import Category from "../pages/admin/productManagement/category/Category";
 import Products from "../pages/admin/productManagement/products/Products";
 import AttributeOption from "../pages/admin/productManagement/attributeOption/AttributeOption";
+import Attribute from "../pages/admin/productManagement/attribute/Attribute";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -62,6 +63,12 @@ export const adminPaths: IAdminPath[] = [
         icon: MessageCircle,
         path: "attribute-option",
         element: <AttributeOption/>,
+      },
+      {
+        name: "Attribute",
+        icon: MessageCircle,
+        path: "attribute",
+        element: <Attribute/>,
       },
       {
         name: "Live Chat",

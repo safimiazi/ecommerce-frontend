@@ -55,6 +55,7 @@ const ReusableForm = ({ fields,initialValues, form, onSubmit }: any) => {
                 rules={field.rules}
               >
                 <Select
+                mode={field.mode}
                   options={field.options}
                   placeholder={field.placeholder}
                 />

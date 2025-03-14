@@ -15,6 +15,7 @@ import {
   useAttributePutMutation,
   useGetattributeDataQuery,
 } from "../../../../redux/api/attributeApi/AttributeApi";
+import { useGetattributeOptionDataQuery } from "../../../../redux/api/attributeOptionApi/AttributeOptionApi";
 
 const Attribute = () => {
   const [form] = Form.useForm();
@@ -28,6 +29,10 @@ const Attribute = () => {
   const { data: data, refetch } = useGetattributeDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
+    isDelete: false,
+    search: globalFilter,
+  });
+  const { data: attributeOption } = useGetattributeOptionDataQuery({
     isDelete: false,
     search: globalFilter,
   });
@@ -107,13 +112,18 @@ const Attribute = () => {
       ),
     },
     {
-      header: "TYPE",
+      header: "ATTRIBUTE OPTIONS",
       Cell: ({ row }: any) => (
         <div>
-          <div className="flex flex-col gap-1 text-sm">
-            <p>
-              <span className="capitalize">{row.type}</span>
-            </p>
+          <div className="flex flex-wrap gap-1 text-sm">
+            {row.attributeOption.map((item: any) => (
+              <span
+                key={item._id}
+                className="capitalize bg-gray-200 px-2 py-1 rounded"
+              >
+                {item.name}
+              </span>
+            ))}
           </div>
         </div>
       ),
@@ -184,23 +194,15 @@ const Attribute = () => {
   //         { label: "Female", value: "female" },
   //       ],
   //     },
-  //     {
-  //       name: "country",
-  //       label: "Country",
-  //       type: "select",
-  //       placeholder: "Select your country",
-  //       rules: [{ required: true, message: "Country is required!" }],
-  //       options: [
-  //         { label: "Bangladesh", value: "bd" },
-  //         { label: "India", value: "in" },
-  //       ],
-  //     },
+
   //     {
   //       name: "acceptTerms",
   //       label: "Accept Terms & Conditions",
   //       type: "checkbox",
   //     },
   //   ];
+
+  console.log("attributeOption", attributeOption);
 
   const fields = [
     {
@@ -211,14 +213,15 @@ const Attribute = () => {
       rules: [{ required: true, message: "Name is required!" }],
     },
     {
-      name: "type",
-      label: "Type",
-
-      type: "radio",
-      options: [
-        { label: "Color", value: "color" },
-        { label: "Other", value: "other" },
-      ],
+      name: "attributeOption",
+      label: "Attribute Option",
+      type: "select",
+      mode: "multiple",
+      placeholder: "Select your attribute option",
+      rules: [{ required: true, message: "Attribute option is required!" }],
+      options: attributeOption?.data?.result.map((item: any) => {
+        return { label: item.name, value: item._id };
+      }),
     },
   ];
 

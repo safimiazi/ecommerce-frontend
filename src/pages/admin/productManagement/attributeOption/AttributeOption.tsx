@@ -248,8 +248,8 @@ const AttributeOption = () => {
       form.resetFields(); // ফর্ম রিসেট করবে
     } catch (error: any) {
       Swal.fire({
-        title: "Good job!",
-        text: `${error.message}`,
+        title: "Error!",
+        text: `${error.data.message}`,
         icon: "error",
       });
     }
