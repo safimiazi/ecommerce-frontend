@@ -144,7 +144,7 @@ const Attribute = () => {
       ),
     },
   ];
-  
+
   useEffect(() => {
     if (Edit && Edit !== null) {
       const initialValues = {
@@ -203,7 +203,6 @@ const Attribute = () => {
   //     },
   //   ];
 
-  console.log("attributeOption", attributeOption);
 
   const fields = [
     {
@@ -248,13 +247,12 @@ const Attribute = () => {
           icon: "success",
         });
       }
-
       setIsModalOpen(false); // সাবমিশন সফল হলে মডাল ক্লোজ করবে
       form.resetFields(); // ফর্ম রিসেট করবে
     } catch (error: any) {
       Swal.fire({
-        title: "Good job!",
-        text: `${error.message}`,
+        title: "Error!",
+        text: `${error.data.message}`,
         icon: "error",
       });
     }
