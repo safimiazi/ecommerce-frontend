@@ -18,6 +18,10 @@ import {
 
 const Brand = () => {
   const [form] = Form.useForm();
+  const [initialValues, setiInitialValues] = useState<any | null>(null);
+
+  const [fileList, setFileList] = useState<any[]>(initialValues?.images || []);
+
   const [Edit, setEdit] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pagination, setPagination] = useState({
@@ -31,12 +35,13 @@ const Brand = () => {
     isDelete: false,
     search: globalFilter,
   });
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(true);
 
   const [BrandPost, { isLoading: isPostLoading }] = useBrandPostMutation();
   const [BrandPut, { isLoading: isEditLoading }] = useBrandPutMutation();
   const [BrandDelete, { isLoading: isDeleteLoading }] =
     useBrandDeleteMutation();
-  const [initialValues, setiInitialValues] = useState<any | null>(null);
 
   const handleEdit = (editData: any) => {
     setEdit(editData);
@@ -106,25 +111,29 @@ const Brand = () => {
     },
     {
       header: "FEATURES",
-      cell: ({ row }: any) => (
-        <div className="flex flex-col gap-1 text-sm">
-          <span
-            className={`px-3 py-1 rounded text-white ${
-              row.isFeatured ? "bg-green-500" : "bg-red-500"
-            }`}
-          >
-            {row.isFeatured ? "Featured" : "Not Featured"}
-          </span>
+      Cell: ({ row }: any) => (
+        <div>
+          <div className="flex flex-col gap-1 text-sm">
+            <p>
+              <span
+                className={`px-3 py-1 rounded text-white ${
+                  row.isFeatured === "true" ? "bg-green-500" : "bg-red-500"
+                }`}
+              >
+                {" "}
+                {row.isFeatured === "true" ? "Featured" : "Not Featured"}
+              </span>
+            </p>
+          </div>
         </div>
       ),
     },
+
     {
       header: "IMAGES",
       Cell: ({ row }: any) => (
         <div className="flex items-center gap-1">
-          {row?.images?.map((image: string) => (
-            <img key={image} src={image} width={80} height={80} />
-          ))}
+          <img src={row.image} width={80} height={80} />
         </div>
       ),
     },
@@ -149,8 +158,9 @@ const Brand = () => {
     if (Edit && Edit !== null) {
       const initialValues = {
         name: Edit.name,
-        BrandOption: Edit.BrandOption.map((item: any) => item._id),
+        isFeatured: Edit.isFeatured === "true" ? true : false,
       };
+      setPreviewImage(Edit.image)
       setiInitialValues(initialValues);
     }
   }, [Edit]);
@@ -160,8 +170,18 @@ const Brand = () => {
       form.resetFields();
       setEdit(null);
       setiInitialValues(null);
+      setFileList([]);
+      setPreviewImage("")
     }
   }, [isModalOpen]);
+
+
+  useEffect(() => {
+ if(fileList.length > 0 && Edit) {
+     
+    setPreviewImage("")
+ }
+  },[fileList])
 
   const fields = [
     {
@@ -175,7 +195,6 @@ const Brand = () => {
       name: "isFeatured",
       label: " Is Featured In Homepage",
       type: "checkbox",
-      rules: [{ required: true, message: "Please check this" }],
     },
     {
       name: "images",
@@ -187,8 +206,6 @@ const Brand = () => {
   ];
 
   const handleSubmit = async (values: any) => {
-    console.log(values)
-    console.log(values.images[0])
     try {
       const formData = new FormData();
 
@@ -224,7 +241,7 @@ const Brand = () => {
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
-        text: `${error.data.message}`,
+        text: `${error.data?.errorSource[0]?.message || error?.data?.message}`,
         icon: "error",
       });
     }
@@ -261,6 +278,15 @@ const Brand = () => {
           form={form}
           initialValues={initialValues}
           onSubmit={handleSubmit}
+          fileList={fileList}
+          setFileList={setFileList}
+          setPreviewOpen={setPreviewOpen}
+          previewImage={previewImage}
+          previewOpen={previewOpen}
+          setPreviewImage={setPreviewImage}
+          
+
+
         />
       </Modal>
     </div>
