@@ -27,7 +27,7 @@ const brandApi = baseApi.injectEndpoints({
     }),
     getbrandData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
-        url: "/brand/get_brand",
+        url: "/brand/get_brands",
         method: "GET",
         params: {
           limit: pageSize,

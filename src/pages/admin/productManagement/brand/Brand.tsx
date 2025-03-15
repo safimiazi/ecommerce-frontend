@@ -105,19 +105,26 @@ const Brand = () => {
       ),
     },
     {
-      header: "Brand OPTIONS",
+      header: "FEATURES",
+      cell: ({ row }: any) => (
+        <div className="flex flex-col gap-1 text-sm">
+          <span
+            className={`px-3 py-1 rounded text-white ${
+              row.isFeatured ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {row.isFeatured ? "Featured" : "Not Featured"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      header: "IMAGES",
       Cell: ({ row }: any) => (
-        <div>
-          <div className="flex flex-wrap gap-1 text-sm">
-            {row.BrandOption.map((item: any) => (
-              <span
-                key={item._id}
-                className="capitalize bg-gray-200 px-2 py-1 rounded"
-              >
-                {item.name}
-              </span>
-            ))}
-          </div>
+        <div className="flex items-center gap-1">
+          {row?.images?.map((image: string) => (
+            <img key={image} src={image} width={80} height={80} />
+          ))}
         </div>
       ),
     },
@@ -156,41 +163,6 @@ const Brand = () => {
     }
   }, [isModalOpen]);
 
-  //   const fields = [
-  //     {
-  //       name: "name",
-  //       label: "Full Name",
-  //       type: "text",
-  //       placeholder: "Enter your name",
-  //       rules: [{ required: true, message: "Name is required!" }],
-  //     },
-  //     {
-  //       name: "email",
-  //       label: "Email Address",
-  //       type: "text",
-  //       placeholder: "Enter your email",
-  //       rules: [
-  //         { required: true, type: "email", message: "Enter a valid email!" },
-  //       ],
-  //     },
-  //     {
-  //       name: "age",
-  //       label: "Age",
-  //       type: "number",
-  //       placeholder: "Enter your age",
-  //     },
-  //     {
-  //       name: "gender",
-  //       label: "Gender",
-  //       type: "radio",
-  //       options: [
-  //         { label: "Male", value: "male" },
-  //         { label: "Female", value: "female" },
-  //       ],
-  //     },
-
-  //   ];
-
   const fields = [
     {
       name: "name",
@@ -204,38 +176,33 @@ const Brand = () => {
       label: " Is Featured In Homepage",
       type: "checkbox",
       rules: [{ required: true, message: "Please check this" }],
-
     },
     {
       name: "images",
       label: "Upload Images",
       type: "image", // ✅ Now supports images
       rules: [{ required: true, message: "Please upload product images" }],
-      maxCount: 5, // Optional: Max number of images allowed
+      maxCount: 1, // Optional: Max number of images allowed
     },
   ];
 
   const handleSubmit = async (values: any) => {
+    console.log(values)
+    console.log(values.images[0])
     try {
+      const formData = new FormData();
 
-        const formData = new FormData();
+      // Append form fields
+      formData.append("name", values.name);
+      formData.append("isFeatured", values.isFeatured);
 
-        // Append form fields
-        formData.append("name", values.name);
-      
-  
-        // Append images
-        values.images.forEach((file : any) => {
-          formData.append("images", file.originFileObj);
-        });
-
-
-
+      // Append images
+      formData.append("image", values.images[0]);
 
       let res;
       if (Edit) {
         res = await BrandPut({
-          data: values,
+          data: formData,
           id: Edit._id,
         }).unwrap();
 
@@ -245,7 +212,7 @@ const Brand = () => {
           icon: "success",
         });
       } else {
-        res = await BrandPost(values).unwrap();
+        res = await BrandPost(formData).unwrap();
         Swal.fire({
           title: "Good job!",
           text: `${res.message}`,
