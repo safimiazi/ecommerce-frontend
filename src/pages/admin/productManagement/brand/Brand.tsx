@@ -217,6 +217,21 @@ const Brand = () => {
 
   const handleSubmit = async (values: any) => {
     try {
+
+        const formData = new FormData();
+
+        // Append form fields
+        formData.append("name", values.name);
+      
+  
+        // Append images
+        values.images.forEach((file : any) => {
+          formData.append("images", file.originFileObj);
+        });
+
+
+
+
       let res;
       if (Edit) {
         res = await BrandPut({
