@@ -24,6 +24,7 @@ import Category from "../pages/admin/productManagement/category/Category";
 import Products from "../pages/admin/productManagement/products/Products";
 import AttributeOption from "../pages/admin/productManagement/attributeOption/AttributeOption";
 import Attribute from "../pages/admin/productManagement/attribute/Attribute";
+import Brand from "../pages/admin/productManagement/brand/Brand";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -53,10 +54,23 @@ export const adminPaths: IAdminPath[] = [
     element: <Products/>,
     children: [
       {
+        name: "Brand",
+        icon: UserCheck,
+        path: "brand",
+        element: <Brand/>,
+      },
+      {
         name: "Category",
         icon: UserCheck,
         path: "category",
         element: <Category/>,
+      },
+      {
+        name: "Product",
+        icon: MessageCircle,
+        path: "product",
+        element: <Products/>
+
       },
       {
         name: "Attribute Option",

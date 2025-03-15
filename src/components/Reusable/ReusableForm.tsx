@@ -1,20 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, Input, Select, Radio, Checkbox, Button } from "antd";
-import { useEffect } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Radio, Checkbox, Button, Upload } from "antd";
+import { useEffect, useState } from "react";
 
 const ReusableForm = ({ fields,initialValues, form, onSubmit }: any) => {
+  const [fileList, setFileList] = useState<any[]>(initialValues?.images || []);
 
     // Set existing values when initialValues change
     useEffect(() => {
         if(initialValues !== null) {
             form.setFieldsValue(initialValues);
-
+  
+      setFileList(initialValues.images || []);
+    
         }
       }, [initialValues, form]);
 
   const handleFinish = (values: any) => {
+    values.images = fileList.map((file) => file.originFileObj || file);
+
     onSubmit(values);
   };
+
+
+  const handleUploadChange = ({ fileList }: any) => {
+    setFileList(fileList);
+    form.setFieldsValue({ images: fileList });
+  };
+
 
   return (
     <Form
@@ -77,11 +90,34 @@ const ReusableForm = ({ fields,initialValues, form, onSubmit }: any) => {
               <Form.Item
                 key={field.name}
                 name={field.name}
+                rules={field.rules}
+
                 valuePropName="checked"
               >
                 <Checkbox>{field.label}</Checkbox>
               </Form.Item>
             );
+
+            case "image": // ✅ Added dynamic image upload field
+            return (
+              <Form.Item key={field.name} label={field.label} name={field.name} rules={field.rules}>
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  beforeUpload={() => false} // Prevent automatic upload
+                  onChange={handleUploadChange}
+                  multiple
+                >
+                  {fileList.length >= field.maxCount ? null : (
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+            );
+
           default:
             return null;
         }
