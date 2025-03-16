@@ -23,7 +23,15 @@ const brandApi = baseApi.injectEndpoints({
         url: `/brand/delete_brand/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["brand"], // ডিলিট হলে ক্যাশ রিফ্রেশ হবে
+      invalidatesTags: ["brand"], // আপডেট হলে ক্যাশ রিফ্রেশ হবে
+    }),
+    bulkDelete: build.mutation({
+      query: ( ids ) => ({
+        url: `/brand/delete_bulk`,
+        method: "DELETE",
+        body: { ids },
+      }),
+      invalidatesTags: ["brand"], // আপডেট হলে ক্যাশ রিফ্রেশ হবে
     }),
     getbrandData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
@@ -48,4 +56,5 @@ export const {
   useBrandPostMutation,
   useBrandPutMutation,
   useGetbrandDataQuery,
+  useBulkDeleteMutation,
 } = brandApi;

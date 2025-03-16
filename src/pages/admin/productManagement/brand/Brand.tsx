@@ -14,6 +14,7 @@ import {
   useBrandDeleteMutation,
   useBrandPostMutation,
   useBrandPutMutation,
+  useBulkDeleteMutation,
   useGetbrandDataQuery,
 } from "../../../../redux/api/brandApi/BrandApi";
 
@@ -37,12 +38,25 @@ const Brand = () => {
     search: globalFilter,
   });
   const [previewImage, setPreviewImage] = useState('');
-  const [previewOpen, setPreviewOpen] = useState(true);
 
   const [BrandPost, { isLoading: isPostLoading }] = useBrandPostMutation();
   const [BrandPut, { isLoading: isEditLoading }] = useBrandPutMutation();
   const [BrandDelete, { isLoading: isDeleteLoading }] =
     useBrandDeleteMutation();
+  const [bulkDelete] = useBulkDeleteMutation()
+    useBrandDeleteMutation();
+    const [loading, setLoading] = useState<boolean>(false)
+
+useEffect(()=> {
+  if(Edit === null){
+    setLoading(isPostLoading)
+  }else if(Edit !== null){
+    setLoading(isEditLoading)
+  }
+
+},[isEditLoading, isPostLoading])
+
+
 
   const handleEdit = (editData: any) => {
     setEdit(editData);
@@ -57,9 +71,7 @@ const Brand = () => {
         text: `${res.message}`,
         icon: "success",
       });
-      setTimeout(() => {
-        refetch();
-      }, 500);
+    
     } catch (error: any) {
       Swal.fire({
         title: "Good job!",
@@ -190,7 +202,7 @@ const Brand = () => {
       label: "Name",
       type: "text",
       placeholder: "Enter Brand Option Name",
-      rules: [{ required: true, message: "Name is required!" }],
+      rules: [{ required: Edit ? false : true, message: "Name is required!" }],
     },
     {
       name: "isFeatured",
@@ -201,7 +213,7 @@ const Brand = () => {
       name: "images",
       label: "Upload Images",
       type: "image", // ✅ Now supports images
-      rules: [{ required: true, message: "Please upload product images" }],
+      rules: [{ required: Edit ? false : true, message: "Please upload product images" }],
       maxCount: 1, // Optional: Max number of images allowed
     },
   ];
@@ -247,6 +259,26 @@ const Brand = () => {
       });
     }
   };
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  const deleteMultiple = async (ids: string[]) => {
+    try {
+      const res = await bulkDelete(ids ).unwrap();
+      Swal.fire({
+        title: "Good job!",
+        text: `${res.message}`,
+        icon: "success",
+      });
+      setSelectedRows([])
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error!",
+        text: `${error.message}`,
+        icon: "error",
+      });
+    }
+  };
+
 
   return (
     <div style={{ padding: 20 }}>
@@ -262,6 +294,12 @@ const Brand = () => {
           onPaginationChange={(pageIndex, pageSize) =>
             setPagination({ pageIndex, pageSize })
           }
+          onBulkDelete={(selectedIds) => {
+            deleteMultiple(selectedIds);
+          }}
+          enableBulkDelete={true}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
           globalFilter={globalFilter}
           onFilterChange={setGlobalFilter}
           totalRecordCount={data?.data?.meta?.total || 0}
@@ -281,10 +319,8 @@ const Brand = () => {
           onSubmit={handleSubmit}
           fileList={fileList}
           setFileList={setFileList}
-          setPreviewOpen={setPreviewOpen}
           previewImage={previewImage}
-          previewOpen={previewOpen}
-          setPreviewImage={setPreviewImage}
+          loading={loading}
           
 
 

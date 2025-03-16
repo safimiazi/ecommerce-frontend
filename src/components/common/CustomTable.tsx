@@ -10,6 +10,11 @@ const CustomTable = ({
   globalFilter,
   onFilterChange,
   totalRecordCount,
+  onBulkDelete,
+  selectedRows,
+  setSelectedRows,
+  enableBulkDelete = false, // ✅ New Prop to enable/disable bulk delete
+
 }: {
   columns: any[];
   data: any[];
@@ -18,8 +23,45 @@ const CustomTable = ({
   globalFilter: string;
   onFilterChange: (value: string) => void;
   totalRecordCount: number;
+  onBulkDelete: (selectedIds: string[]) => void;
+  selectedRows: string[];
+  setSelectedRows: any;
+  enableBulkDelete?: boolean; // ✅ New Prop to enable/disable bulk delete
 }) => {
-  const  isDarkMode  = false;
+  const isDarkMode = false;
+
+
+
+
+
+  // Handle selecting/deselecting rows
+  const handleSelectRow = (id: string) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((item) => item!== id));
+    } else {
+      setSelectedRows([...selectedRows, id]);
+    }
+
+  };
+    // Handle bulk delete
+    const handleBulkDelete = () => {
+      if ( enableBulkDelete && selectedRows.length > 0) {
+        onBulkDelete(selectedRows);
+        setSelectedRows([]); // Reset selection after deletion
+      }
+    };
+
+
+    // Select/Deselect All
+    const handleSelectAll = () => {
+      if (!enableBulkDelete) return; // ✅ Prevent selection if bulk delete is disabled
+
+      if (selectedRows.length === data.length) {
+        setSelectedRows([]);
+      } else {
+        setSelectedRows(data.map((row) => row._id));
+      }
+    };
 
   const handlePageChange = (newPageIndex: number) => {
     onPaginationChange(newPageIndex, pagination.pageSize);
@@ -30,38 +72,78 @@ const CustomTable = ({
   };
 
   return (
-    <div className={`py-4 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
-      {/* Global Filter */}
-      <div className="mb-4 flex justify-between items-center">
-        <input
-          type="text"
-          value={globalFilter}
-          onChange={(e) => onFilterChange(e.target.value)}
-          placeholder="Search..."
-          className={`p-2 border rounded-xl w-52 ${
-            isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 border-gray-300"
-          }`}
-        />
-        <div className="text-sm">
-          Showing {pagination.pageIndex * pagination.pageSize + 1}-
-          {Math.min(
-            (pagination.pageIndex + 1) * pagination.pageSize,
-            totalRecordCount
-          )}{" "}
-          of {totalRecordCount}
-        </div>
-      </div>
+    <div
+      className={`py-4 ${
+        isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+      }`}
+    >
+  {/* Global Filter */}
+<div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+  {/* Search Input */}
+  <input
+    type="text"
+    value={globalFilter}
+    onChange={(e) => onFilterChange(e.target.value)}
+    placeholder="Search..."
+    className={`p-3 border rounded-lg w-full sm:w-64 focus:outline-none focus:ring-2 transition-all ${
+      isDarkMode
+        ? "bg-gray-800 text-white border-gray-700 focus:ring-blue-500"
+        : "bg-gray-50 border-gray-300 focus:ring-blue-400"
+    }`}
+  />
+
+  {/* Selected Rows Count */}
+  { enableBulkDelete && selectedRows.length > 0 && (
+    <div
+      className={`px-4 cursor-pointer py-2 rounded-full text-sm font-semibold ${
+        isDarkMode
+          ? "bg-blue-600 text-white"
+          : "bg-blue-100 text-blue-800"
+      }`}
+      onClick={handleBulkDelete}
+    >
+      {selectedRows.length} delete
+    </div>
+  )}
+
+  {/* Pagination Info */}
+  <div
+    className={`text-sm ${
+      isDarkMode ? "text-gray-300" : "text-gray-600"
+    }`}
+  >
+    Showing{" "}
+    <span className="font-semibold">
+      {pagination.pageIndex * pagination.pageSize + 1}
+    </span>
+    {" - "}
+    <span className="font-semibold">
+      {Math.min(
+        (pagination.pageIndex + 1) * pagination.pageSize,
+        totalRecordCount
+      )}
+    </span>{" "}
+    of <span className="font-semibold">{totalRecordCount}</span>
+  </div>
+</div>
 
       {/* Table */}
       <div className="overflow-x-auto  rounded-xl  border border-gray-200">
         <table className="w-full ">
           <thead>
             <tr>
+            {enableBulkDelete && (
+                <th className={`border p-2 text-left ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300"}`}>
+                  <input type="checkbox" onChange={handleSelectAll} checked={selectedRows?.length > 0 && selectedRows?.length === data?.length} />
+                </th>
+              )}
               {columns.map((col) => (
                 <th
                   key={col.accessorKey || col.header}
                   className={`border p-2 text-left ${
-                    isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300"
+                    isDarkMode
+                      ? "bg-gray-800 border-gray-700"
+                      : "bg-gray-100 border-gray-300"
                   }`}
                 >
                   {col.header}
@@ -84,13 +166,22 @@ const CustomTable = ({
                   //     : "bg-white"
                   // }`}
                 >
+               {enableBulkDelete && (
+                    <td className={`border p-2 text-left ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300"}`}>
+                      <input type="checkbox" checked={selectedRows.includes(row._id)} onChange={() => handleSelectRow(row._id)} />
+                    </td>
+                  )}
                   {columns.map((col) => (
                     <td
                       key={col.accessorKey || col.header}
                       className={`border p-2 ${
                         isDarkMode ? "border-gray-700" : "border-gray-300"
                       }`}
-                      style={{maxWidth: "250px",  overflowX: "auto", minWidth: '150px'}}
+                      style={{
+                        maxWidth: "250px",
+                        overflowX: "auto",
+                        minWidth: "150px",
+                      }}
                     >
                       {col.Cell ? col.Cell({ row }) : row[col.accessorKey]}
                     </td>
@@ -119,7 +210,9 @@ const CustomTable = ({
           value={pagination.pageSize}
           onChange={handlePageSizeChange}
           className={`p-2 border rounded ${
-            isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 border-gray-300"
+            isDarkMode
+              ? "bg-gray-800 text-white border-gray-700"
+              : "bg-gray-100 border-gray-300"
           }`}
         >
           <option value={5}>5</option>
@@ -137,7 +230,10 @@ const CustomTable = ({
             Previous
           </button>
           <button
-            disabled={(pagination.pageIndex + 1) * pagination.pageSize >= totalRecordCount}
+            disabled={
+              (pagination.pageIndex + 1) * pagination.pageSize >=
+              totalRecordCount
+            }
             onClick={() => handlePageChange(pagination.pageIndex + 1)}
             className={`px-4 py-2 border rounded disabled:opacity-50 ${
               isDarkMode ? "border-gray-700" : "border-gray-300"

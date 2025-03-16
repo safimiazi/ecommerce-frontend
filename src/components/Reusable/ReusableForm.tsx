@@ -19,10 +19,8 @@ const ReusableForm = ({
   onSubmit,
   fileList,
   setFileList,
-  setPreviewOpen,
   previewImage,
-  previewOpen,
-  setPreviewImage,
+  loading,
 }: any) => {
   // Set existing values when initialValues change
   useEffect(() => {
@@ -132,10 +130,14 @@ const ReusableForm = ({
                     )}
                   </Upload>
                   {previewImage && (
-        <div className="mt-2">
-          <Image src={previewImage} alt="Preview" style={{ maxWidth: "100px", borderRadius: "8px" }} />
-        </div>
-      )}
+                    <div className="mt-2">
+                      <Image
+                        src={previewImage}
+                        alt="Preview"
+                        style={{ maxWidth: "100px", borderRadius: "8px" }}
+                      />
+                    </div>
+                  )}
                 </div>
               </Form.Item>
             );
@@ -146,7 +148,7 @@ const ReusableForm = ({
       })}
 
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button loading={loading} type="primary" htmlType="submit">
           {initialValues ? "Edit" : "Submit"}
         </Button>
       </Form.Item>
