@@ -24,7 +24,7 @@ const CustomTable = ({
   totalRecordCount: number;
   onBulkDelete: (selectedIds: string[]) => void;
   selectedRows: string[];
-  setSelectedRows: any;
+  setSelectedRows?: any;
   enableBulkDelete?: boolean; // ✅ New Prop to enable/disable bulk delete
 }) => {
   const isDarkMode = false;

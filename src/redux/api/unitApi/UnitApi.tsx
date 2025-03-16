@@ -3,6 +3,8 @@ import { baseApi } from "../baseApi";
 const unitApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     create: build.mutation({
+      invalidatesTags: ["unit"], // নতুন ডাটা যোগ হলে পুরনো ক্যাশ ইনভ্যালিড হবে
+
       query: (data) => {
         return {
           url: "/unit/create",
@@ -12,6 +14,8 @@ const unitApi = baseApi.injectEndpoints({
       },
     }),
     update: build.mutation({
+      invalidatesTags: ["unit"], // নতুন ডাটা যোগ হলে পুরনো ক্যাশ ইনভ্যালিড হবে
+
       query: ({ data, id }) => ({
         url: `/unit/${id}`,
         method: "PUT",
@@ -19,19 +23,28 @@ const unitApi = baseApi.injectEndpoints({
       }),
     }),
     softDelete: build.mutation({
+      invalidatesTags: ["unit"], // নতুন ডাটা যোগ হলে পুরনো ক্যাশ ইনভ্যালিড হবে
+
       query: ({ id }) => ({
         url: `/unit/${id}`,
         method: "DELETE",
       }),
     }),
-    bulkDelete: build.mutation({
-      query: (ids) => ({
-        url: `/unit/bulk`,
-        method: "DELETE",
-        body: { ids },
-      }),
+    bulkSoftDelete: build.mutation({
+      query: (ids) => {
+        console.log("Sending bulk delete request with:", ids);
+        return {
+          url: "/unit/bulk-delete",
+          method: "DELETE",
+          body: { ids }, // Ensure this is an array of valid ObjectIds
+        };
+      },
+      invalidatesTags: ["unit"],
     }),
+
     getAll: build.query({
+      providesTags: ["unit"], // নতুন ডাটা যোগ হলে পুরনো ক্যাশ ইনভ্যালিড হবে
+
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
         url: "/unit",
         method: "GET",
@@ -52,6 +65,6 @@ export const {
   useCreateMutation,
   useUpdateMutation,
   useSoftDeleteMutation,
-  useBulkDeleteMutation,
+  useBulkSoftDeleteMutation,
   useGetAllQuery,
 } = unitApi;

@@ -257,7 +257,11 @@ const Attribute = () => {
       });
     }
   };
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const deleteMultiple = async (ids: string[]) => {
 
+ 
+  };
   return (
     <div style={{ padding: 20 }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,6 +276,11 @@ const Attribute = () => {
           onPaginationChange={(pageIndex, pageSize) =>
             setPagination({ pageIndex, pageSize })
           }
+          onBulkDelete={(selectedIds) => {
+            deleteMultiple(selectedIds);
+          }}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
           globalFilter={globalFilter}
           onFilterChange={setGlobalFilter}
           totalRecordCount={data?.data?.meta?.total || 0}

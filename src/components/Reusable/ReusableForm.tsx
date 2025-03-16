@@ -26,14 +26,17 @@ const ReusableForm = ({
   useEffect(() => {
     if (initialValues !== null) {
       form.setFieldsValue(initialValues);
+     if(initialValues?.images != null) {
 
-      setFileList(initialValues.images || []);
+       setFileList(initialValues?.images || []);
+     }
     }
   }, [initialValues, form]);
 
   const handleFinish = (values: any) => {
-    values.images = fileList.map((file: any) => file.originFileObj || file);
-
+    if (fileList && fileList.length > 0) {
+      values.images = fileList?.map((file: any) => file?.originFileObj || file);
+    }
     onSubmit(values);
   };
 

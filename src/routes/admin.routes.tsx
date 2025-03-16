@@ -25,6 +25,7 @@ import Products from "../pages/admin/productManagement/products/Products";
 import AttributeOption from "../pages/admin/productManagement/attributeOption/AttributeOption";
 import Attribute from "../pages/admin/productManagement/attribute/Attribute";
 import Brand from "../pages/admin/productManagement/brand/Brand";
+import Unit from "../pages/admin/productManagement/unit/Unit";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -64,6 +65,12 @@ export const adminPaths: IAdminPath[] = [
         icon: UserCheck,
         path: "category",
         element: <Category/>,
+      },
+      {
+        name: "Unit",
+        icon: UserCheck,
+        path: "unit",
+        element: <Unit/>,
       },
       {
         name: "Product",

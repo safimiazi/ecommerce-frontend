@@ -10,8 +10,8 @@ import Swal from "sweetalert2";
 import {
   useCreateMutation,
   useUpdateMutation,
-  useBulkDeleteMutation,
   useGetAllQuery,
+  useBulkSoftDeleteMutation,
   useSoftDeleteMutation,
 } from "../../../../redux/api/unitApi/UnitApi";
 
@@ -19,7 +19,6 @@ const Unit = () => {
   const [form] = Form.useForm();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [initialValues, setiInitialValues] = useState<any | null>(null);
-  const [fileList, setFileList] = useState<any[]>(initialValues?.images || []);
   const [Edit, setEdit] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pagination, setPagination] = useState({
@@ -33,11 +32,10 @@ const Unit = () => {
     isDelete: false,
     search: globalFilter,
   });
-  const [previewImage, setPreviewImage] = useState("");
   const [create, { isLoading: isPostLoading }] = useCreateMutation();
   const [update, { isLoading: isEditLoading }] = useUpdateMutation();
   const [softDelete] = useSoftDeleteMutation();
-  const [bulkDelete] = useBulkDeleteMutation();
+  const [bulkSoftDelete] = useBulkSoftDeleteMutation();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -133,7 +131,6 @@ const Unit = () => {
       const initialValues = {
         name: Edit.name,
       };
-      setPreviewImage(Edit.image);
       setiInitialValues(initialValues);
     }
   }, [Edit]);
@@ -145,8 +142,6 @@ const Unit = () => {
       setiInitialValues(null);
     }
   }, [isModalOpen]);
-
-
 
   const fields = [
     {
@@ -160,19 +155,10 @@ const Unit = () => {
 
   const handleSubmit = async (values: any) => {
     try {
-      const formData = new FormData();
-
-      // Append form fields
-      formData.append("name", values.name);
-      formData.append("isFeatured", values.isFeatured);
-
-      // Append images
-      formData.append("image", values.images[0]);
-
       let res;
       if (Edit) {
         res = await update({
-          data: formData,
+          data: values,
           id: Edit._id,
         }).unwrap();
 
@@ -182,7 +168,7 @@ const Unit = () => {
           icon: "success",
         });
       } else {
-        res = await create(formData).unwrap();
+        res = await create(values).unwrap();
         Swal.fire({
           title: "Good job!",
           text: `${res.message}`,
@@ -201,8 +187,9 @@ const Unit = () => {
   };
 
   const deleteMultiple = async (ids: string[]) => {
+
     try {
-      const res = await bulkDelete(ids).unwrap();
+      const res = await bulkSoftDelete(ids).unwrap();
       Swal.fire({
         title: "Good job!",
         text: `${res.message}`,
