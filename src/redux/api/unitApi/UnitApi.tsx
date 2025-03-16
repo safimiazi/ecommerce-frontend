@@ -18,7 +18,7 @@ const unitApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
-    delete: build.mutation({
+    softDelete: build.mutation({
       query: ({ id }) => ({
         url: `/unit/${id}`,
         method: "DELETE",
@@ -51,7 +51,7 @@ const unitApi = baseApi.injectEndpoints({
 export const {
   useCreateMutation,
   useUpdateMutation,
-  useDeleteMutation,
+  useSoftDeleteMutation,
   useBulkDeleteMutation,
   useGetAllQuery,
 } = unitApi;
