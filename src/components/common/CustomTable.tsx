@@ -14,7 +14,6 @@ const CustomTable = ({
   selectedRows,
   setSelectedRows,
   enableBulkDelete = false, // ✅ New Prop to enable/disable bulk delete
-
 }: {
   columns: any[];
   data: any[];
@@ -30,38 +29,32 @@ const CustomTable = ({
 }) => {
   const isDarkMode = false;
 
-
-
-
-
   // Handle selecting/deselecting rows
   const handleSelectRow = (id: string) => {
     if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows.filter((item) => item!== id));
+      setSelectedRows(selectedRows.filter((item) => item !== id));
     } else {
       setSelectedRows([...selectedRows, id]);
     }
-
   };
-    // Handle bulk delete
-    const handleBulkDelete = () => {
-      if ( enableBulkDelete && selectedRows.length > 0) {
-        onBulkDelete(selectedRows);
-        setSelectedRows([]); // Reset selection after deletion
-      }
-    };
+  // Handle bulk delete
+  const handleBulkDelete = () => {
+    if (enableBulkDelete && selectedRows.length > 0) {
+      onBulkDelete(selectedRows);
+      setSelectedRows([]); // Reset selection after deletion
+    }
+  };
 
+  // Select/Deselect All
+  const handleSelectAll = () => {
+    if (!enableBulkDelete) return; // ✅ Prevent selection if bulk delete is disabled
 
-    // Select/Deselect All
-    const handleSelectAll = () => {
-      if (!enableBulkDelete) return; // ✅ Prevent selection if bulk delete is disabled
-
-      if (selectedRows.length === data.length) {
-        setSelectedRows([]);
-      } else {
-        setSelectedRows(data.map((row) => row._id));
-      }
-    };
+    if (selectedRows.length === data.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(data.map((row) => row._id));
+    }
+  };
 
   const handlePageChange = (newPageIndex: number) => {
     onPaginationChange(newPageIndex, pagination.pageSize);
@@ -77,64 +70,77 @@ const CustomTable = ({
         isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
-  {/* Global Filter */}
-<div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-  {/* Search Input */}
-  <input
-    type="text"
-    value={globalFilter}
-    onChange={(e) => onFilterChange(e.target.value)}
-    placeholder="Search..."
-    className={`p-3 border rounded-lg w-full sm:w-64 focus:outline-none focus:ring-2 transition-all ${
-      isDarkMode
-        ? "bg-gray-800 text-white border-gray-700 focus:ring-blue-500"
-        : "bg-gray-50 border-gray-300 focus:ring-blue-400"
-    }`}
-  />
+      {/* Global Filter */}
+      <div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        {/* Search Input */}
+        <input
+          type="text"
+          value={globalFilter}
+          onChange={(e) => onFilterChange(e.target.value)}
+          placeholder="Search..."
+          className={`p-3 border rounded-lg w-full sm:w-64 focus:outline-none focus:ring-2 transition-all ${
+            isDarkMode
+              ? "bg-gray-800 text-white border-gray-700 focus:ring-blue-500"
+              : "bg-gray-50 border-gray-300 focus:ring-blue-400"
+          }`}
+        />
 
-  {/* Selected Rows Count */}
-  { enableBulkDelete && selectedRows.length > 0 && (
-    <div
-      className={`px-4 cursor-pointer py-2 rounded-full text-sm font-semibold ${
-        isDarkMode
-          ? "bg-blue-600 text-white"
-          : "bg-blue-100 text-blue-800"
-      }`}
-      onClick={handleBulkDelete}
-    >
-      {selectedRows.length} delete
-    </div>
-  )}
+        {/* Selected Rows Count */}
+        {enableBulkDelete && selectedRows.length > 0 && (
+          <div
+            className={`px-4 cursor-pointer py-2 rounded-full text-sm font-semibold ${
+              isDarkMode
+                ? "bg-blue-600 text-white"
+                : "bg-blue-100 text-blue-800"
+            }`}
+            onClick={handleBulkDelete}
+          >
+            {selectedRows.length} delete
+          </div>
+        )}
 
-  {/* Pagination Info */}
-  <div
-    className={`text-sm ${
-      isDarkMode ? "text-gray-300" : "text-gray-600"
-    }`}
-  >
-    Showing{" "}
-    <span className="font-semibold">
-      {pagination.pageIndex * pagination.pageSize + 1}
-    </span>
-    {" - "}
-    <span className="font-semibold">
-      {Math.min(
-        (pagination.pageIndex + 1) * pagination.pageSize,
-        totalRecordCount
-      )}
-    </span>{" "}
-    of <span className="font-semibold">{totalRecordCount}</span>
-  </div>
-</div>
+        {/* Pagination Info */}
+        <div
+          className={`text-sm ${
+            isDarkMode ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
+          Showing{" "}
+          <span className="font-semibold">
+            {pagination.pageIndex * pagination.pageSize + 1}
+          </span>
+          {" - "}
+          <span className="font-semibold">
+            {Math.min(
+              (pagination.pageIndex + 1) * pagination.pageSize,
+              totalRecordCount
+            )}
+          </span>{" "}
+          of <span className="font-semibold">{totalRecordCount}</span>
+        </div>
+      </div>
 
       {/* Table */}
       <div className="overflow-x-auto  rounded-xl  border border-gray-200">
         <table className="w-full ">
           <thead>
             <tr>
-            {enableBulkDelete && (
-                <th className={`border p-2 text-left ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300"}`}>
-                  <input type="checkbox" onChange={handleSelectAll} checked={selectedRows?.length > 0 && selectedRows?.length === data?.length} />
+              {enableBulkDelete && (
+                <th
+                  className={`border p-2 text-left ${
+                    isDarkMode
+                      ? "bg-gray-800 border-gray-700"
+                      : "bg-gray-100 border-gray-300"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={
+                      selectedRows?.length > 0 &&
+                      selectedRows?.length === data?.length
+                    }
+                  />
                 </th>
               )}
               {columns.map((col) => (
@@ -166,9 +172,19 @@ const CustomTable = ({
                   //     : "bg-white"
                   // }`}
                 >
-               {enableBulkDelete && (
-                    <td className={`border p-2 text-left ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300"}`}>
-                      <input type="checkbox" checked={selectedRows.includes(row._id)} onChange={() => handleSelectRow(row._id)} />
+                  {enableBulkDelete && (
+                    <td
+                      className={`border p-2 text-left ${
+                        isDarkMode
+                          ? "bg-gray-800 border-gray-700"
+                          : "bg-gray-100 border-gray-300"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(row._id)}
+                        onChange={() => handleSelectRow(row._id)}
+                      />
                     </td>
                   )}
                   {columns.map((col) => (
