@@ -62,6 +62,19 @@ const CategoryApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Category"], // ক্যাশিং ঠিকমতো কাজ করবে
     }),
+    getCategoryForSidebar: build.query({
+      query: ({ pageIndex, pageSize, search, isDelete }) => ({
+        url: "/category/get_category_for_sidebar",
+        method: "GET",
+        params: {
+          limit: pageSize,
+          page: pageIndex,
+          searchTerm: search,
+          isDelete,
+        },
+      }),
+      providesTags: ["Category"], // ক্যাশিং ঠিকমতো কাজ করবে
+    }),
   }),
 
   overrideExisting: false,
@@ -73,4 +86,5 @@ export const {
   useCategoryPutMutation,
   useGetCategoryDataQuery,
   useCategoryBulkDeleteMutation,
+  useGetCategoryForSidebarQuery
 } = CategoryApi;

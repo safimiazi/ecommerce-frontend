@@ -249,7 +249,7 @@ const Category = () => {
               label="Parent Category"
               name="parentCategory"
               rules={[
-                { required: true, message: "Please select a parent category!" },
+                { required: false, message: "Please select a parent category!" },
               ]}
             >
               <Select
@@ -264,7 +264,7 @@ const Category = () => {
             <Form.Item
               label="Category"
               name="Category"
-              rules={[{ required: true, message: "Please select a category!" }]}
+              rules={[{ required: false, message: "Please select a category!" }]}
             >
               <Select
                 placeholder="Select category"
@@ -282,7 +282,7 @@ const Category = () => {
               name="subcategories"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please select at least one subcategory!",
                 },
               ]}
@@ -302,7 +302,7 @@ const Category = () => {
               name="categories"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please select at least one categories!",
                 },
               ]}
