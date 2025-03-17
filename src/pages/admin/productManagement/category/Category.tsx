@@ -92,7 +92,7 @@ const Category = () => {
 
     const deleteMultiple = async (ids: string[]) => {
       try {
-        const res = await categoryBulkDelete(ids).unwrap();
+        const res = await categoryBulkDelete({ids}).unwrap();
         Swal.fire({
           title: "Good job!",
           text: `${res.message}`,
