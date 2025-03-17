@@ -32,7 +32,7 @@ const Category = () => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   // Fetch categories
-  const { data, refetch } = useGetCategoryDataQuery({
+  const { data } = useGetCategoryDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
     isDelete: false,
@@ -73,7 +73,6 @@ const Category = () => {
         text: `${res.message}`,
         icon: "success",
       });
-      refetch();
       setIsModalOpen(false);
       form.resetFields();
       setEditingCategory(null);
@@ -96,6 +95,7 @@ const Category = () => {
         icon: "success",
       });
       setSelectedRows([]);
+
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
@@ -123,7 +123,6 @@ const Category = () => {
     try {
       const res = await categoryDelete({ id }).unwrap();
       notification.success({ message: res?.message, placement: "topRight" });
-      setTimeout(() => refetch(), 500);
     } catch (error: any) {
       notification.error({
         message: error?.message || "Something went wrong!",

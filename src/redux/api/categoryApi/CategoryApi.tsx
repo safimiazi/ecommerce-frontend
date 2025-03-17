@@ -38,7 +38,14 @@ const CategoryApi = baseApi.injectEndpoints({
         method: "DELETE",
         body: { ids },
       }),
-      invalidatesTags: ["Category"], 
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(CategoryApi.util.invalidateTags(["Category"])); // ক্যাশ ফোর্স রিফ্রেশ
+        } catch (error) {
+          console.error("Bulk Delete Failed:", error);
+        }
+      },
     }),
 
     // Get Categories (Provides Tags for Caching)
