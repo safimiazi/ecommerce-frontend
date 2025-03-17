@@ -38,7 +38,7 @@ const CategoryApi = baseApi.injectEndpoints({
         method: "DELETE",
         body: { ids },
       }),
-      invalidatesTags: ["Category"], // Bulk delete এর পর ক্যাশ রিফ্রেশ করবে
+      invalidatesTags: ["Category"], 
     }),
 
     // Get Categories (Provides Tags for Caching)
