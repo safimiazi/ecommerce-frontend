@@ -22,7 +22,6 @@ import {
 } from "../../../../redux/api/categoryApi/CategoryApi";
 import Swal from "sweetalert2";
 
-
 const Category = () => {
   const [form] = Form.useForm();
   const [editingCategory, setEditingCategory] = useState<any | null>(null);
@@ -44,8 +43,8 @@ const Category = () => {
   const [categoryPost, { isLoading: isPostLoading }] =
     useCategoryPostMutation();
   const [categoryPut, { isLoading: isEditLoading }] = useCategoryPutMutation();
-  const [categoryDelete] =  useCategoryDeleteMutation();
-  const [categoryBulkDelete]  = useCategoryBulkDeleteMutation()
+  const [categoryDelete] = useCategoryDeleteMutation();
+  const [categoryBulkDelete] = useCategoryBulkDeleteMutation();
 
   // Handle Add or Edit Category
   const handleAddOrUpdate = async (values: any) => {
@@ -56,7 +55,6 @@ const Category = () => {
         parentCategory: showParentCategory ? values.parentCategory : null,
         status: values.status,
       };
-
 
       let res;
       if (editingCategory) {
@@ -89,24 +87,23 @@ const Category = () => {
     }
   };
 
-
-    const deleteMultiple = async (ids: string[]) => {
-      try {
-        const res = await categoryBulkDelete({ids}).unwrap();
-        Swal.fire({
-          title: "Good job!",
-          text: `${res.message}`,
-          icon: "success",
-        });
-        setSelectedRows([]);
-      } catch (error: any) {
-        Swal.fire({
-          title: "Error!",
-          text: `${error.message}`,
-          icon: "error",
-        });
-      }
-    };
+  const deleteMultiple = async (ids: string[]) => {
+    try {
+      const res = await categoryBulkDelete({ ids }).unwrap();
+      Swal.fire({
+        title: "Good job!",
+        text: `${res.message}`,
+        icon: "success",
+      });
+      setSelectedRows([]);
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error!",
+        text: `${error.message}`,
+        icon: "error",
+      });
+    }
+  };
 
   // Handle Edit
   const handleEdit = (category: any) => {
@@ -114,7 +111,7 @@ const Category = () => {
     form.setFieldsValue({
       name: category.name,
       description: category.description,
-      parentCategory: category.parentCategory || null,
+      parentCategory: category.parentCategory._id || null,
       status: category.status,
     });
     setShowParentCategory(!!category.parentCategory);
@@ -160,7 +157,9 @@ const Category = () => {
     },
     {
       header: "Parent Category",
-      Cell: ({ row }: any) => <span className="">{row?.parentCategory?.name || "N/A"}</span>,
+      Cell: ({ row }: any) => (
+        <span className="">{row?.parentCategory?.name || "N/A"}</span>
+      ),
     },
     {
       header: "Description",
@@ -168,7 +167,15 @@ const Category = () => {
     },
     {
       header: "Status",
-      Cell: ({ row }: any) => <span className={`p-1 rounded border ${row.status === "active" ? "text-green-500" : "text-red-500"}`}>{row.status || "N/A"}</span>,
+      Cell: ({ row }: any) => (
+        <span
+          className={`p-1 rounded border ${
+            row.status === "active" ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {row.status || "N/A"}
+        </span>
+      ),
     },
     {
       header: "Created Date",
