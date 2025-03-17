@@ -9,7 +9,6 @@ import {
   Popconfirm,
   notification,
   Select,
-  Checkbox,
 } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../../components/common/CustomTable";
@@ -26,7 +25,7 @@ const Category = () => {
   const [form] = Form.useForm();
   const [editingCategory, setEditingCategory] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showParentCategory, setShowParentCategory] = useState(false);
+  const [categoryType, setCategoryType] = useState<string>("parent");
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -40,51 +39,47 @@ const Category = () => {
   });
 
   // API Mutations
-  const [categoryPost, { isLoading: isPostLoading }] =
+  const [categoryPost] =
     useCategoryPostMutation();
-  const [categoryPut, { isLoading: isEditLoading }] = useCategoryPutMutation();
+  const [categoryPut] = useCategoryPutMutation();
   const [categoryDelete] = useCategoryDeleteMutation();
   const [categoryBulkDelete] = useCategoryBulkDeleteMutation();
 
-  // Handle Add or Edit Category
   const handleAddOrUpdate = async (values: any) => {
     try {
-      const categoryData = {
-        name: values.name,
-        description: values.description,
-        parentCategory: showParentCategory ? values.parentCategory : null,
-        status: values.status,
-      };
-
       let res;
       if (editingCategory) {
         // Edit existing category
         res = await categoryPut({
-          data: categoryData,
+          data: values,
           id: editingCategory._id,
         }).unwrap();
       } else {
         // Add new category
-        res = await categoryPost(categoryData).unwrap();
+        res = await categoryPost(values).unwrap();
       }
-
+  
       Swal.fire({
         title: "Good job!",
         text: `${res.message}`,
         icon: "success",
       });
-      setIsModalOpen(false);
+  
+      // ✅ Reset the form and close the modal after successful submission
       form.resetFields();
       setEditingCategory(null);
-      setShowParentCategory(false); // Reset parent category toggle
+      setIsModalOpen(false);
+      setCategoryType("parent"); // Reset category type
+  
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
-        text: `${error.message}`,
+        text: `${error?.data?.message}`,
         icon: "error",
       });
     }
   };
+  
 
   const deleteMultiple = async (ids: string[]) => {
     try {
@@ -95,7 +90,6 @@ const Category = () => {
         icon: "success",
       });
       setSelectedRows([]);
-
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
@@ -111,10 +105,11 @@ const Category = () => {
     form.setFieldsValue({
       name: category.name,
       description: category.description,
-      parentCategory: category.parentCategory._id || null,
+      parentCategory: category.parentCategory?._id || null,
+      subcategories: category.subcategories || [],
       status: category.status,
     });
-    setShowParentCategory(!!category.parentCategory);
+    setCategoryType(category.parentCategory ? "category" : "parent");
     setIsModalOpen(true);
   };
 
@@ -182,6 +177,9 @@ const Category = () => {
     },
   ];
 
+
+
+
   return (
     <div className="p-4">
       <Button type="primary" onClick={() => setIsModalOpen(true)}>
@@ -215,52 +213,118 @@ const Category = () => {
           setIsModalOpen(false);
           setEditingCategory(null);
           form.resetFields();
-          setShowParentCategory(false);
+          setCategoryType("parent");
         }}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleAddOrUpdate}>
-          {/* Category Name */}
+        <Form onFinish={handleAddOrUpdate} layout="vertical">
+          {/* Category Label Type */}
           <Form.Item
-            name="name"
-            label="Category Name"
-            rules={[{ required: true, message: "Please enter category name!" }]}
+            label="Category Type"
+            name="type"
+            initialValue={categoryType}
           >
-            <Input placeholder="Enter category name" />
+            <Select
+              onChange={(value) => setCategoryType(value)}
+              options={[
+                { value: "parent", label: <span>Parent Category</span> },
+                { value: "category", label: <span>Category</span> },
+                { value: "subcategory", label: <span>Sub Category</span> },
+              ]}
+            />
           </Form.Item>
 
-          {/* Checkbox to Show Parent Category Dropdown */}
-          <Form.Item>
-            <Checkbox
-              checked={showParentCategory}
-              onChange={(e) => setShowParentCategory(e.target.checked)}
+          {/* Name of the Category */}
+          <Form.Item
+            label="Category Name"
+            name="name"
+            rules={[{ required: true, message: "Please input category name!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          {/* Parent Category Selection for Category/Subcategory */}
+          {categoryType === "category" && (
+            <Form.Item
+              label="Parent Category"
+              name="parentCategory"
+              rules={[
+                { required: true, message: "Please select a parent category!" },
+              ]}
             >
-              Assign to a Parent Category
-            </Checkbox>
-          </Form.Item>
-
-          {/* Parent Category Dropdown (Conditional) */}
-          {showParentCategory && (
-            <Form.Item name="parentCategory" label="Parent Category">
               <Select
                 placeholder="Select parent category"
-                options={data?.data?.result.map((category: any) => {
+                options={data?.data?.result.filter((cat : any)=> cat.type === "parent").map((category: any) => {
+                  return { value: category._id, label: category.name };
+                })}
+              />
+            </Form.Item>
+          )}
+          {categoryType === "subcategory" && (
+            <Form.Item
+              label="Category"
+              name="Category"
+              rules={[{ required: true, message: "Please select a category!" }]}
+            >
+              <Select
+                placeholder="Select category"
+                options={data?.data?.result.filter((cat : any)=> cat.type === "category").map((category: any) => {
                   return { value: category._id, label: category.name };
                 })}
               />
             </Form.Item>
           )}
 
-          {/* Status (Active / Inactive) */}
-          <Form.Item
-            name="status"
-            label="Status"
-            initialValue="active"
-            rules={[
-              { required: true, message: "Please select category status!" },
-            ]}
-          >
+          {/* Subcategory Selection */}
+          {categoryType === "category" && (
+            <Form.Item
+              label="Subcategories"
+              name="subcategories"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select at least one subcategory!",
+                },
+              ]}
+            >
+              <Select
+                mode="multiple"
+                placeholder="Select parent category"
+                options={data?.data?.result.filter((cat : any)=> cat.type === "subcategory").map((category: any) => {
+                  return { value: category._id, label: category.name };
+                })}
+              />
+            </Form.Item>
+          )}
+          {categoryType === "parent" && (
+            <Form.Item
+              label="categories"
+              name="categories"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select at least one categories!",
+                },
+              ]}
+            >
+              <Select
+                mode="multiple"
+                placeholder="Select categories"
+                options={data?.data?.result.filter((cat : any)=> cat.type === "category").map((category: any) => {
+                  return { value: category._id, label: category.name };
+                })}
+              />
+            </Form.Item>
+          )}
+
+          {/* Description of the Category */}
+          <Form.Item label="Description" name="description">
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item label="Status" name="status">
             <Select
+              placeholder="Select Status"
+              defaultValue={"active"}
               options={[
                 { value: "active", label: <span>Active</span> },
                 { value: "inactive", label: <span>In Active</span> },
@@ -268,22 +332,9 @@ const Category = () => {
             />
           </Form.Item>
 
-          {/* Description */}
-          <Form.Item name="description" label="Description">
-            <Input.TextArea
-              rows={3}
-              placeholder="Enter category description (optional)"
-            />
-          </Form.Item>
-
-          {/* Submit Button */}
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isPostLoading || isEditLoading}
-            >
-              {editingCategory ? "Update Category" : "Create Category"}
+            <Button type="primary" htmlType="submit">
+              Add Category
             </Button>
           </Form.Item>
         </Form>

@@ -17,22 +17,7 @@ export const CategoriesSidebarItems: ICategoriesItems[] = [
     name: "Electronics",
     icon: Monitor,
   },
-  {
-    name: "Electronics",
-    icon: Monitor,
-  },
-  {
-    name: "Electronics",
-    icon: Monitor,
-  },
-  {
-    name: "Electronics",
-    icon: Monitor,
-  },
-  {
-    name: "Electronics",
-    icon: Monitor,
-  },
+
   {
     name: "Mobile Phones",
     icon: Monitor,

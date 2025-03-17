@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../common/Sidebar";
 import TopNav from "../common/TopNav";
 import Top from "../common/Top";
 import BottomNav from "../common/BottomNav";
@@ -9,6 +8,7 @@ import Footer from "../common/Footer";
 import WishlistDrawer from "../ui/WishlistDrawer";
 import CompareDrawer from "../ui/CompareDrawer";
 import ShopingBag from "../ui/ShopingBag";
+import { MainSidebar } from "../common/MainSidebar";
 
 const MainLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,7 +38,7 @@ const MainLayout = () => {
         </div>
         <div className="flex h-screen">
           <div className="md:w-64">
-            <Sidebar
+            <MainSidebar
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
           />
