@@ -1,89 +1,132 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
 
-import { Form, Input, Button, Modal, Popconfirm, notification } from "antd";
+import { useState } from "react";
+import {
+  Form,
+  Input,
+  Button,
+  Modal,
+  Popconfirm,
+  notification,
+  Select,
+  Checkbox,
+} from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../../components/common/CustomTable";
 import {
+  useCategoryBulkDeleteMutation,
   useCategoryDeleteMutation,
   useCategoryPostMutation,
   useCategoryPutMutation,
   useGetCategoryDataQuery,
 } from "../../../../redux/api/categoryApi/CategoryApi";
+import Swal from "sweetalert2";
+
 
 const Category = () => {
   const [form] = Form.useForm();
-  const [EditingCategory, setEditingCategory] = useState<any | null>(null);
+  const [editingCategory, setEditingCategory] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const [showParentCategory, setShowParentCategory] = useState(false);
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
-  const { data: data, refetch } = useGetCategoryDataQuery({
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  // Fetch categories
+  const { data, refetch } = useGetCategoryDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
     isDelete: false,
-    search: globalFilter
+    search: globalFilter,
   });
 
+  // API Mutations
   const [categoryPost, { isLoading: isPostLoading }] =
     useCategoryPostMutation();
   const [categoryPut, { isLoading: isEditLoading }] = useCategoryPutMutation();
-  const [categoryDelete, { isLoading: isDeleteLoading }] =
-    useCategoryDeleteMutation();
+  const [categoryDelete] =  useCategoryDeleteMutation();
+  const [categoryBulkDelete]  = useCategoryBulkDeleteMutation()
 
+  // Handle Add or Edit Category
   const handleAddOrUpdate = async (values: any) => {
     try {
-      const data = {
+      const categoryData = {
         name: values.name,
         description: values.description,
+        parentCategory: showParentCategory ? values.parentCategory : null,
+        status: values.status,
       };
 
+
       let res;
-      if (EditingCategory) {
+      if (editingCategory) {
+        // Edit existing category
         res = await categoryPut({
-          data: data,
-          id: EditingCategory._id,
+          data: categoryData,
+          id: editingCategory._id,
         }).unwrap();
       } else {
-        res = await categoryPost(data).unwrap();
+        // Add new category
+        res = await categoryPost(categoryData).unwrap();
       }
-      alert(res.message);
-      //   notification.success({
-      //     message: res?.message,
-      //     placement: "topRight",
-      //   });
 
+      Swal.fire({
+        title: "Good job!",
+        text: `${res.message}`,
+        icon: "success",
+      });
       refetch();
       setIsModalOpen(false);
       form.resetFields();
       setEditingCategory(null);
+      setShowParentCategory(false); // Reset parent category toggle
     } catch (error: any) {
-      notification.error({
-        message: error?.message || "Something went wrong!",
-        placement: "topRight",
+      Swal.fire({
+        title: "Error!",
+        text: `${error.message}`,
+        icon: "error",
       });
     }
   };
 
-  const handleEdit = (project: any) => {
-    setEditingCategory(project);
-    form.setFieldsValue(project);
+
+    const deleteMultiple = async (ids: string[]) => {
+      try {
+        const res = await categoryBulkDelete(ids).unwrap();
+        Swal.fire({
+          title: "Good job!",
+          text: `${res.message}`,
+          icon: "success",
+        });
+        setSelectedRows([]);
+      } catch (error: any) {
+        Swal.fire({
+          title: "Error!",
+          text: `${error.message}`,
+          icon: "error",
+        });
+      }
+    };
+
+  // Handle Edit
+  const handleEdit = (category: any) => {
+    setEditingCategory(category);
+    form.setFieldsValue({
+      name: category.name,
+      description: category.description,
+      parentCategory: category.parentCategory || null,
+      status: category.status,
+    });
+    setShowParentCategory(!!category.parentCategory);
     setIsModalOpen(true);
   };
 
+  // Handle Delete
   const handleDelete = async (id: string) => {
     try {
       const res = await categoryDelete({ id }).unwrap();
-      notification.success({
-        message: res?.message,
-        placement: "topRight",
-      });
-      setTimeout(() => {
-        refetch();
-      }, 500);
+      notification.success({ message: res?.message, placement: "topRight" });
+      setTimeout(() => refetch(), 500);
     } catch (error: any) {
       notification.error({
         message: error?.message || "Something went wrong!",
@@ -91,132 +134,150 @@ const Category = () => {
       });
     }
   };
-  const isDarkMode = false;
+
+  // Category Table Columns
   const customColumns = [
     {
-      header: "ACTION",
+      header: "Action",
       size: 50,
-      muiTableHeadCellProps: {
-        sx: { color: `${isDarkMode ? "white" : "black"} ` },
-      },
       Cell: ({ row }: any) => (
-        <div className="flex justify-start gap-2">
+        <div className="flex gap-2">
           <Popconfirm
-            title="Are you sure you want to delete this About?"
-            description="This action cannot be undone."
-            onConfirm={() => handleDelete(row._id)} // Executes delete on confirm
+            title="Are you sure you want to delete this category?"
+            onConfirm={() => handleDelete(row._id)}
             okText="Yes, Delete"
             cancelText="Cancel"
-            // okButtonProps={{ danger: true }}
           >
-            <Button type="primary"  icon={<DeleteOutlined />}>
-              Delete
-            </Button>
+            <Button type="primary" danger icon={<DeleteOutlined />} />
           </Popconfirm>
-
-          <Button loading={isDeleteLoading} onClick={() => handleEdit(row)}>
-            Edit
-          </Button>
-        </div>
-      ),
-    },
-
-    {
-      header: "NAME",
-      Cell: ({ row }: any) => (
-        <div>
-          <div className="flex flex-col gap-1 text-sm">
-            <p>
-              <span className="capitalize">{row.name}</span>
-            </p>
-          </div>
+          <Button onClick={() => handleEdit(row)}>Edit</Button>
         </div>
       ),
     },
     {
-      header: "DESCRIPTION",
-      Cell: ({ row }: any) => (
-        <div>
-          <div className="flex flex-col gap-1 text-sm">
-            <p>
-              <span className="capitalize">{row.description}</span>
-            </p>
-          </div>
-        </div>
-      ),
+      header: "Name",
+      Cell: ({ row }: any) => <span className="capitalize">{row.name}</span>,
     },
-
     {
-      header: "CREATED DATE",
-      Cell: ({ row }: any) => (
-        <div className="space-y-1 text-sm">
-          <p>
-            {new Date(row.createdAt).toLocaleDateString("en", {
-              month: "short",
-              day: "2-digit",
-              year: "numeric",
-            })}
-          </p>
-        </div>
-      ),
+      header: "Parent Category",
+      Cell: ({ row }: any) => <span className="">{row?.parentCategory?.name || "N/A"}</span>,
+    },
+    {
+      header: "Description",
+      Cell: ({ row }: any) => <span>{row.description || "N/A"}</span>,
+    },
+    {
+      header: "Status",
+      Cell: ({ row }: any) => <span className={`p-1 rounded border ${row.status === "active" ? "text-green-500" : "text-red-500"}`}>{row.status || "N/A"}</span>,
+    },
+    {
+      header: "Created Date",
+      Cell: ({ row }: any) => new Date(row.createdAt).toLocaleDateString(),
     },
   ];
+
   return (
-    <div style={{ padding: 20 }}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Button type="primary" onClick={() => setIsModalOpen(true)}>
-          Add New Category
-        </Button>
+    <div className="p-4">
+      <Button type="primary" onClick={() => setIsModalOpen(true)}>
+        Add New Category
+      </Button>
 
-        <CustomTable
-          columns={customColumns}
-          data={data?.data?.result || []}
-          pagination={pagination}
-          onPaginationChange={(pageIndex, pageSize) =>
-            setPagination({ pageIndex, pageSize })
-          }
-          globalFilter={globalFilter}
-          onFilterChange={setGlobalFilter}
-          totalRecordCount={data?.data?.meta?.total || 0}
-        />
-      </div>
+      {/* Table Display */}
+      <CustomTable
+        columns={customColumns}
+        data={data?.data?.result || []}
+        pagination={pagination}
+        onPaginationChange={(pageIndex, pageSize) =>
+          setPagination({ pageIndex, pageSize })
+        }
+        globalFilter={globalFilter}
+        onFilterChange={setGlobalFilter}
+        totalRecordCount={data?.data?.meta?.total || 0}
+        onBulkDelete={(selectedIds) => {
+          deleteMultiple(selectedIds);
+        }}
+        enableBulkDelete={true}
+        selectedRows={selectedRows}
+        setSelectedRows={setSelectedRows}
+      />
 
+      {/* Modal for Adding & Editing */}
       <Modal
-        title={EditingCategory ? "Edit Category" : "Add New Category"}
+        title={editingCategory ? "Edit Category" : "Add New Category"}
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setEditingCategory(null);
+          form.resetFields();
+          setShowParentCategory(false);
+        }}
         footer={null}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleAddOrUpdate}
-          autoComplete="off"
-        >
+        <Form form={form} layout="vertical" onFinish={handleAddOrUpdate}>
+          {/* Category Name */}
           <Form.Item
             name="name"
             label="Category Name"
-            rules={[{ required: true, message: "Please enter name" }]}
+            rules={[{ required: true, message: "Please enter category name!" }]}
           >
-            <Input placeholder="Enter name" />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Category Description"
-            rules={[{ required: true, message: "Please enter description" }]}
-          >
-            <Input placeholder="Enter description" />
+            <Input placeholder="Enter category name" />
           </Form.Item>
 
+          {/* Checkbox to Show Parent Category Dropdown */}
+          <Form.Item>
+            <Checkbox
+              checked={showParentCategory}
+              onChange={(e) => setShowParentCategory(e.target.checked)}
+            >
+              Assign to a Parent Category
+            </Checkbox>
+          </Form.Item>
+
+          {/* Parent Category Dropdown (Conditional) */}
+          {showParentCategory && (
+            <Form.Item name="parentCategory" label="Parent Category">
+              <Select
+                placeholder="Select parent category"
+                options={data?.data?.result.map((category: any) => {
+                  return { value: category._id, label: category.name };
+                })}
+              />
+            </Form.Item>
+          )}
+
+          {/* Status (Active / Inactive) */}
+          <Form.Item
+            name="status"
+            label="Status"
+            initialValue="active"
+            rules={[
+              { required: true, message: "Please select category status!" },
+            ]}
+          >
+            <Select
+              options={[
+                { value: "active", label: <span>Active</span> },
+                { value: "inactive", label: <span>In Active</span> },
+              ]}
+            />
+          </Form.Item>
+
+          {/* Description */}
+          <Form.Item name="description" label="Description">
+            <Input.TextArea
+              rows={3}
+              placeholder="Enter category description (optional)"
+            />
+          </Form.Item>
+
+          {/* Submit Button */}
           <Form.Item>
             <Button
-              loading={EditingCategory ? isEditLoading : isPostLoading}
               type="primary"
               htmlType="submit"
-              size="large"
-              block
+              loading={isPostLoading || isEditLoading}
             >
-              {EditingCategory ? "Edit Category" : "Add Category"}
+              {editingCategory ? "Update Category" : "Create Category"}
             </Button>
           </Form.Item>
         </Form>

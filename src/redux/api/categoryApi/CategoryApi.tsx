@@ -24,6 +24,13 @@ const CategoryApi = baseApi.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    categoryBulkDelete: build.mutation({
+      query: ({ ids }) => ({
+        url: `/category/categor_bulk_delete`,
+        method: "DELETE",
+        body: { ids },
+      }),
+    }),
     getCategoryData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
         url: "/category/get_category",
@@ -46,4 +53,5 @@ export const {
   useCategoryPostMutation,
   useCategoryPutMutation,
   useGetCategoryDataQuery,
+  useCategoryBulkDeleteMutation,
 } = CategoryApi;

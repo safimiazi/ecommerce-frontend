@@ -32,7 +32,6 @@ const unitApi = baseApi.injectEndpoints({
     }),
     bulkSoftDelete: build.mutation({
       query: (ids) => {
-        console.log("Sending bulk delete request with:", ids);
         return {
           url: "/unit/bulk-delete",
           method: "DELETE",
