@@ -125,7 +125,7 @@ const ReusableForm = ({
                     onChange={handleUploadChange}
                     multiple
                   >
-                    {fileList.length >= field.maxCount ? null : (
+                    {fileList?.length >= field?.maxCount ? null : (
                       <div>
                         <PlusOutlined />
                         <div style={{ marginTop: 8 }}>Upload</div>

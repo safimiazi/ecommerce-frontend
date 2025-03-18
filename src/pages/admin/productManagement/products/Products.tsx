@@ -229,46 +229,140 @@ const [fileList, setFileList] = useState<any[]>([]);
       });
     }
   };
-  
-   const fields = [
-      {
-        name: "name",
-        label: "Full Name",
-        type: "text",
-        placeholder: "Enter your name",
-        rules: [{ required: true, message: "Name is required!" }],
-      },
-      {
-        name: "email",
-        label: "Email Address",
-        type: "text",
-        placeholder: "Enter your email",
-        rules: [
-          { required: true, type: "email", message: "Enter a valid email!" },
-        ],
-      },
-      {
-        name: "age",
-        label: "Age",
-        type: "number",
-        placeholder: "Enter your age",
-      },
-      {
-        name: "gender",
-        label: "Gender",
-        type: "radio",
-        options: [
-          { label: "Male", value: "male" },
-          { label: "Female", value: "female" },
-        ],
-      },
 
-      {
-        name: "acceptTerms",
-        label: "Accept Terms & Conditions",
-        type: "checkbox",
-      },
-    ];
+ const fields = [
+  {
+    name: "productName",
+    label: "Product Name",
+    type: "text",
+    placeholder: "Enter product name",
+    rules: [{ required: true, message: "Product name is required!" }],
+  },
+  {
+    name: "skuCode",
+    label: "SKU Code",
+    type: "text",
+    placeholder: "Enter SKU code",
+    rules: [{ required: true, message: "SKU code is required!" }],
+  },
+  {
+    name: "productBrand",
+    label: "Product Brand",
+    type: "select",
+    placeholder: "Select a brand",
+    options: [], // Dynamically populate from API
+    rules: [{ required: true, message: "Product brand is required!" }],
+  },
+  {
+    name: "productCategory",
+    label: "Product Category",
+    type: "select",
+    placeholder: "Select a category",
+    options: [], // Fetch categories from API
+    rules: [{ required: true, message: "Product category is required!" }],
+  },
+  {
+    name: "productGeneric",
+    label: "Generic Name",
+    type: "select",
+    placeholder: "Select a generic name",
+    options: [], // Fetch generics from API
+    rules: [{ required: true, message: "Generic name is required!" }],
+  },
+  {
+    name: "productWeight",
+    label: "Product Weight",
+    type: "text",
+    placeholder: "Enter product weight",
+    rules: [{ required: true, message: "Product weight is required!" }],
+  },
+  {
+    name: "productUnit",
+    label: "Unit",
+    type: "select",
+    placeholder: "Select unit",
+    options: [], // Fetch units from API
+    rules: [{ required: true, message: "Unit is required!" }],
+  },
+  {
+    name: "productPurchasePoint",
+    label: "Purchase Point",
+    type: "text",
+    placeholder: "Enter purchase point",
+    rules: [{ required: true, message: "Purchase point is required!" }],
+  },
+  {
+    name: "productTags",
+    label: "Product Tags",
+    type: "select",
+    placeholder: "Enter tags",
+    mode: "tags",
+  },
+  {
+    name: "productBuyingPrice",
+    label: "Buying Price",
+    type: "number",
+    placeholder: "Enter buying price",
+    rules: [{ required: true, message: "Buying price is required!" }],
+  },
+  {
+    name: "productSellingPrice",
+    label: "Selling Price",
+    type: "number",
+    placeholder: "Enter selling price",
+    rules: [{ required: true, message: "Selling price is required!" }],
+  },
+  {
+    name: "productOfferPrice",
+    label: "Offer Price",
+    type: "number",
+    placeholder: "Enter offer price (if any)",
+  },
+  {
+    name: "productStock",
+    label: "Stock Quantity",
+    type: "number",
+    placeholder: "Enter stock quantity",
+    rules: [{ required: true, message: "Stock quantity is required!" }],
+  },
+  {
+    name: "productFeatureImage",
+    label: "Feature Image",
+    type: "image",
+    maxCount: 1,
+    rules: [{ required: true, message: "Feature image is required!" }],
+  },
+  {
+    name: "productImages",
+    label: "Product Images",
+    type: "image",
+    maxCount: 1,
+  },
+  {
+    name: "productDescription",
+    label: "Description",
+    type: "text",
+    placeholder: "Enter product description",
+  },
+  {
+    name: "isFeatured",
+    label: "Featured Product",
+    type: "radio",
+    options: [
+      { label: "Yes", value: "yes" },
+      { label: "No", value: "not" },
+    ],
+  },
+  {
+    name: "variants",
+    label: "Variants",
+    type: "select",
+    placeholder: "Select product variants",
+    options: [], // Fetch from API
+    mode: "multiple",
+  },
+];
+
 
 
   return (
