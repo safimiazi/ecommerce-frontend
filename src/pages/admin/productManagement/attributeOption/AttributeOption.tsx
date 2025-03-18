@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-
-import { Form, Button, Modal, Popconfirm, notification } from "antd";
+import { useState } from "react";
+import { Form, Button, Modal, Popconfirm, Radio, Input, Select } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../../components/common/CustomTable";
-
-import ReusableForm from "../../../../components/Reusable/ReusableForm";
 import {
   useAttributeOptionDeleteMutation,
   useAttributeOptionPostMutation,
@@ -14,15 +10,15 @@ import {
   useGetattributeOptionDataQuery,
 } from "../../../../redux/api/attributeOptionApi/AttributeOptionApi";
 import Swal from "sweetalert2";
+import { HexColorPicker } from "react-colorful";
+import namer from "color-namer";
 
 const AttributeOption = () => {
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [form] = Form.useForm();
-  const [Edit, setEdit] = useState<any | null>(null);
+  const [edit, setEdit] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
   const { data: data, refetch } = useGetattributeOptionDataQuery({
     pageIndex: pagination.pageIndex,
@@ -30,18 +26,21 @@ const AttributeOption = () => {
     isDelete: false,
     search: globalFilter,
   });
-
-  const [attributeOptionPost, { isLoading: isPostLoading }] =
-    useAttributeOptionPostMutation();
-  const [attributeOptionPut, { isLoading: isEditLoading }] =
-    useAttributeOptionPutMutation();
+  const selectedType = Form.useWatch("type", form);
+  const [attributeOptionPost] = useAttributeOptionPostMutation();
+  const [attributeOptionPut] = useAttributeOptionPutMutation();
   const [attributeOptionDelete, { isLoading: isDeleteLoading }] =
     useAttributeOptionDeleteMutation();
-  const [initialValues, setiInitialValues] = useState<any | null>(null);
 
   const handleEdit = (editData: any) => {
     setEdit(editData);
     setIsModalOpen(true);
+    form.setFieldsValue({
+      name: editData.name,
+      type: editData.type,
+      colorCode: editData.colorCode,
+      status: editData.status
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -50,36 +49,31 @@ const AttributeOption = () => {
       Swal.fire({
         title: "Good job!",
         text: `${res.message}`,
-        icon: "success"
+        icon: "success",
       });
-      setTimeout(() => {
-        refetch();
-      }, 500);
+      refetch();
     } catch (error: any) {
       Swal.fire({
-        title: "Good job!",
+        title: "Error!",
         text: `${error.message}`,
         icon: "error",
       });
     }
   };
-  const isDarkMode = false;
+
   const customColumns = [
     {
       header: "ACTION",
       size: 50,
-      muiTableHeadCellProps: {
-        sx: { color: `${isDarkMode ? "white" : "black"} ` },
-      },
+      muiTableHeadCellProps: { sx: { color: "black" } },
       Cell: ({ row }: any) => (
         <div className="flex justify-start gap-2">
           <Popconfirm
-            title="Are you sure you want to delete this About?"
+            title="Are you sure you want to delete this Attribute?"
             description="This action cannot be undone."
-            onConfirm={() => handleDelete(row._id)} // Executes delete on confirm
+            onConfirm={() => handleDelete(row._id)}
             okText="Yes, Delete"
             cancelText="Cancel"
-            // okButtonProps={{ danger: true }}
           >
             <Button type="primary" icon={<DeleteOutlined />}>
               Delete
@@ -92,160 +86,69 @@ const AttributeOption = () => {
         </div>
       ),
     },
-
     {
       header: "NAME",
-      Cell: ({ row }: any) => (
-        <div>
-          <div className="flex flex-col gap-1 text-sm">
-            <p>
-              <span className="capitalize">{row.name}</span>
-            </p>
-          </div>
-        </div>
-      ),
+      Cell: ({ row }: any) => <p>{row.name}</p>,
     },
     {
       header: "TYPE",
+      Cell: ({ row }: any) => <p>{row.type}</p>,
+    },
+    {
+      header: "COLOR CODE",
       Cell: ({ row }: any) => (
-        <div>
-          <div className="flex flex-col gap-1 text-sm">
-            <p>
-              <span className="capitalize">{row.type}</span>
-            </p>
-          </div>
+        <div
+          className={`py-1 px-2 rounded border text-white`}
+          style={{ backgroundColor: row.colorCode }} // ✅ Inline style for dynamic color
+        >
+          {row.colorCode}
         </div>
       ),
     },
-
+    {
+      header: "Status",
+      Cell: ({ row }: any) => (
+        <span
+          className={`p-1 rounded border ${
+            row.status === "active" ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {row.status || "N/A"}
+        </span>
+      ),
+    },
     {
       header: "CREATED DATE",
       Cell: ({ row }: any) => (
-        <div className="space-y-1 text-sm">
-          <p>
-            {new Date(row.createdAt).toLocaleDateString("en", {
-              month: "short",
-              day: "2-digit",
-              year: "numeric",
-            })}
-          </p>
-        </div>
+        <p>{new Date(row.createdAt).toLocaleDateString()}</p>
       ),
     },
   ];
-  useEffect(() => {
-    if (Edit && Edit !== null) {
-      const initialValues = {
-        name: Edit.name,
-        type: Edit.type,
-      };
-      setiInitialValues(initialValues);
-    }
-  }, [Edit]);
 
-  useEffect(() => {
-    if (!isModalOpen) {
-      form.resetFields(); // ফর্ম রিসেট করে নতুন ফর্ম ফিল্ড খালি করবে
-      setEdit(null); // Edit মোড রিসেট করে দিবে
-      setiInitialValues(null); // initialValues রিসেট হবে
-    }
-  }, [isModalOpen]);
-
-  //   const fields = [
-  //     {
-  //       name: "name",
-  //       label: "Full Name",
-  //       type: "text",
-  //       placeholder: "Enter your name",
-  //       rules: [{ required: true, message: "Name is required!" }],
-  //     },
-  //     {
-  //       name: "email",
-  //       label: "Email Address",
-  //       type: "text",
-  //       placeholder: "Enter your email",
-  //       rules: [
-  //         { required: true, type: "email", message: "Enter a valid email!" },
-  //       ],
-  //     },
-  //     {
-  //       name: "age",
-  //       label: "Age",
-  //       type: "number",
-  //       placeholder: "Enter your age",
-  //     },
-  //     {
-  //       name: "gender",
-  //       label: "Gender",
-  //       type: "radio",
-  //       options: [
-  //         { label: "Male", value: "male" },
-  //         { label: "Female", value: "female" },
-  //       ],
-  //     },
-  //     {
-  //       name: "country",
-  //       label: "Country",
-  //       type: "select",
-  //       placeholder: "Select your country",
-  //       rules: [{ required: true, message: "Country is required!" }],
-  //       options: [
-  //         { label: "Bangladesh", value: "bd" },
-  //         { label: "India", value: "in" },
-  //       ],
-  //     },
-  //     {
-  //       name: "acceptTerms",
-  //       label: "Accept Terms & Conditions",
-  //       type: "checkbox",
-  //     },
-  //   ];
-
-  const fields = [
-    {
-      name: "name",
-      label: "Name",
-      type: "text",
-      placeholder: "Enter Attribute Option Name",
-      rules: [{ required: true, message: "Name is required!" }],
-    },
-    {
-      name: "type",
-      label: "Type",
-
-      type: "radio",
-      options: [
-        { label: "Color", value: "color" },
-        { label: "Other", value: "other" },
-      ],
-    },
-  ];
 
   const handleSubmit = async (values: any) => {
+    const data = {
+      name: values?.colorCode ? getColorName(values.colorCode) : values.name,
+      type: values.type,
+      colorCode: values?.colorCode || null,
+      status: values?.status,
+    };
+
     try {
       let res;
-      if (Edit) {
-        res = await attributeOptionPut({
-          data: values,
-          id: Edit._id,
-        }).unwrap();
-
-        Swal.fire({
-          title: "Good job!",
-          text: `${res.message}`,
-          icon: "success",
-        });
+      if (edit) {
+        res = await attributeOptionPut({ data, id: edit._id }).unwrap();
       } else {
-        res = await attributeOptionPost(values).unwrap();
-        Swal.fire({
-          title: "Good job!",
-          text: `${res.message}`,
-          icon: "success",
-        });
+        res = await attributeOptionPost(data).unwrap();
       }
 
-      setIsModalOpen(false); // সাবমিশন সফল হলে মডাল ক্লোজ করবে
-      form.resetFields(); // ফর্ম রিসেট করবে
+      Swal.fire({
+        title: "Good job!",
+        text: `${res.message}`,
+        icon: "success",
+      });
+      setIsModalOpen(false);
+      form.resetFields();
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
@@ -253,6 +156,11 @@ const AttributeOption = () => {
         icon: "error",
       });
     }
+  };
+
+  const getColorName = (hex: string) => {
+    const names = namer(hex);
+    return names?.basic[0]?.name || "Unknown";
   };
 
   return (
@@ -272,21 +180,78 @@ const AttributeOption = () => {
           globalFilter={globalFilter}
           onFilterChange={setGlobalFilter}
           totalRecordCount={data?.data?.meta?.total || 0}
+          enableBulkDelete={false}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
+          onBulkDelete={() => {}}
         />
       </div>
 
       <Modal
-        title={Edit ? "Edit Attribute Option" : "Add Attribute Option"}
+        title={edit ? "Edit Attribute Option" : "Add Attribute Option"}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
-        <ReusableForm
-          fields={fields}
-          form={form}
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-        />
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: "Please enter a name!" }]}
+          >
+            <Input placeholder="Enter color name" />
+          </Form.Item>
+          <Form.Item
+            label="Type"
+            name="type"
+            rules={[{ required: true, message: "Please select a type!" }]}
+          >
+            <Radio.Group
+              options={[
+                { label: "Color", value: "color" },
+                { label: "Other", value: "other" },
+              ]}
+              optionType="button"
+            />
+          </Form.Item>
+
+          {selectedType === "color" && (
+            <>
+              <Form.Item
+                label="Pick a Color Code"
+                name="colorCode"
+                rules={[
+                  { required: true, message: "Please select a colorCode!" },
+                ]}
+              >
+                <HexColorPicker
+                  color={form.getFieldValue("colorCode")}
+                  onChange={(color) =>
+                    form.setFieldsValue({ colorCode: color })
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+          <Form.Item
+            label="Status"
+            name="status"
+            initialValue="active" // ✅ Ensures a default value is set in form state
+          >
+            <Select
+              options={[
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );
