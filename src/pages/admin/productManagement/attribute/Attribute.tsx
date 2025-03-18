@@ -163,46 +163,7 @@ const Attribute = () => {
     }
   }, [isModalOpen]);
 
-  //   const fields = [
-  //     {
-  //       name: "name",
-  //       label: "Full Name",
-  //       type: "text",
-  //       placeholder: "Enter your name",
-  //       rules: [{ required: true, message: "Name is required!" }],
-  //     },
-  //     {
-  //       name: "email",
-  //       label: "Email Address",
-  //       type: "text",
-  //       placeholder: "Enter your email",
-  //       rules: [
-  //         { required: true, type: "email", message: "Enter a valid email!" },
-  //       ],
-  //     },
-  //     {
-  //       name: "age",
-  //       label: "Age",
-  //       type: "number",
-  //       placeholder: "Enter your age",
-  //     },
-  //     {
-  //       name: "gender",
-  //       label: "Gender",
-  //       type: "radio",
-  //       options: [
-  //         { label: "Male", value: "male" },
-  //         { label: "Female", value: "female" },
-  //       ],
-  //     },
-
-  //     {
-  //       name: "acceptTerms",
-  //       label: "Accept Terms & Conditions",
-  //       type: "checkbox",
-  //     },
-  //   ];
-
+ 
 
   const fields = [
     {
