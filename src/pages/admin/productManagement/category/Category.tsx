@@ -1,15 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Modal,
-  Popconfirm,
-  notification,
-  Select,
-} from "antd";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {  useState } from "react";
+import { Form, Input, Button, Modal, Popconfirm, notification, Select } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../../components/common/CustomTable";
 import {
@@ -23,7 +16,7 @@ import Swal from "sweetalert2";
 
 const Category = () => {
   const [form] = Form.useForm();
-  const [editingCategory, setEditingCategory] = useState<any | null>(null);
+  const [editing, setediting] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryType, setCategoryType] = useState<string>("parent");
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -39,38 +32,37 @@ const Category = () => {
   });
 
   // API Mutations
-  const [categoryPost] =
-    useCategoryPostMutation();
+  const [categoryPost] = useCategoryPostMutation();
   const [categoryPut] = useCategoryPutMutation();
   const [categoryDelete] = useCategoryDeleteMutation();
   const [categoryBulkDelete] = useCategoryBulkDeleteMutation();
 
+  // Handle Add or Update Category
   const handleAddOrUpdate = async (values: any) => {
     try {
       let res;
-      if (editingCategory) {
+      if (editing) {
         // Edit existing category
         res = await categoryPut({
           data: values,
-          id: editingCategory._id,
+          id: editing._id,
         }).unwrap();
       } else {
         // Add new category
         res = await categoryPost(values).unwrap();
       }
-  
+
       Swal.fire({
         title: "Good job!",
         text: `${res.message}`,
         icon: "success",
       });
-  
-      // ✅ Reset the form and close the modal after successful submission
+
+      // Reset the form and close the modal after successful submission
       form.resetFields();
-      setEditingCategory(null);
+      setediting(null);
       setIsModalOpen(false);
       setCategoryType("parent"); // Reset category type
-  
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
@@ -79,8 +71,8 @@ const Category = () => {
       });
     }
   };
-  
 
+  // Handle Bulk Delete
   const deleteMultiple = async (ids: string[]) => {
     try {
       const res = await categoryBulkDelete({ ids }).unwrap();
@@ -99,17 +91,23 @@ const Category = () => {
     }
   };
 
+
+
   // Handle Edit
-  const handleEdit = (category: any) => {
-    setEditingCategory(category);
-    form.setFieldsValue({
-      name: category.name,
-      description: category.description,
-      parentCategory: category.parentCategory?._id || null,
-      subcategories: category.subcategories || [],
-      status: category.status,
-    });
-    setCategoryType(category.parentCategory ? "category" : "parent");
+  const handleEdit = (editData: any) => {
+    console.log(editData);
+    setCategoryType(editData.type)
+    form.setFieldsValue({name: editData.name,
+      description: editData.description,
+      status: editData.status,
+      type: editData.type,
+      parentCategory: editData.parentCategory?._id,
+      category: editData.category?._id,
+      categories: editData.categories.map((cat: any) => cat._id),
+      subcategories: editData.subcategories.map((cat: any) => cat._id),
+
+    })
+    setediting(editData);
     setIsModalOpen(true);
   };
 
@@ -150,9 +148,9 @@ const Category = () => {
       Cell: ({ row }: any) => <span className="capitalize">{row.name}</span>,
     },
     {
-      header: "Parent Category",
+      header: "Category Type",
       Cell: ({ row }: any) => (
-        <span className="">{row?.parentCategory?.name || "N/A"}</span>
+        <span className="">{row?.type || "N/A"}</span>
       ),
     },
     {
@@ -176,9 +174,6 @@ const Category = () => {
       Cell: ({ row }: any) => new Date(row.createdAt).toLocaleDateString(),
     },
   ];
-
-
-
 
   return (
     <div className="p-4">
@@ -207,23 +202,19 @@ const Category = () => {
 
       {/* Modal for Adding & Editing */}
       <Modal
-        title={editingCategory ? "Edit Category" : "Add New Category"}
+        title={editing ? "Edit Category" : "Add New Category"}
         open={isModalOpen}
         onCancel={() => {
           setIsModalOpen(false);
-          setEditingCategory(null);
+          setediting(null);
           form.resetFields();
           setCategoryType("parent");
         }}
         footer={null}
       >
-        <Form onFinish={handleAddOrUpdate} layout="vertical">
+        <Form form={form} onFinish={handleAddOrUpdate} layout="vertical" >
           {/* Category Label Type */}
-          <Form.Item
-            label="Category Type"
-            name="type"
-            initialValue={categoryType}
-          >
+          <Form.Item label="Category Type" name="type">
             <Select
               onChange={(value) => setCategoryType(value)}
               options={[
@@ -254,23 +245,27 @@ const Category = () => {
             >
               <Select
                 placeholder="Select parent category"
-                options={data?.data?.result.filter((cat : any)=> cat.type === "parent").map((category: any) => {
-                  return { value: category._id, label: category.name };
-                })}
+                options={data?.data?.result
+                  .filter((cat: any) => cat.type === "parent")
+                  .map((category: any) => {
+                    return { value: category._id, label: category.name };
+                  })}
               />
             </Form.Item>
           )}
           {categoryType === "subcategory" && (
             <Form.Item
               label="Category"
-              name="Category"
+              name="category"
               rules={[{ required: false, message: "Please select a category!" }]}
             >
               <Select
                 placeholder="Select category"
-                options={data?.data?.result.filter((cat : any)=> cat.type === "category").map((category: any) => {
-                  return { value: category._id, label: category.name };
-                })}
+                options={data?.data?.result
+                  .filter((cat: any) => cat.type === "category")
+                  .map((category: any) => {
+                    return { value: category._id, label: category.name };
+                  })}
               />
             </Form.Item>
           )}
@@ -290,9 +285,11 @@ const Category = () => {
               <Select
                 mode="multiple"
                 placeholder="Select parent category"
-                options={data?.data?.result.filter((cat : any)=> cat.type === "subcategory").map((category: any) => {
-                  return { value: category._id, label: category.name };
-                })}
+                options={data?.data?.result
+                  .filter((cat: any) => cat.type === "subcategory")
+                  .map((category: any) => {
+                    return { value: category._id, label: category.name };
+                  })}
               />
             </Form.Item>
           )}
@@ -310,9 +307,11 @@ const Category = () => {
               <Select
                 mode="multiple"
                 placeholder="Select categories"
-                options={data?.data?.result.filter((cat : any)=> cat.type === "category").map((category: any) => {
-                  return { value: category._id, label: category.name };
-                })}
+                options={data?.data?.result
+                  .filter((cat: any) => cat.type === "category")
+                  .map((category: any) => {
+                    return { value: category._id, label: category.name };
+                  })}
               />
             </Form.Item>
           )}
@@ -334,7 +333,7 @@ const Category = () => {
 
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Add Category
+              {editing ? "Update Category" : "Add Category"}
             </Button>
           </Form.Item>
         </Form>
