@@ -179,7 +179,7 @@ const Attribute = () => {
       type: "select",
       mode: "multiple",
       placeholder: "Select your attribute option",
-      rules: [{ required: true, message: "Attribute option is required!" }],
+      rules: [{ required: false, message: "Attribute option is required!" }],
       options: attributeOption?.data?.result.map((item: any) => {
         return { label: item.name, value: item._id };
       }),

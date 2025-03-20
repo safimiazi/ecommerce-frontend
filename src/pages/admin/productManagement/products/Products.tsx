@@ -38,8 +38,7 @@ const Products = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [habeVairent, setHaveVariant] = useState(false);
   const [attributesForColor, setAttributesForColor] = useState<any[]>([]);
-  const [selectColors, setSelectColors] = useState<any[]>([]);
-  console.log(selectColors);
+  console.log(attributesForColor);
   const { data: productData, refetch } = useGetproductDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
@@ -223,7 +222,7 @@ const Products = () => {
       title: "Variant Color",
       key: "variantColor",
       render: (_: any, record: any) => (
-        <Form.Item name={`variantcolor_${record._id}`}>
+        <Form.Item name={`variantcolor`}>
           <Select
             mode="multiple"
             placeholder="Select variant colors"
@@ -232,15 +231,10 @@ const Products = () => {
               label: item.name,
               value: item._id,
             }))}
-            onChange={(values) => {
-              const selectColors = record.attributeOption.filter((attr: any) =>
-                values.includes(attr._id)
-              );
-              setSelectColors(selectColors);
-            }}
+            
           />
         </Form.Item>
-      ), // Render the color selection for each row
+      ),
     },
   ];
 
@@ -454,7 +448,6 @@ const Products = () => {
             <>
               <Form.Item label="Variants" name="variants">
                 <Select
-                  mode="multiple"
                   placeholder="Select variants"
                   options={attributes?.data?.result.map((item: any) => ({
                     label: item.name,
@@ -468,14 +461,16 @@ const Products = () => {
                   }}
                 />
               </Form.Item>
-              <Table
-                columns={columns}
-                dataSource={data}
-                pagination={false} // Disable pagination
-                bordered
-                rowKey="_id"
-              />
             </>
+          )}
+
+          {attributesForColor[0]?.name === "Color" && (
+            <Table
+              columns={columns}
+              dataSource={data}
+              pagination={false} // Disable pagination
+              bordered
+            />
           )}
 
           <Form.Item>
