@@ -66,6 +66,18 @@ const Products = () => {
   const [productPut, { isLoading: isEditLoading }] = useProductPutMutation();
   const [productDelete, { isLoading: isDeleteLoading }] =
     useProductDeleteMutation();
+    const [skuCode, setSkuCode] = useState("");
+
+    // Function to generate a new SKU code (you can customize it as needed)
+    const generateSkuCode = () => {
+      const newSkuCode = `SKU-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      setSkuCode(newSkuCode); // Set the generated SKU code
+      notification.success({
+        message: "New SKU Code Generated",
+        description: `Generated SKU Code: ${newSkuCode}`,
+      });
+    };
+
 
   useEffect(() => {
     if (!openProductDrawer) {
@@ -86,8 +98,7 @@ const Products = () => {
   };
 
   const handleAddOrUpdate = async (values: any) => {
-    console.log(values);
-    return;
+  
     try {
       const formData = new FormData();
       formData.append("name", values.productName);
@@ -289,12 +300,26 @@ const Products = () => {
           </Form.Item>
 
           <Form.Item
-            label="SKU Code"
-            name="skuCode"
-            rules={[{ required: true, message: "Please enter the SKU code" }]}
+        label="SKU Code"
+        name="skuCode"
+        rules={[{ required: true, message: "Please enter the SKU code" }]}
+      >
+        <Input.Group compact>
+          <Input
+            style={{ width: "80%" }}
+            value={skuCode}
+            onChange={(e) => setSkuCode(e.target.value)} // Allow manual entry if needed
+            placeholder="Enter SKU code"
+          />
+          <Button
+            type="primary"
+            style={{ width: "20%" }}
+            onClick={generateSkuCode} // Trigger SKU code generation
           >
-            <Input />
-          </Form.Item>
+            Generate
+          </Button>
+        </Input.Group>
+      </Form.Item>
 
           <Form.Item
             label="Brand"
