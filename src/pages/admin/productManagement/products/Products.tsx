@@ -1,9 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { Button, Drawer, Form, Popconfirm, notification } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Form,
+  Input,
+  Select,
+  Checkbox,
+  Button,
+  Upload,
+  InputNumber,
+  Popconfirm,
+  notification,
+  Drawer,
+  Table,
+} from "antd";
 import CustomTable from "../../../../components/common/CustomTable";
 import MaxWidth from "../../../../wrapper/MaxWidth";
 import {
@@ -13,18 +23,23 @@ import {
   useProductPutMutation,
 } from "../../../../redux/api/productApi/ProductApi";
 import { useGetCategoryDataQuery } from "../../../../redux/api/categoryApi/CategoryApi";
-import ReusableForm from "../../../../components/Reusable/ReusableForm";
-import Swal from "sweetalert2";
+import { useGetbrandDataQuery } from "../../../../redux/api/brandApi/BrandApi";
+import { useGetattributeDataQuery } from "../../../../redux/api/attributeApi/AttributeApi";
+import { useGetAllQuery } from "../../../../redux/api/unitApi/UnitApi";
 
 const Products = () => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [initialValues, setiInitialValues] = useState<any | null>(null);
   const [openProductDrawer, setOpenProductDrawer] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [featureImageList, setFeatureImageList] = useState<any[]>([]);
   const [form] = Form.useForm();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
-  const [Edit, setEdit] = useState<any | null>(null);
+  const [habeVairent, setHaveVariant] = useState(false);
+  const [attributesForColor, setAttributesForColor] = useState<any[]>([]);
+  const [selectColors, setSelectColors] = useState<any[]>([]);
+  console.log(selectColors);
   const { data: productData, refetch } = useGetproductDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
@@ -35,76 +50,76 @@ const Products = () => {
     isDelete: false,
     search: globalFilter,
   });
+  const { data: brands } = useGetbrandDataQuery({
+    isDelete: false,
+    search: globalFilter,
+  });
+  const { data: attributes } = useGetattributeDataQuery({
+    isDelete: false,
+    search: globalFilter,
+  });
+  const { data: units } = useGetAllQuery({
+    isDelete: false,
+    search: globalFilter,
+  });
+
   const [productPost, { isLoading: isPostLoading }] = useProductPostMutation();
   const [productPut, { isLoading: isEditLoading }] = useProductPutMutation();
-  const [loading, setLoading] = useState<boolean>(false);
   const [productDelete, { isLoading: isDeleteLoading }] =
-  useProductDeleteMutation();
-const [fileList, setFileList] = useState<any[]>([]);
-
-
-
-  useEffect(() => {
-    if (Edit && Edit !== null) {
-      const initialValues = {
-        name: Edit.name,
-      };
-      setiInitialValues(initialValues);
-    }
-  }, [Edit]);
+    useProductDeleteMutation();
 
   useEffect(() => {
     if (!openProductDrawer) {
       form.resetFields();
-      setEdit(null);
-      setiInitialValues(null);
+      setEditingProduct(null);
+      setFileList([]);
+      setFeatureImageList([]);
+      setAttributesForColor([]);
     }
   }, [openProductDrawer]);
-
-
-  useEffect(() => {
-    if (Edit === null) {
-      setLoading(isPostLoading);
-    } else if (Edit !== null) {
-      setLoading(isEditLoading);
-    }
-  }, [isEditLoading, isPostLoading]);
- 
-
 
   const handleUploadChange = ({ fileList }: any) => {
     setFileList(fileList);
   };
 
+  const handleFeatureImageChange = ({ fileList }: any) => {
+    setFeatureImageList(fileList);
+  };
 
   const handleAddOrUpdate = async (values: any) => {
+    console.log(values);
+    return;
     try {
       const formData = new FormData();
+      formData.append("name", values.productName);
+      formData.append("skuCode", values.skuCode);
+      formData.append("productCategory", values.productCategory);
+      formData.append("productBrand", values.productBrand);
+      formData.append("productWeight", values.productWeight);
+      formData.append("productUnit", values.productUnit);
+      formData.append("productPurchasePoint", values.productPurchasePoint);
+      formData.append("productBuyingPrice", values.productBuyingPrice);
+      formData.append("productSellingPrice", values.productSellingPrice);
+      formData.append("productStock", values.productStock);
 
-      // Append form fields
-      formData.append("name", values.name);
-      formData.append("description", values.description);
-      formData.append("price", String(values.price));
-      formData.append("category", values.categoryId);
-      formData.append("stock", String(values.stock));
+      featureImageList.forEach((file) => {
+        formData.append("featureImage", file.originFileObj);
+      });
 
-      // Append images
       fileList.forEach((file) => {
         formData.append("images", file.originFileObj);
       });
 
-      let res;
-      if (editingProduct) {
-        res = await productPut({
-          formData,
-          id: editingProduct._id,
-        }).unwrap();
-      } else {
-        res = await productPost(formData).unwrap();
+      if (habeVairent) {
+        formData.append("variants", JSON.stringify(selectedColors));
       }
 
+      const res = editingProduct
+        ? await productPut({ formData, id: editingProduct._id }).unwrap()
+        : await productPost(formData).unwrap();
+
       notification.success({
-        message: res?.message,
+        message: res?.message || "Product added/updated successfully!",
         placement: "topRight",
       });
 
@@ -124,18 +139,19 @@ const [fileList, setFileList] = useState<any[]>([]);
     setEditingProduct(product);
     setOpenProductDrawer(true);
     form.setFieldsValue(product);
+    setFileList(product?.images || []);
+    setFeatureImageList(product?.featureImage || []);
+    setAttributesForColor(product?.variants || []);
   };
 
   const handleDelete = async (id: string) => {
     try {
       const res = await productDelete({ id }).unwrap();
       notification.success({
-        message: res?.message,
+        message: res?.message || "Product deleted successfully!",
         placement: "topRight",
       });
-      setTimeout(() => {
-        refetch();
-      }, 500);
+      refetch();
     } catch (error: any) {
       notification.error({
         message: error?.message || "Something went wrong!",
@@ -152,7 +168,7 @@ const [fileList, setFileList] = useState<any[]>([]);
         <div className="flex justify-start gap-2">
           <Popconfirm
             title="Are you sure you want to delete this product?"
-            onConfirm={() => handleDelete(row._id)} // Executes delete on confirm
+            onConfirm={() => handleDelete(row._id)}
             okText="Yes, Delete"
             cancelText="Cancel"
           >
@@ -171,7 +187,6 @@ const [fileList, setFileList] = useState<any[]>([]);
       header: "NAME",
       Cell: ({ row }: any) => <span>{row.name}</span>,
     },
-
     {
       header: "IMAGES",
       Cell: ({ row }: any) => (
@@ -196,176 +211,45 @@ const [fileList, setFileList] = useState<any[]>([]);
     },
   ];
 
-  const deleteMultiple = async (ids: string[]) => {};
+  const columns = [
+    {
+      title: "Color Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text: any) => <strong>{text}</strong>, // Make color name bold
+    },
 
-  const handleSubmit = async (values: any) => {
-    try {
-      let res;
-      if (Edit) {
-        res = await update({
-          data: values,
-          id: Edit._id,
-        }).unwrap();
+    {
+      title: "Variant Color",
+      key: "variantColor",
+      render: (_: any, record: any) => (
+        <Form.Item name={`variantcolor_${record._id}`}>
+          <Select
+            mode="multiple"
+            placeholder="Select variant colors"
+            style={{ width: "100%" }}
+            options={record.attributeOption.map((item: any) => ({
+              label: item.name,
+              value: item._id,
+            }))}
+            onChange={(values) => {
+              const selectColors = record.attributeOption.filter((attr: any) =>
+                values.includes(attr._id)
+              );
+              setSelectColors(selectColors);
+            }}
+          />
+        </Form.Item>
+      ), // Render the color selection for each row
+    },
+  ];
 
-        Swal.fire({
-          title: "Good job!",
-          text: `${res.message}`,
-          icon: "success",
-        });
-      } else {
-        res = await create(values).unwrap();
-        Swal.fire({
-          title: "Good job!",
-          text: `${res.message}`,
-          icon: "success",
-        });
-      }
-      form.resetFields();
-    } catch (error: any) {
-      Swal.fire({
-        title: "Error!",
-        text: `${error.data?.errorSource[0]?.message || error?.data?.message}`,
-        icon: "error",
-      });
-    }
-  };
-
- const fields = [
-  {
-    name: "productName",
-    label: "Product Name",
-    type: "text",
-    placeholder: "Enter product name",
-    rules: [{ required: true, message: "Product name is required!" }],
-  },
-  {
-    name: "skuCode",
-    label: "SKU Code",
-    type: "text",
-    placeholder: "Enter SKU code",
-    rules: [{ required: true, message: "SKU code is required!" }],
-  },
-  {
-    name: "productBrand",
-    label: "Product Brand",
-    type: "select",
-    placeholder: "Select a brand",
-    options: [], // Dynamically populate from API
-    rules: [{ required: true, message: "Product brand is required!" }],
-  },
-  {
-    name: "productCategory",
-    label: "Product Category",
-    type: "select",
-    placeholder: "Select a category",
-    options: [], // Fetch categories from API
-    rules: [{ required: true, message: "Product category is required!" }],
-  },
-  {
-    name: "productGeneric",
-    label: "Generic Name",
-    type: "select",
-    placeholder: "Select a generic name",
-    options: [], // Fetch generics from API
-    rules: [{ required: true, message: "Generic name is required!" }],
-  },
-  {
-    name: "productWeight",
-    label: "Product Weight",
-    type: "text",
-    placeholder: "Enter product weight",
-    rules: [{ required: true, message: "Product weight is required!" }],
-  },
-  {
-    name: "productUnit",
-    label: "Unit",
-    type: "select",
-    placeholder: "Select unit",
-    options: [], // Fetch units from API
-    rules: [{ required: true, message: "Unit is required!" }],
-  },
-  {
-    name: "productPurchasePoint",
-    label: "Purchase Point",
-    type: "text",
-    placeholder: "Enter purchase point",
-    rules: [{ required: true, message: "Purchase point is required!" }],
-  },
-  {
-    name: "productTags",
-    label: "Product Tags",
-    type: "select",
-    placeholder: "Enter tags",
-    mode: "tags",
-  },
-  {
-    name: "productBuyingPrice",
-    label: "Buying Price",
-    type: "number",
-    placeholder: "Enter buying price",
-    rules: [{ required: true, message: "Buying price is required!" }],
-  },
-  {
-    name: "productSellingPrice",
-    label: "Selling Price",
-    type: "number",
-    placeholder: "Enter selling price",
-    rules: [{ required: true, message: "Selling price is required!" }],
-  },
-  {
-    name: "productOfferPrice",
-    label: "Offer Price",
-    type: "number",
-    placeholder: "Enter offer price (if any)",
-  },
-  {
-    name: "productStock",
-    label: "Stock Quantity",
-    type: "number",
-    placeholder: "Enter stock quantity",
-    rules: [{ required: true, message: "Stock quantity is required!" }],
-  },
-  {
-    name: "productFeatureImage",
-    label: "Feature Image",
-    type: "image",
-    maxCount: 1,
-    rules: [{ required: true, message: "Feature image is required!" }],
-  },
-  {
-    name: "productImages",
-    label: "Product Images",
-    type: "image",
-    maxCount: 1,
-  },
-  {
-    name: "productDescription",
-    label: "Description",
-    type: "text",
-    placeholder: "Enter product description",
-  },
-  {
-    name: "isFeatured",
-    label: "Featured Product",
-    type: "radio",
-    options: [
-      { label: "Yes", value: "yes" },
-      { label: "No", value: "not" },
-    ],
-  },
-  {
-    name: "variants",
-    label: "Variants",
-    type: "select",
-    placeholder: "Select product variants",
-    options: [], // Fetch from API
-    mode: "multiple",
-  },
-
-];
-
-
-
+  const data = attributesForColor.map((color: any) => ({
+    key: color._id,
+    name: color.name,
+    colorCode: color.colorCode,
+    attributeOption: color.attributeOption,
+  }));
   return (
     <MaxWidth>
       <Button type="primary" onClick={() => setOpenProductDrawer(true)}>
@@ -381,10 +265,6 @@ const [fileList, setFileList] = useState<any[]>([]);
         globalFilter={globalFilter}
         onFilterChange={setGlobalFilter}
         totalRecordCount={productData?.data?.meta?.total || 0}
-        onBulkDelete={(selectedIds) => {
-          deleteMultiple(selectedIds);
-        }}
-        enableBulkDelete={true}
         selectedRows={selectedRows}
         setSelectedRows={setSelectedRows}
       />
@@ -392,21 +272,218 @@ const [fileList, setFileList] = useState<any[]>([]);
         title={`${editingProduct ? "Edit Product" : "New Product"}`}
         placement="right"
         closable
-        onClose={() => {
-          setOpenProductDrawer(false);
-          setEditingProduct(null);
-          form.resetFields();
-        }}
+        onClose={() => setOpenProductDrawer(false)}
         open={openProductDrawer}
         width={500}
       >
-        <ReusableForm
-          fields={fields}
+        <Form
           form={form}
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          loading={loading}
-        />
+          onFinish={handleAddOrUpdate}
+          layout="vertical"
+          initialValues={{
+            isFeatured: "not",
+          }}
+        >
+          <Form.Item
+            label="Product Name"
+            name="productName"
+            rules={[
+              { required: true, message: "Please enter the product name" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="SKU Code"
+            name="skuCode"
+            rules={[{ required: true, message: "Please enter the SKU code" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Brand"
+            name="productBrand"
+            rules={[{ required: true, message: "Please select a brand" }]}
+          >
+            <Select
+              placeholder="Select a brand"
+              options={brands?.data?.result.map((item: any) => ({
+                label: item.name,
+                value: item._id,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Category"
+            name="productCategory"
+            rules={[{ required: true, message: "Please select a category" }]}
+          >
+            <Select
+              placeholder="Select a category"
+              options={categories?.data?.result.map((item: any) => ({
+                label: item.name,
+                value: item._id,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Weight"
+            name="productWeight"
+            rules={[
+              { required: true, message: "Please enter the product weight" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Unit"
+            name="productUnit"
+            rules={[{ required: true, message: "Please select a unit" }]}
+          >
+            <Select
+              placeholder="Select a unit"
+              options={units?.data?.result.map((item: any) => ({
+                label: item.name,
+                value: item._id,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Purchase Point"
+            name="productPurchasePoint"
+            rules={[
+              { required: true, message: "Please enter the purchase point" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Buying Price"
+            name="productBuyingPrice"
+            rules={[
+              { required: true, message: "Please enter the buying price" },
+            ]}
+          >
+            <InputNumber style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item
+            label="Selling Price"
+            name="productSellingPrice"
+            rules={[
+              { required: true, message: "Please enter the selling price" },
+            ]}
+          >
+            <InputNumber style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item label="Offer Price" name="productOfferPrice">
+            <InputNumber style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item
+            label="Stock"
+            name="productStock"
+            rules={[
+              { required: true, message: "Please enter the stock quantity" },
+            ]}
+          >
+            <InputNumber style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item label="Featured Image" name="productFeatureImage">
+            <Upload
+              listType="picture-card"
+              fileList={featureImageList}
+              beforeUpload={() => false}
+              onChange={handleFeatureImageChange}
+              maxCount={1}
+            >
+              {featureImageList.length >= 1 ? null : (
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              )}
+            </Upload>
+          </Form.Item>
+
+          <Form.Item label="Images" name="productImages">
+            <Upload
+              listType="picture-card"
+              fileList={fileList}
+              beforeUpload={() => false}
+              onChange={handleUploadChange}
+              multiple
+            >
+              {fileList.length >= 5 ? null : (
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              )}
+            </Upload>
+          </Form.Item>
+
+          <Form.Item label="Product Description" name="productDescription">
+            <Input.TextArea rows={4} />
+          </Form.Item>
+
+          <Form.Item label="Featured" name="isFeatured" valuePropName="checked">
+            <Checkbox>Yes</Checkbox>
+          </Form.Item>
+
+          <Form.Item
+            label="This Product Has Variations"
+            name="haveVarient"
+            valuePropName="checked"
+          >
+            <Checkbox onChange={(e) => setHaveVariant(e.target.checked)}>
+              Yes
+            </Checkbox>
+          </Form.Item>
+
+          {habeVairent && (
+            <>
+              <Form.Item label="Variants" name="variants">
+                <Select
+                  mode="multiple"
+                  placeholder="Select variants"
+                  options={attributes?.data?.result.map((item: any) => ({
+                    label: item.name,
+                    value: item._id,
+                  }))}
+                  onChange={(values) => {
+                    const selectedAttributes = attributes?.data?.result.filter(
+                      (attr: any) => values.includes(attr._id)
+                    );
+                    setAttributesForColor(selectedAttributes);
+                  }}
+                />
+              </Form.Item>
+              <Table
+                columns={columns}
+                dataSource={data}
+                pagination={false} // Disable pagination
+                bordered
+                rowKey="_id"
+              />
+            </>
+          )}
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </Drawer>
     </MaxWidth>
   );
