@@ -95,7 +95,6 @@ const Products = () => {
   };
 
   const handleAddOrUpdate = async (values: any) => {
-
     console.log(values);
     try {
       const formData = new FormData();
@@ -116,22 +115,19 @@ const Products = () => {
       formData.append("productDescription", values.productDescription);
       formData.append("variant", values?.variant || null);
 
-
       if (values?.productFeatureImage) {
-          formData.append("productFeatureImage", values.productFeatureImage.file); // Ensure this field name is correct
-       
+        formData.append("productFeatureImage", values.productFeatureImage.file); // Ensure this field name is correct
       } else {
         console.error("No feature image selected.");
       }
 
       if (values?.productImages) {
-        values?.productImages.fileList.forEach((file : any) => {
+        values?.productImages.fileList.forEach((file: any) => {
           formData.append("productImages", file.originFileObj); // Ensure this field name is correct
         });
       } else {
         console.error("No additional images selected.");
       }
-
 
       // Handle color-related data
       if (values.variantcolor && values.variantcolor.length > 0) {
@@ -213,26 +209,22 @@ const Products = () => {
       Cell: ({ row }: any) => <span>{row.productName}</span>,
     },
     {
-      header: "Feature image",
-      Cell: ({ row }: any) => (
-        <div className="flex items-center gap-1">
-          {row?.images?.map((image: string) => (
-            <img key={image} src={image} width={80} height={80} />
-          ))}
-        </div>
-      ),
+      header: "SKU CODE",
+      Cell: ({ row }: any) => <span>{row.skuCode}</span>,
     },
     {
-      header: " images",
-      Cell: ({ row }: any) => (
-        <div className="flex items-center gap-1">
-          {row?.images?.map((image: string) => (
-            <img key={image} src={image} width={80} height={80} />
-          ))}
-        </div>
-      ),
+      header: "CATEGORY",
+      Cell: ({ row }: any) => <span>{row.productCategory.name}</span>,
     },
-    // aro parle add koro
+    {
+      header: "BRAND",
+      Cell: ({ row }: any) => <span>{row.productBrand.name}</span>,
+    },
+    {
+      header: "UNIT",
+      Cell: ({ row }: any) => <span>{row.productUnit.name}</span>,
+    },
+
     {
       header: "CREATED DATE",
       Cell: ({ row }: any) => (
