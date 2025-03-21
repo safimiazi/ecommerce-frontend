@@ -214,7 +214,7 @@ const Products = () => {
     },
     {
       header: "CATEGORY",
-      Cell: ({ row }: any) => <span>{row.productCategory.name}</span>,
+      Cell: ({ row }: any) => <span>{`${row.productCategory.name} (${row.productCategory.type})`}</span>,
     },
     {
       header: "BRAND",
