@@ -20,8 +20,15 @@ const ProductApi = baseApi.injectEndpoints({
     }),
     productDelete: build.mutation({
       query: ({ id }) => ({
-        url: `/product/delete_product/${id}`,
+        url: `/product/${id}`,
         method: "DELETE",
+      }),
+    }),
+    bulkDelete: build.mutation({
+      query: ({ ids }) => ({
+        url: `/product/bulk`,
+        method: "DELETE",
+        body: { ids },
       }),
     }),
     getproductData: build.query({
@@ -54,5 +61,6 @@ export const {
     useProductPutMutation,
     useProductDeleteMutation,
     useGetproductDataQuery,
-    useGetSingleproductDataQuery
+    useGetSingleproductDataQuery,
+    useBulkDeleteMutation
 } = ProductApi;

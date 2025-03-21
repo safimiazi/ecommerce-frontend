@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { PlusOutlined, DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  MoreOutlined,
+} from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -10,7 +16,6 @@ import {
   Upload,
   InputNumber,
   Popconfirm,
-  notification,
   Drawer,
   Table,
   Menu,
@@ -19,6 +24,7 @@ import {
 import CustomTable from "../../../../components/common/CustomTable";
 import MaxWidth from "../../../../wrapper/MaxWidth";
 import {
+  useBulkDeleteMutation,
   useGetproductDataQuery,
   useProductDeleteMutation,
   useProductPostMutation,
@@ -28,8 +34,13 @@ import { useGetCategoryDataQuery } from "../../../../redux/api/categoryApi/Categ
 import { useGetbrandDataQuery } from "../../../../redux/api/brandApi/BrandApi";
 import { useGetattributeDataQuery } from "../../../../redux/api/attributeApi/AttributeApi";
 import { useGetAllQuery } from "../../../../redux/api/unitApi/UnitApi";
+import Swal from "sweetalert2";
+import ProductDetailsModal from "../../../../components/common/ProductDetailsModal";
 
 const Products = () => {
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openProductDrawer, setOpenProductDrawer] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
@@ -38,7 +49,7 @@ const Products = () => {
   const [form] = Form.useForm();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
-  const [habeVairent, setHaveVariant] = useState(false);
+  const haveVarient = Form.useWatch("haveVarient", form)
   const [attributesForColor, setAttributesForColor] = useState<any[]>([]);
   const { data: productData, refetch } = useGetproductDataQuery({
     pageIndex: pagination.pageIndex,
@@ -65,8 +76,8 @@ const Products = () => {
 
   const [productPost, { isLoading: isPostLoading }] = useProductPostMutation();
   const [productPut, { isLoading: isEditLoading }] = useProductPutMutation();
-  const [productDelete, { isLoading: isDeleteLoading }] =
-    useProductDeleteMutation();
+  const [productDelete] = useProductDeleteMutation();
+  const [bulkDelete] = useBulkDeleteMutation();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -114,6 +125,7 @@ const Products = () => {
       formData.append("productOfferPrice", values.productOfferPrice);
       formData.append("productStock", values.productStock);
       formData.append("isFeatured", values.isFeatured);
+      formData.append("haveVarient", values.haveVarient);
       formData.append("productDescription", values.productDescription);
       formData.append("variant", values?.variant || null);
 
@@ -141,9 +153,10 @@ const Products = () => {
         ? await productPut({ formData, id: editingProduct._id }).unwrap()
         : await productPost(formData).unwrap();
 
-      notification.success({
-        message: res?.message || "Product added/updated successfully!",
-        placement: "topRight",
+      Swal.fire({
+        title: "Good job!",
+        text: `${res.message}`,
+        icon: "success",
       });
 
       refetch();
@@ -151,14 +164,22 @@ const Products = () => {
       setEditingProduct(null);
       setOpenProductDrawer(false);
     } catch (error: any) {
-      notification.error({
-        message: error?.message || "Something went wrong!",
-        placement: "topRight",
+      Swal.fire({
+        title: "Error!",
+        text: `${error.data?.errorSource[0]?.message || error?.data?.message}`,
+        icon: "error",
       });
     }
   };
 
+  // Function to close modal
+  const handleClose = () => {
+    setIsModalVisible(false);
+    setSelectedProduct(null);
+  };
+
   const handleEdit = (product: any) => {
+    console.log(product);
     setEditingProduct(product);
     setOpenProductDrawer(true);
     form.setFieldsValue(product);
@@ -170,15 +191,17 @@ const Products = () => {
   const handleDelete = async (id: string) => {
     try {
       const res = await productDelete({ id }).unwrap();
-      notification.success({
-        message: res?.message || "Product deleted successfully!",
-        placement: "topRight",
+      Swal.fire({
+        title: "Good job!",
+        text: `${res.message}`,
+        icon: "success",
       });
       refetch();
     } catch (error: any) {
-      notification.error({
-        message: error?.message || "Something went wrong!",
-        placement: "topRight",
+      Swal.fire({
+        title: "Error!",
+        text: `${error.data?.errorSource[0]?.message || error?.data?.message}`,
+        icon: "error",
       });
     }
   };
@@ -193,7 +216,13 @@ const Products = () => {
             <Menu.Item key="edit" onClick={() => handleEdit(row)}>
               <EditOutlined /> Edit
             </Menu.Item>
-            <Menu.Item key="details" onClick={() => handleDetails(row)}>
+            <Menu.Item
+              key="details"
+              onClick={() => {
+                setSelectedProduct(row);
+                setIsModalVisible(true);
+              }}
+            >
               <EyeOutlined /> Details
             </Menu.Item>
             <Menu.Item key="delete" danger>
@@ -208,7 +237,7 @@ const Products = () => {
             </Menu.Item>
           </Menu>
         );
-  
+
         return (
           <Dropdown overlay={menu} trigger={["hover"]}>
             <Button icon={<MoreOutlined />} />
@@ -226,7 +255,9 @@ const Products = () => {
     },
     {
       header: "CATEGORY",
-      Cell: ({ row }: any) => <span>{`${row.productCategory.name} (${row.productCategory.type})`}</span>,
+      Cell: ({ row }: any) => (
+        <span>{`${row.productCategory.name} (${row.productCategory.type})`}</span>
+      ),
     },
     {
       header: "BRAND",
@@ -284,11 +315,34 @@ const Products = () => {
     colorCode: color.colorCode,
     attributeOption: color.attributeOption,
   }));
+
+  const deleteMultiple = async (ids: string[]) => {
+    try {
+      const res = await bulkDelete({ ids }).unwrap();
+      Swal.fire({
+        title: "Good job!",
+        text: `${res.message}`,
+        icon: "success",
+      });
+      setSelectedRows([]);
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error!",
+        text: `${error.message}`,
+        icon: "error",
+      });
+    }
+  };
   return (
     <MaxWidth>
       <Button type="primary" onClick={() => setOpenProductDrawer(true)}>
         Add New Product
       </Button>
+      <ProductDetailsModal
+        visible={isModalVisible}
+        onClose={handleClose}
+        product={selectedProduct}
+      />
       <CustomTable
         columns={customColumns}
         data={productData?.data?.result || []}
@@ -296,8 +350,10 @@ const Products = () => {
         onPaginationChange={(pageIndex, pageSize) =>
           setPagination({ pageIndex, pageSize })
         }
-        onBulkDelete={() => {}}
-        enableBulkDelete={false}
+        onBulkDelete={(ids) => {
+          deleteMultiple(ids);
+        }}
+        enableBulkDelete={true}
         globalFilter={globalFilter}
         onFilterChange={setGlobalFilter}
         totalRecordCount={productData?.data?.meta?.total || 0}
@@ -312,14 +368,7 @@ const Products = () => {
         open={openProductDrawer}
         width={500}
       >
-        <Form
-          form={form}
-          onFinish={handleAddOrUpdate}
-          layout="vertical"
-          initialValues={{
-            isFeatured: "not",
-          }}
-        >
+        <Form form={form} onFinish={handleAddOrUpdate} layout="vertical">
           <Form.Item
             label="Product Name"
             name="productName"
@@ -503,13 +552,13 @@ const Products = () => {
             <Checkbox>Yes</Checkbox>
           </Form.Item>
 
-          <Form.Item label="This Product Has Variations" name="haveVarient">
-            <Checkbox onChange={(e) => setHaveVariant(e.target.checked)}>
+          <Form.Item label="Has Variations" name="haveVarient">
+            <Checkbox>
               Yes
             </Checkbox>
           </Form.Item>
 
-          {habeVairent && (
+          {haveVarient && (
             <>
               <Form.Item label="Variant" name="variant">
                 <Select
