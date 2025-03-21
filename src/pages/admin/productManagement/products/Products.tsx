@@ -38,7 +38,6 @@ const Products = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [habeVairent, setHaveVariant] = useState(false);
   const [attributesForColor, setAttributesForColor] = useState<any[]>([]);
-  console.log(attributesForColor);
   const { data: productData, refetch } = useGetproductDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
@@ -66,16 +65,16 @@ const Products = () => {
   const [productPut, { isLoading: isEditLoading }] = useProductPutMutation();
   const [productDelete, { isLoading: isDeleteLoading }] =
     useProductDeleteMutation();
-  const [skuCode, setSkuCode] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Function to generate a new SKU code (you can customize it as needed)
-  const generateSkuCode = () => {
-    const newSkuCode = `SKU-${Math.random()
-      .toString(36)
-      .substring(2, 8)
-      .toUpperCase()}`;
-    setSkuCode(newSkuCode); // Set the generated SKU code
-  };
+  useEffect(() => {
+    if (isEditLoading) {
+      setLoading(true);
+    }
+    if (isPostLoading) {
+      setLoading(true);
+    }
+  }, [isEditLoading, isPostLoading]);
 
   useEffect(() => {
     if (!openProductDrawer) {
@@ -96,9 +95,13 @@ const Products = () => {
   };
 
   const handleAddOrUpdate = async (values: any) => {
+
+    console.log(values);
     try {
       const formData = new FormData();
-      formData.append("name", values.productName);
+
+      // Append product details
+      formData.append("productName", values.productName);
       formData.append("skuCode", values.skuCode);
       formData.append("productCategory", values.productCategory);
       formData.append("productBrand", values.productBrand);
@@ -107,20 +110,35 @@ const Products = () => {
       formData.append("productPurchasePoint", values.productPurchasePoint);
       formData.append("productBuyingPrice", values.productBuyingPrice);
       formData.append("productSellingPrice", values.productSellingPrice);
+      formData.append("productOfferPrice", values.productOfferPrice);
       formData.append("productStock", values.productStock);
+      formData.append("isFeatured", values.isFeatured);
+      formData.append("productDescription", values.productDescription);
+      formData.append("variant", values?.variant || null);
 
-      featureImageList.forEach((file) => {
-        formData.append("featureImage", file.originFileObj);
-      });
 
-      fileList.forEach((file) => {
-        formData.append("images", file.originFileObj);
-      });
-
-      if (habeVairent) {
-        formData.append("variants", JSON.stringify(selectedColors));
+      if (values?.productFeatureImage) {
+          formData.append("productFeatureImage", values.productFeatureImage.file); // Ensure this field name is correct
+       
+      } else {
+        console.error("No feature image selected.");
       }
 
+      if (values?.productImages) {
+        values?.productImages.fileList.forEach((file : any) => {
+          formData.append("productImages", file.originFileObj); // Ensure this field name is correct
+        });
+      } else {
+        console.error("No additional images selected.");
+      }
+
+
+      // Handle color-related data
+      if (values.variantcolor && values.variantcolor.length > 0) {
+        formData.append("variantcolor", JSON.stringify(values.variantcolor));
+      }
+
+      // Submit the form
       const res = editingProduct
         ? await productPut({ formData, id: editingProduct._id }).unwrap()
         : await productPost(formData).unwrap();
@@ -263,6 +281,8 @@ const Products = () => {
         onPaginationChange={(pageIndex, pageSize) =>
           setPagination({ pageIndex, pageSize })
         }
+        onBulkDelete={() => {}}
+        enableBulkDelete={false}
         globalFilter={globalFilter}
         onFilterChange={setGlobalFilter}
         totalRecordCount={productData?.data?.meta?.total || 0}
@@ -303,14 +323,21 @@ const Products = () => {
             <Input.Group compact>
               <Input
                 style={{ width: "80%" }}
-                value={skuCode}
-                onChange={(e) => setSkuCode(e.target.value)} // Allow manual entry if needed
+                value={Form.useWatch("skuCode", form)}
                 placeholder="Enter SKU code"
+                // You don't need to manually manag e SKU value here anymore
               />
               <Button
                 type="primary"
                 style={{ width: "20%" }}
-                onClick={generateSkuCode} // Trigger SKU code generation
+                onClick={() => {
+                  // Generate a new SKU code and update it in the form
+                  const newSkuCode = `SKU-${Math.random()
+                    .toString(36)
+                    .substring(2, 8)
+                    .toUpperCase()}`;
+                  form.setFieldsValue({ skuCode: newSkuCode });
+                }}
               >
                 Generate
               </Button>
@@ -339,7 +366,7 @@ const Products = () => {
             <Select
               placeholder="Select a category"
               options={categories?.data?.result.map((item: any) => ({
-                label: item.name,
+                label: `${item.name} (${item.type.toUpperCase()})`,
                 value: item._id,
               }))}
             />
@@ -349,7 +376,7 @@ const Products = () => {
             label="Weight"
             name="productWeight"
             rules={[
-              { required: true, message: "Please enter the product weight" },
+              { required: false, message: "Please enter the product weight" },
             ]}
           >
             <Input />
@@ -373,7 +400,7 @@ const Products = () => {
             label="Purchase Point"
             name="productPurchasePoint"
             rules={[
-              { required: true, message: "Please enter the purchase point" },
+              { required: false, message: "Please enter the purchase point" },
             ]}
           >
             <Input />
@@ -430,7 +457,13 @@ const Products = () => {
             </Upload>
           </Form.Item>
 
-          <Form.Item label="Images" name="productImages">
+          <Form.Item
+            label="Images"
+            name="productImages"
+            rules={[
+              { required: true, message: "please select product images." },
+            ]}
+          >
             <Upload
               listType="picture-card"
               fileList={fileList}
@@ -451,15 +484,11 @@ const Products = () => {
             <Input.TextArea rows={4} />
           </Form.Item>
 
-          <Form.Item label="Featured" name="isFeatured" valuePropName="checked">
+          <Form.Item label="Featured" name="isFeatured">
             <Checkbox>Yes</Checkbox>
           </Form.Item>
 
-          <Form.Item
-            label="This Product Has Variations"
-            name="haveVarient"
-            valuePropName="checked"
-          >
+          <Form.Item label="This Product Has Variations" name="haveVarient">
             <Checkbox onChange={(e) => setHaveVariant(e.target.checked)}>
               Yes
             </Checkbox>
@@ -467,9 +496,9 @@ const Products = () => {
 
           {habeVairent && (
             <>
-              <Form.Item label="Variants" name="variants">
+              <Form.Item label="Variant" name="variant">
                 <Select
-                  placeholder="Select variants"
+                  placeholder="Select variant"
                   options={attributes?.data?.result.map((item: any) => ({
                     label: item.name,
                     value: item._id,
