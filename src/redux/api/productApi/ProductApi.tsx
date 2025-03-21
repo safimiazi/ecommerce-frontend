@@ -26,7 +26,7 @@ const ProductApi = baseApi.injectEndpoints({
     }),
     getproductData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
-        url: "/product/get_products",
+        url: "/product",
         method: "GET",
         params: {
           limit: pageSize,

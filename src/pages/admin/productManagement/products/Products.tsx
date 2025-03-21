@@ -210,10 +210,10 @@ const Products = () => {
     },
     {
       header: "NAME",
-      Cell: ({ row }: any) => <span>{row.name}</span>,
+      Cell: ({ row }: any) => <span>{row.productName}</span>,
     },
     {
-      header: "IMAGES",
+      header: "Feature image",
       Cell: ({ row }: any) => (
         <div className="flex items-center gap-1">
           {row?.images?.map((image: string) => (
@@ -222,6 +222,17 @@ const Products = () => {
         </div>
       ),
     },
+    {
+      header: " images",
+      Cell: ({ row }: any) => (
+        <div className="flex items-center gap-1">
+          {row?.images?.map((image: string) => (
+            <img key={image} src={image} width={80} height={80} />
+          ))}
+        </div>
+      ),
+    },
+    // aro parle add koro
     {
       header: "CREATED DATE",
       Cell: ({ row }: any) => (
