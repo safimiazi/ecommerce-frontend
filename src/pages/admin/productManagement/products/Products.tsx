@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -13,6 +13,8 @@ import {
   notification,
   Drawer,
   Table,
+  Menu,
+  Dropdown,
 } from "antd";
 import CustomTable from "../../../../components/common/CustomTable";
 import MaxWidth from "../../../../wrapper/MaxWidth";
@@ -185,24 +187,34 @@ const Products = () => {
     {
       header: "ACTION",
       size: 50,
-      Cell: ({ row }: any) => (
-        <div className="flex justify-start gap-2">
-          <Popconfirm
-            title="Are you sure you want to delete this product?"
-            onConfirm={() => handleDelete(row._id)}
-            okText="Yes, Delete"
-            cancelText="Cancel"
-          >
-            <Button type="primary" icon={<DeleteOutlined />}>
-              Delete
-            </Button>
-          </Popconfirm>
-
-          <Button loading={isDeleteLoading} onClick={() => handleEdit(row)}>
-            Edit
-          </Button>
-        </div>
-      ),
+      Cell: ({ row }: any) => {
+        const menu = (
+          <Menu>
+            <Menu.Item key="edit" onClick={() => handleEdit(row)}>
+              <EditOutlined /> Edit
+            </Menu.Item>
+            <Menu.Item key="details" onClick={() => handleDetails(row)}>
+              <EyeOutlined /> Details
+            </Menu.Item>
+            <Menu.Item key="delete" danger>
+              <Popconfirm
+                title="Are you sure you want to delete this product?"
+                onConfirm={() => handleDelete(row._id)}
+                okText="Yes, Delete"
+                cancelText="Cancel"
+              >
+                <DeleteOutlined /> Delete
+              </Popconfirm>
+            </Menu.Item>
+          </Menu>
+        );
+  
+        return (
+          <Dropdown overlay={menu} trigger={["hover"]}>
+            <Button icon={<MoreOutlined />} />
+          </Dropdown>
+        );
+      },
     },
     {
       header: "NAME",
