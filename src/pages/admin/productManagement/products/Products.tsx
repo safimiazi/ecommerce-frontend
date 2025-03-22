@@ -17,7 +17,6 @@ import {
   InputNumber,
   Popconfirm,
   Drawer,
-  Table,
   Menu,
   Dropdown,
 } from "antd";
@@ -150,7 +149,7 @@ const Products = () => {
 
       // Handle color-related data
       if (values.variantcolor && values.variantcolor.length > 0) {
-        formData.append("variantcolor", JSON.stringify(values.variantcolor));
+        formData.append("variantcolor", values.variantcolor || null);
       }
 
       // Submit the form
@@ -207,8 +206,8 @@ const Products = () => {
       isFeatured: product?.isFeatured,
       haveVarient: product?.haveVarient,
       productDescription: product?.productDescription,
-      variant: product.variant._id,
-      variantcolor: product?.variantcolor.map((item: any) => ({
+      variant: product.variant?._id,
+      variantcolor: product?.variantcolor?.map((item: any) => ({
         label: item.name,
         value: item._id,
       })),
