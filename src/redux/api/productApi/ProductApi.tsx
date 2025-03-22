@@ -47,6 +47,18 @@ const ProductApi = baseApi.injectEndpoints({
         },
       }),
     }),
+    getProductByCategory: build.query({
+      query: ({ pageIndex, pageSize, search, isDelete, id }) => ({
+        url: `/products/${id}`,
+        method: "GET",
+        params: {
+          limit: pageSize,
+          page: pageIndex ,
+          searchTerm: search ,
+          isDelete
+        },
+      }),
+    }),
     getSingleproductData: build.query({
       query: ({ id }) => ({
         url: `/product/get_product/${id}`,
@@ -66,5 +78,6 @@ export const {
     useProductDeleteMutation,
     useGetproductDataQuery,
     useGetSingleproductDataQuery,
-    useBulkDeleteMutation
+    useBulkDeleteMutation,
+    useGetProductByCategoryQuery
 } = ProductApi;

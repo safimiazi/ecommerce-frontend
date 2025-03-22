@@ -56,6 +56,7 @@ const Products = () => {
     isDelete: false,
     search: globalFilter,
   });
+
   const { data: categories } = useGetCategoryDataQuery({
     isDelete: false,
     search: globalFilter,
