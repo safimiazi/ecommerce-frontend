@@ -45,12 +45,15 @@ const Products = () => {
   const [openProductDrawer, setOpenProductDrawer] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [fileList, setFileList] = useState<any[]>([]);
+  console.log("ffff", fileList)
   const [featureImageList, setFeatureImageList] = useState<any[]>([]);
   const [form] = Form.useForm();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
-  const haveVarient = Form.useWatch("haveVarient", form)
+  const haveVarient = Form.useWatch("haveVarient", form);
+  console.log(haveVarient);
   const [attributesForColor, setAttributesForColor] = useState<any[]>([]);
+  console.log(attributesForColor);
   const { data: productData, refetch } = useGetproductDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
@@ -96,6 +99,8 @@ const Products = () => {
       setFileList([]);
       setFeatureImageList([]);
       setAttributesForColor([]);
+      setProductImages([]);
+      setProductFeatureImage(null);
     }
   }, [openProductDrawer]);
 
@@ -113,31 +118,31 @@ const Products = () => {
       const formData = new FormData();
 
       // Append product details
-      formData.append("productName", values.productName);
-      formData.append("skuCode", values.skuCode);
-      formData.append("productCategory", values.productCategory);
-      formData.append("productBrand", values.productBrand);
-      formData.append("productWeight", values.productWeight);
-      formData.append("productUnit", values.productUnit);
-      formData.append("productPurchasePoint", values.productPurchasePoint);
-      formData.append("productBuyingPrice", values.productBuyingPrice);
-      formData.append("productSellingPrice", values.productSellingPrice);
-      formData.append("productOfferPrice", values.productOfferPrice);
-      formData.append("productStock", values.productStock);
-      formData.append("isFeatured", values.isFeatured);
-      formData.append("haveVarient", values.haveVarient);
-      formData.append("productDescription", values.productDescription);
+      formData.append("productName", values.productName || null);
+      formData.append("skuCode", values.skuCode || null);
+      formData.append("productCategory", values.productCategory || null);
+      formData.append("productBrand", values.productBrand || null);
+      formData.append("productWeight", values.productWeight || null);
+      formData.append("productUnit", values.productUnit || null);
+      formData.append("productPurchasePoint", values.productPurchasePoint || null);
+      formData.append("productBuyingPrice", values.productBuyingPrice || null);
+      formData.append("productSellingPrice", values.productSellingPrice || null);
+      formData.append("productOfferPrice", values.productOfferPrice || null);
+      formData.append("productStock", values.productStock || null);
+      formData.append("isFeatured", values.isFeatured || null);
+      formData.append("haveVarient", values.haveVarient || null);
+      formData.append("productDescription", values.productDescription || null);
       formData.append("variant", values?.variant || null);
 
       if (values?.productFeatureImage) {
-        formData.append("productFeatureImage", values.productFeatureImage.file); // Ensure this field name is correct
+        formData.append("productFeatureImage", values.productFeatureImage.file || null); // Ensure this field name is correct
       } else {
         console.error("No feature image selected.");
       }
 
-      if (values?.productImages) {
-        values?.productImages.fileList.forEach((file: any) => {
-          formData.append("productImages", file.originFileObj); // Ensure this field name is correct
+      if (fileList) {
+        fileList.forEach((file: any) => {
+          formData.append("productImages", file?.originFileObj || null); // Ensure this field name is correct
         });
       } else {
         console.error("No additional images selected.");
@@ -163,6 +168,8 @@ const Products = () => {
       form.resetFields();
       setEditingProduct(null);
       setOpenProductDrawer(false);
+      setProductImages([]);
+      setProductFeatureImage(null);
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
@@ -178,14 +185,37 @@ const Products = () => {
     setSelectedProduct(null);
   };
 
+  const [productImages, setProductImages] = useState([]);
+  const [productFeatureImage, setProductFeatureImage] = useState(null);
+
   const handleEdit = (product: any) => {
     console.log(product);
     setEditingProduct(product);
     setOpenProductDrawer(true);
-    form.setFieldsValue(product);
-    setFileList(product?.images || []);
-    setFeatureImageList(product?.featureImage || []);
-    setAttributesForColor(product?.variants || []);
+    form.setFieldsValue({
+      productName: product?.productName,
+      skuCode: product?.skuCode,
+      productCategory: product?.productCategory._id,
+      productBrand: product?.productBrand._id,
+      productWeight: product?.productWeight,
+      productUnit: product?.productUnit._id,
+      productPurchasePoint: product?.productPurchasePoint,
+      productBuyingPrice: product?.productBuyingPrice,
+      productSellingPrice: product?.productSellingPrice,
+      productOfferPrice: product?.productOfferPrice,
+      productStock: product?.productStock,
+      isFeatured: product?.isFeatured,
+      haveVarient: product?.haveVarient,
+      productDescription: product?.productDescription,
+      variant: product.variant._id,
+      variantcolor: product?.variantcolor.map((item: any) => ({
+        label: item.name,
+        value: item._id,
+      })),
+    });
+    setProductImages(product?.productImages);
+    setProductFeatureImage(product?.productFeatureImage);
+    setAttributesForColor(product?.variantcolor || []);
   };
 
   const handleDelete = async (id: string) => {
@@ -281,40 +311,6 @@ const Products = () => {
       ),
     },
   ];
-
-  const columns = [
-    {
-      title: "Color Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text: any) => <strong>{text}</strong>, // Make color name bold
-    },
-
-    {
-      title: "Variant Color",
-      key: "variantColor",
-      render: (_: any, record: any) => (
-        <Form.Item name={`variantcolor`}>
-          <Select
-            mode="multiple"
-            placeholder="Select variant colors"
-            style={{ width: "100%" }}
-            options={record.attributeOption.map((item: any) => ({
-              label: item.name,
-              value: item._id,
-            }))}
-          />
-        </Form.Item>
-      ),
-    },
-  ];
-
-  const data = attributesForColor.map((color: any) => ({
-    key: color._id,
-    name: color.name,
-    colorCode: color.colorCode,
-    attributeOption: color.attributeOption,
-  }));
 
   const deleteMultiple = async (ids: string[]) => {
     try {
@@ -505,20 +501,34 @@ const Products = () => {
           </Form.Item>
 
           <Form.Item label="Featured Image" name="productFeatureImage">
-            <Upload
-              listType="picture-card"
-              fileList={featureImageList}
-              beforeUpload={() => false}
-              onChange={handleFeatureImageChange}
-              maxCount={1}
-            >
-              {featureImageList.length >= 1 ? null : (
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </div>
-              )}
-            </Upload>
+            <div>
+              <Upload
+                listType="picture-card"
+                fileList={featureImageList}
+                beforeUpload={() => false}
+                onChange={handleFeatureImageChange}
+                maxCount={1}
+              >
+                {featureImageList.length >= 1 ? null : (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
+              </Upload>
+              <div>
+                {productFeatureImage && (
+                  <img
+                    src={productFeatureImage}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      marginBottom: 16,
+                    }}
+                  />
+                )}
+              </div>
+            </div>
           </Form.Item>
 
           <Form.Item
@@ -528,34 +538,49 @@ const Products = () => {
               { required: true, message: "please select product images." },
             ]}
           >
-            <Upload
-              listType="picture-card"
-              fileList={fileList}
-              beforeUpload={() => false}
-              onChange={handleUploadChange}
-              multiple
-            >
-              {fileList.length >= 5 ? null : (
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </div>
-              )}
-            </Upload>
+            <div className="space-y-2">
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                beforeUpload={() => false}
+                onChange={handleUploadChange}
+                multiple
+              >
+                {fileList.length >= 5 ? null : (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
+              </Upload>
+              <div className="grid grid-cols-5 gap-1">
+                {productImages?.length > 0 &&
+                  productImages.map((image: string) => {
+                    return (
+                      <img
+                        src={image}
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          marginBottom: 16,
+                        }}
+                      />
+                    );
+                  })}
+              </div>
+            </div>
           </Form.Item>
 
           <Form.Item label="Product Description" name="productDescription">
             <Input.TextArea rows={4} />
           </Form.Item>
 
-          <Form.Item label="Featured" name="isFeatured">
-            <Checkbox>Yes</Checkbox>
+          <Form.Item name="isFeatured" valuePropName="checked">
+            <Checkbox>Is Featured?</Checkbox>
           </Form.Item>
 
-          <Form.Item label="Has Variations" name="haveVarient">
-            <Checkbox>
-              Yes
-            </Checkbox>
+          <Form.Item name="haveVarient" valuePropName="checked">
+            <Checkbox>Have Variant?</Checkbox>
           </Form.Item>
 
           {haveVarient && (
@@ -568,27 +593,32 @@ const Products = () => {
                     value: item._id,
                   }))}
                   onChange={(values) => {
-                    const selectedAttributes = attributes?.data?.result.filter(
+                    const selectedAttributes = attributes?.data?.result.find(
                       (attr: any) => values.includes(attr._id)
                     );
-                    setAttributesForColor(selectedAttributes);
+                    setAttributesForColor(selectedAttributes?.attributeOption);
                   }}
                 />
               </Form.Item>
             </>
           )}
 
-          {attributesForColor[0]?.name === "Color" && (
-            <Table
-              columns={columns}
-              dataSource={data}
-              pagination={false} // Disable pagination
-              bordered
-            />
+          {attributesForColor.length > 0 && (
+            <Form.Item name={`variantcolor`}>
+              <Select
+                mode="multiple"
+                placeholder="Select variant colors"
+                style={{ width: "100%" }}
+                options={attributesForColor?.map((item: any) => ({
+                  label: item.name,
+                  value: item._id,
+                }))}
+              />
+            </Form.Item>
           )}
 
           <Form.Item>
-            <Button loading={loading} type="primary" htmlType="submit">
+            <Button  type="primary" htmlType="submit">
               Submit
             </Button>
           </Form.Item>
