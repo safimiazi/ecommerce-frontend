@@ -74,11 +74,11 @@ const Products = () => {
   });
 
   const [productPost, { isLoading: isPostLoading }] = useProductPostMutation();
-  const [ProductUpdate, { isLoading: isEditLoading }] = useProductUpdateMutation();
+  const [ProductUpdate, { isLoading: isEditLoading }] =
+    useProductUpdateMutation();
   const [productDelete] = useProductDeleteMutation();
   const [bulkDelete] = useBulkDeleteMutation();
   const [loading, setLoading] = useState(false);
-
 
   useEffect(() => {
     if (isEditLoading) {
@@ -110,7 +110,7 @@ const Products = () => {
   };
 
   const handleAddOrUpdate = async (values: any) => {
- console.log(values);
+    console.log(values);
     try {
       const formData = new FormData();
 
@@ -121,20 +121,30 @@ const Products = () => {
       formData.append("productBrand", values.productBrand || ""); // Default empty string or null
       formData.append("productWeight", values.productWeight || ""); // Default empty string
       formData.append("productUnit", values.productUnit || ""); // Default empty string
-      formData.append("productPurchasePoint", values.productPurchasePoint || ""); // Default empty string
+      formData.append(
+        "productPurchasePoint",
+        values.productPurchasePoint || ""
+      ); // Default empty string
       formData.append("productBuyingPrice", values.productBuyingPrice || 0); // Default 0
       formData.append("productSellingPrice", values.productSellingPrice || 0); // Default 0
       formData.append("productOfferPrice", values.productOfferPrice || 0); // Default 0
       formData.append("productStock", values.productStock || 0); // Default 0
-      formData.append("isFeatured", values.isFeatured !== undefined ? values.isFeatured : false); // Default false
-      formData.append("haveVarient", values.haveVarient !== undefined ? values.haveVarient : false); // Default false
+      formData.append(
+        "isFeatured",
+        values.isFeatured !== undefined ? values.isFeatured : false
+      ); // Default false
+      formData.append(
+        "haveVarient",
+        values.haveVarient !== undefined ? values.haveVarient : false
+      ); // Default false
       formData.append("productDescription", values.productDescription || ""); // Default empty string
       formData.append("variant", values?.variant || null); // Default null if no variant
-  
-      if ( featureImageList &&  featureImageList[0]?.
-        originFileObj) {
-        formData.append("productFeatureImage", featureImageList[0]?.
-          originFileObj || null); // Ensure this field name is correct
+
+      if (featureImageList && featureImageList[0]?.originFileObj) {
+        formData.append(
+          "productFeatureImage",
+          featureImageList[0]?.originFileObj || null
+        ); // Ensure this field name is correct
       } else {
         console.error("No feature image selected.");
       }
@@ -154,7 +164,10 @@ const Products = () => {
 
       // Submit the form
       const res = editingProduct
-        ? await ProductUpdate({data: formData, id: editingProduct._id }).unwrap()
+        ? await ProductUpdate({
+            data: formData,
+            id: editingProduct._id,
+          }).unwrap()
         : await productPost(formData).unwrap();
 
       Swal.fire({
@@ -173,7 +186,7 @@ const Products = () => {
       console.error(error);
       Swal.fire({
         title: "Error!",
-        text: `${error?.data?.message || error.data?.errorSource[0]?.message }`,
+        text: `${error?.data?.message || error.data?.errorSource[0]?.message}`,
         icon: "error",
       });
     }
