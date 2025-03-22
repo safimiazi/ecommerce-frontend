@@ -27,7 +27,7 @@ import {
   useGetproductDataQuery,
   useProductDeleteMutation,
   useProductPostMutation,
-  useProductPutMutation,
+  useProductUpdateMutation,
 } from "../../../../redux/api/productApi/ProductApi";
 import { useGetCategoryDataQuery } from "../../../../redux/api/categoryApi/CategoryApi";
 import { useGetbrandDataQuery } from "../../../../redux/api/brandApi/BrandApi";
@@ -44,15 +44,12 @@ const Products = () => {
   const [openProductDrawer, setOpenProductDrawer] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [fileList, setFileList] = useState<any[]>([]);
-  console.log("ffff", fileList)
   const [featureImageList, setFeatureImageList] = useState<any[]>([]);
   const [form] = Form.useForm();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
   const haveVarient = Form.useWatch("haveVarient", form);
-  console.log(haveVarient);
   const [attributesForColor, setAttributesForColor] = useState<any[]>([]);
-  console.log(attributesForColor);
   const { data: productData, refetch } = useGetproductDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
@@ -77,10 +74,11 @@ const Products = () => {
   });
 
   const [productPost, { isLoading: isPostLoading }] = useProductPostMutation();
-  const [productPut, { isLoading: isEditLoading }] = useProductPutMutation();
+  const [ProductUpdate, { isLoading: isEditLoading }] = useProductUpdateMutation();
   const [productDelete] = useProductDeleteMutation();
   const [bulkDelete] = useBulkDeleteMutation();
   const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     if (isEditLoading) {
@@ -112,29 +110,31 @@ const Products = () => {
   };
 
   const handleAddOrUpdate = async (values: any) => {
-    console.log(values);
+ console.log(values);
     try {
       const formData = new FormData();
 
       // Append product details
-      formData.append("productName", values.productName || null);
-      formData.append("skuCode", values.skuCode || null);
-      formData.append("productCategory", values.productCategory || null);
-      formData.append("productBrand", values.productBrand || null);
-      formData.append("productWeight", values.productWeight || null);
-      formData.append("productUnit", values.productUnit || null);
-      formData.append("productPurchasePoint", values.productPurchasePoint || null);
-      formData.append("productBuyingPrice", values.productBuyingPrice || null);
-      formData.append("productSellingPrice", values.productSellingPrice || null);
-      formData.append("productOfferPrice", values.productOfferPrice || null);
-      formData.append("productStock", values.productStock || null);
-      formData.append("isFeatured", values.isFeatured || null);
-      formData.append("haveVarient", values.haveVarient || null);
-      formData.append("productDescription", values.productDescription || null);
-      formData.append("variant", values?.variant || null);
-
-      if (values?.productFeatureImage) {
-        formData.append("productFeatureImage", values.productFeatureImage.file || null); // Ensure this field name is correct
+      formData.append("productName", values.productName || ""); // Default empty string
+      formData.append("skuCode", values.skuCode || ""); // Default empty string
+      formData.append("productCategory", values.productCategory || ""); // Default empty string or null
+      formData.append("productBrand", values.productBrand || ""); // Default empty string or null
+      formData.append("productWeight", values.productWeight || ""); // Default empty string
+      formData.append("productUnit", values.productUnit || ""); // Default empty string
+      formData.append("productPurchasePoint", values.productPurchasePoint || ""); // Default empty string
+      formData.append("productBuyingPrice", values.productBuyingPrice || 0); // Default 0
+      formData.append("productSellingPrice", values.productSellingPrice || 0); // Default 0
+      formData.append("productOfferPrice", values.productOfferPrice || 0); // Default 0
+      formData.append("productStock", values.productStock || 0); // Default 0
+      formData.append("isFeatured", values.isFeatured !== undefined ? values.isFeatured : false); // Default false
+      formData.append("haveVarient", values.haveVarient !== undefined ? values.haveVarient : false); // Default false
+      formData.append("productDescription", values.productDescription || ""); // Default empty string
+      formData.append("variant", values?.variant || null); // Default null if no variant
+  
+      if ( featureImageList &&  featureImageList[0]?.
+        originFileObj) {
+        formData.append("productFeatureImage", featureImageList[0]?.
+          originFileObj || null); // Ensure this field name is correct
       } else {
         console.error("No feature image selected.");
       }
@@ -149,12 +149,12 @@ const Products = () => {
 
       // Handle color-related data
       if (values.variantcolor && values.variantcolor.length > 0) {
-        formData.append("variantcolor", values.variantcolor || null);
+        formData.append("variantcolor", JSON.stringify(values.variantcolor));
       }
 
       // Submit the form
       const res = editingProduct
-        ? await productPut({ formData, id: editingProduct._id }).unwrap()
+        ? await ProductUpdate({data: formData, id: editingProduct._id }).unwrap()
         : await productPost(formData).unwrap();
 
       Swal.fire({
@@ -170,9 +170,10 @@ const Products = () => {
       setProductImages([]);
       setProductFeatureImage(null);
     } catch (error: any) {
+      console.error(error);
       Swal.fire({
         title: "Error!",
-        text: `${error.data?.errorSource[0]?.message || error?.data?.message}`,
+        text: `${error?.data?.message || error.data?.errorSource[0]?.message }`,
         icon: "error",
       });
     }
@@ -596,6 +597,7 @@ const Products = () => {
                       (attr: any) => values.includes(attr._id)
                     );
                     setAttributesForColor(selectedAttributes?.attributeOption);
+                    form.setFieldsValue({ variantcolor: [] });
                   }}
                 />
               </Form.Item>
@@ -617,7 +619,7 @@ const Products = () => {
           )}
 
           <Form.Item>
-            <Button  type="primary" htmlType="submit">
+            <Button loading={loading} type="primary" htmlType="submit">
               Submit
             </Button>
           </Form.Item>
