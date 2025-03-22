@@ -27,7 +27,7 @@ const ProductApi = baseApi.injectEndpoints({
     bulkDelete: build.mutation({
       query: ({ ids }) => ({
         url: `/product/bulk`,
-        method: "DELETE",
+        method: "POST",
         body: { ids },
       }),
     }),

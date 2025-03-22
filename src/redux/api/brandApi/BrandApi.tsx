@@ -26,9 +26,9 @@ const brandApi = baseApi.injectEndpoints({
       invalidatesTags: ["brand"], // আপডেট হলে ক্যাশ রিফ্রেশ হবে
     }),
     bulkDelete: build.mutation({
-      query: ( ids ) => ({
+      query: (ids) => ({
         url: `/brand/delete_bulk`,
-        method: "DELETE",
+        method: "POST",
         body: { ids },
       }),
       invalidatesTags: ["brand"], // আপডেট হলে ক্যাশ রিফ্রেশ হবে
