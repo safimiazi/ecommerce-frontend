@@ -73,20 +73,20 @@ const Products = () => {
     <>
       <div className="space-y-6">
         {/* Search Bar */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 px-4 py-6">
+        <div className="flex bg-blue-200 rounded flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 px-4 py-6">
           {/* Search Input */}
           <div className="w-full sm:w-1/2">
             <Search
               placeholder="Search products..."
               allowClear
               enterButton="Search"
-              size="large"
+              size="middle"
               onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm
               className="w-full"
             />
           </div>
           <Button type="primary" icon={<FilterOutlined />} onClick={showDrawer}>
-            Filters
+           Advance Filters
           </Button>
           {/* Sort Order Select */}
           <div className="w-full sm:w-1/4">
