@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import Account from "../ui/Account";
+import { useCompare } from "../../hooks/CompareContext";
 
 const Top = ({
   setIsMobileMenuOpen,
@@ -17,6 +18,8 @@ const Top = ({
   setWishlistOpen,
   setCompareOpen,
 }: any) => {
+  const { compareList } = useCompare();
+
   return (
     <div className="h-16 border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
       <button
@@ -51,7 +54,7 @@ const Top = ({
 
       {/* Right: Wishlist, Login, Cart (Hidden in Mobile) */}
       <div className="hidden md:flex gap-6 items-center">
-        <Badge color="blue" count={5}>
+        <Badge color="blue" count={compareList?.length}>
           <div className="p-2 rounded-full bg-gray-200">
             <GitCompare
               className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"

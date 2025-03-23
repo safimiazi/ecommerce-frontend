@@ -17,6 +17,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
 import { useRef, useState } from "react";
 import ProductQuickView from "./ProductQuickView";
+import { useCompare } from "../../hooks/CompareContext";
 
 const ProductCard = ({ product }: any) => {
   const swiperRef = useRef<SwiperType | null>(null);
@@ -24,6 +25,7 @@ const ProductCard = ({ product }: any) => {
   const discountPrice = product?.productOfferPrice
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
+    const { addToCompare } = useCompare();
 
   return (
     <div>
@@ -90,7 +92,7 @@ const ProductCard = ({ product }: any) => {
               </div>
             </Tooltip>
             <Tooltip title="Compare">
-              <div className="p-2 rounded-full bg-blue-500 cursor-pointer">
+              <div onClick={()=> addToCompare(product)} className="p-2 rounded-full bg-blue-500 cursor-pointer">
                 <GitCompare className="text-white" size={15} />
               </div>
             </Tooltip>
