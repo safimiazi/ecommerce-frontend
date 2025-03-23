@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Drawer, Table, Image, Button, Tag } from "antd";
+import { Drawer, Table, Image, Button } from "antd";
 import { useCompare } from "../../hooks/CompareContext";
 import { X } from "lucide-react";
 
@@ -23,7 +23,7 @@ const CompareDrawer = ({ onClose, open }: any) => {
             pagination={false}
             bordered
             columns={[
-              { title: "Feature", dataIndex: "feature", key: "feature" },
+              { title: "Image", dataIndex: "feature", key: "feature" },
               ...compareList.map((product, index) => ({
                 title: (
                   <div className="flex items-center gap-2">

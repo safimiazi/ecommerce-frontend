@@ -2,8 +2,11 @@
 import { Badge } from "antd";
 import { GitCompare, Heart, ShoppingCart } from "lucide-react";
 import Account from "../ui/Account";
+import { useCompare } from "../../hooks/CompareContext";
 
 const BottomNav = ({ showCart, setWishlistOpen, setCompareOpen }: any) => {
+  const { compareList } = useCompare();
+
   return (
     <div className="py-4 md:z-[1000] border-t border-gray-200 fixed bottom-0 w-full bg-white flex justify-around items-center md:hidden shadow-lg">
       <Badge color="blue" count={5}>
@@ -16,7 +19,7 @@ const BottomNav = ({ showCart, setWishlistOpen, setCompareOpen }: any) => {
         </div>
       </Badge>
       <Account/>
-      <Badge color="blue" count={5}>
+      <Badge color="blue" count={compareList?.length}>
         <div className="p-2 rounded-full bg-gray-200">
           <GitCompare
             className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"
