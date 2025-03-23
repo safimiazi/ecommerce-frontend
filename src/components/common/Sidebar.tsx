@@ -1,29 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { useGetCategoryForSidebarQuery } from "../../redux/api/categoryApi/CategoryApi";
 import { CategoryFormater } from "./CategoryFormater";
 import { NavItem } from "./NavItem";
 import { SubNavItem } from "./SubNavItem";
-import { setCategoryId } from "../../redux/features/category/categorySlice";
 
-const Sidebar = ({
-  setIsMobileMenuOpen,
-  isMobileMenuOpen,
-}: any) => {
+const Sidebar = ({ setIsMobileMenuOpen, isMobileMenuOpen }: any) => {
   // Fetch categories
   const { data } = useGetCategoryForSidebarQuery({
     isDelete: false,
   });
 
-  const dispatch = useDispatch();
-
-
   // Handle category click
   const handleCategoryClick = (id: string) => {
-    console.log(id)
-    dispatch(setCategoryId({ id }));
+    console.log("Category ID: ", id);
   };
 
   return (
@@ -41,16 +33,20 @@ const Sidebar = ({
             {CategoryFormater(data?.data?.result)?.map((category: any) => (
               <div key={category.id} className="space-y-1">
                 {category.subcategories.length > 0 ? (
-                  <SubNavItem
-                    name={category.name}
-                    items={category.subcategories}
-                    id={category.id} // Pass category ID
-                    onClick={handleCategoryClick} // Pass click handler
-                  />
+                  <Link to={`/products/${category.id}`}>
+                    <SubNavItem
+                      name={category.name}
+                      items={category.subcategories}
+                      id={category.id} // Pass category ID
+                      onClick={handleCategoryClick} // Pass click handler
+                    />
+                  </Link>
                 ) : (
-                  <NavItem id={category.id} onClick={handleCategoryClick}>
-                    {category.name}
-                  </NavItem>
+                  <Link to={`/products/${category.id}`}>
+                    <NavItem id={category.id} onClick={handleCategoryClick}>
+                      {category.name}
+                    </NavItem>
+                  </Link>
                 )}
               </div>
             ))}

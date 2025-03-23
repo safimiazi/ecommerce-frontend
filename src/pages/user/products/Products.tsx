@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useParams } from "react-router-dom";
 import { useGetProductByCategoryQuery } from "../../../redux/api/productApi/ProductApi";
-import { useSelector } from "react-redux";
 
 const Products = () => {
-  const categoryId = useSelector((state: any) => state.category.categoryId);
-console.log(categoryId)
-  const { data: products } = useGetProductByCategoryQuery({
+    const { id } = useParams();
+    const { data: products } = useGetProductByCategoryQuery({
     isDelete: false,
-    id: "67dba9111dd28e85dab34dea",
+    id
   });
 
-  return <p>Selected Category ID: {categoryId ? categoryId : "None"}</p>;
+  return <p>Selected Category ID: {id ? id : "None"}</p>;
 };
 
 export default Products;

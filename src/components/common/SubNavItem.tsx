@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { NavItem } from "./NavItem";
+import { Link } from "react-router-dom";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const SubNavItem = ({ items, name, id, onClick }: any) => {
@@ -36,16 +37,20 @@ export const SubNavItem = ({ items, name, id, onClick }: any) => {
             ? items.map((item: any, inx: number) => (
                 <div key={inx}>
                   {item?.subcategories && item?.subcategories.length > 0 ? (
-                    <SubNavItem
-                      items={item.subcategories}
-                      name={item.name}
-                      id={item.id} // Pass category ID
-                      onClick={onClick} // Pass onClick handler
-                    />
+                    <Link to={`/products/${item.id}`}>
+                      <SubNavItem
+                        items={item.subcategories}
+                        name={item.name}
+                        id={item.id} // Pass category ID
+                        onClick={onClick} // Pass onClick handler
+                      />
+                    </Link>
                   ) : (
-                    <NavItem id={item.id} onClick={onClick}>
-                      {item.name}
-                    </NavItem>
+                    <Link to={`/products/${item.id}`}>
+                      <NavItem id={item.id} onClick={onClick}>
+                        {item.name}
+                      </NavItem>
+                    </Link>
                   )}
                 </div>
               ))
