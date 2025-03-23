@@ -1,27 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useDispatch } from "react-redux";
 import { useGetCategoryForSidebarQuery } from "../../redux/api/categoryApi/CategoryApi";
 import { CategoryFormater } from "./CategoryFormater";
 import { NavItem } from "./NavItem";
 import { SubNavItem } from "./SubNavItem";
+import { setCategoryId } from "../../redux/features/category/categorySlice";
 
 const Sidebar = ({
   setIsMobileMenuOpen,
   isMobileMenuOpen,
-  onCategoryClick,
 }: any) => {
   // Fetch categories
   const { data } = useGetCategoryForSidebarQuery({
     isDelete: false,
   });
 
+  const dispatch = useDispatch();
+
 
   // Handle category click
   const handleCategoryClick = (id: string) => {
-    if (onCategoryClick) {
-      onCategoryClick(id); // Pass the category ID to the parent component
-    }
+    console.log(id)
+    dispatch(setCategoryId({ id }));
   };
 
   return (

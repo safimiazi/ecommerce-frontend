@@ -12,7 +12,7 @@ const ProductApi = baseApi.injectEndpoints({
       },
     }),
     ProductUpdate: build.mutation({
-      query: ({data, id}) => {
+      query: ({ data, id }) => {
         return {
           url: `/product/update/${id}`,
           method: "PUT",
@@ -21,7 +21,6 @@ const ProductApi = baseApi.injectEndpoints({
       },
     }),
 
-    
     productDelete: build.mutation({
       query: ({ id }) => ({
         url: `/product/${id}`,
@@ -41,21 +40,22 @@ const ProductApi = baseApi.injectEndpoints({
         method: "GET",
         params: {
           limit: pageSize,
-          page: pageIndex ,
-          searchTerm: search ,
-          isDelete
+          page: pageIndex,
+          searchTerm: search,
+          isDelete,
         },
       }),
     }),
     getProductByCategory: build.query({
       query: ({ pageIndex, pageSize, search, isDelete, id }) => ({
-        url: `/products/${id}`,
+        url: `/products`,
         method: "GET",
         params: {
           limit: pageSize,
-          page: pageIndex ,
-          searchTerm: search ,
-          isDelete
+          page: pageIndex,
+          searchTerm: search,
+          isDelete,
+          id,
         },
       }),
     }),
@@ -63,7 +63,6 @@ const ProductApi = baseApi.injectEndpoints({
       query: ({ id }) => ({
         url: `/product/get_product/${id}`,
         method: "GET",
-       
       }),
     }),
   }),
@@ -72,12 +71,11 @@ const ProductApi = baseApi.injectEndpoints({
 });
 
 export const {
- 
-    useProductPostMutation,
-    useProductUpdateMutation,
-    useProductDeleteMutation,
-    useGetproductDataQuery,
-    useGetSingleproductDataQuery,
-    useBulkDeleteMutation,
-    useGetProductByCategoryQuery
+  useProductPostMutation,
+  useProductUpdateMutation,
+  useProductDeleteMutation,
+  useGetproductDataQuery,
+  useGetSingleproductDataQuery,
+  useBulkDeleteMutation,
+  useGetProductByCategoryQuery,
 } = ProductApi;

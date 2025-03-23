@@ -6,6 +6,7 @@ import Admin from "../Admin";
 import { routeGenerator } from "../utils/routesGenerator";
 import LoginRegistration from "../pages/auth/LoginRegistration";
 import { adminPaths } from "./admin.routes";
+import Products from "../pages/user/products/Products";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "/products",
+        element: <Products />,
       },
       {
         path: "/details",
