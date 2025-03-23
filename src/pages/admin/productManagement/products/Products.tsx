@@ -183,6 +183,7 @@ const Products = () => {
       setOpenProductDrawer(false);
       setProductImages([]);
       setProductFeatureImage(null);
+      setLoading(false)
     } catch (error: any) {
       console.error(error);
       Swal.fire({
@@ -203,7 +204,6 @@ const Products = () => {
   const [productFeatureImage, setProductFeatureImage] = useState(null);
 
   const handleEdit = (product: any) => {
-    console.log(product);
     setEditingProduct(product);
     setOpenProductDrawer(true);
     form.setFieldsValue({
