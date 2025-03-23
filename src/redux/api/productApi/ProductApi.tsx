@@ -47,13 +47,13 @@ const ProductApi = baseApi.injectEndpoints({
       }),
     }),
     getProductByCategory: build.query({
-      query: ({ pageIndex, pageSize, search, isDelete, id }) => ({
+      query: ({ pageIndex, pageSize, searchTerm, isDelete, id }) => ({
         url: `/product/products`,
         method: "GET",
         params: {
-          limit: pageSize,
-          page: pageIndex,
-          searchTerm: search,
+          pageSize,
+          pageIndex,
+          searchTerm,
           isDelete,
           id,
         },
