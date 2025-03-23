@@ -22,10 +22,10 @@ import { useCompare } from "../../hooks/CompareContext";
 const ProductCard = ({ product }: any) => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const { addToCompare } = useCompare();
   const discountPrice = product?.productOfferPrice
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
-    const { addToCompare } = useCompare();
 
   return (
     <div>
