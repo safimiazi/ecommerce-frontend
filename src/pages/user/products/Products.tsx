@@ -3,19 +3,28 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetProductByCategoryQuery } from "../../../redux/api/productApi/ProductApi";
 import ProductCard from "../../../components/ui/ProductCart";
-import { Pagination, Spin, Input } from "antd";
+import { Pagination, Spin, Input, Select, Button } from "antd";
+import { FilterOutlined } from "@ant-design/icons";
+import ProductFilters from "../../../components/ui/ProductFilters";
 
 const { Search } = Input;
 
 const Products = () => {
   const { id } = useParams();
+  const [open, setOpen] = useState(false);
 
   // 🔹 State for Pagination & Search
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [minPrice, setMinPrice] = useState();
+  const [maxPrice, setMaxPrice] = useState();
+  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState();
+  const [brand, setBrand] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-
+  const [sortOrder, setSortOrder] = useState("lowToHigh"); // Default sorting: Low to High
+  const [creationOrder, setCreationOrder] = useState("newest"); // Default sorting: Newest First
   // 🔹 Fetch Products with Pagination & Search
   const { data: products, isLoading } = useGetProductByCategoryQuery({
     isDelete: false,
@@ -23,8 +32,14 @@ const Products = () => {
     pageIndex,
     pageSize,
     searchTerm: debouncedSearchTerm,
+    sortOrder: sortOrder, // Pass sort order
+    creationOrder,
+    minPrice, 
+    maxPrice, 
+    brand, 
+    startDate, 
+    endDate, 
   });
-console.log(debouncedSearchTerm)
   // 🔹 Handle Page Change
   const handlePageChange = (page: number, size?: number) => {
     setPageIndex(page);
@@ -42,18 +57,65 @@ console.log(debouncedSearchTerm)
     };
   }, [searchTerm]); // Trigger when `searchTerm` changes
 
+
+  // Open & Close Drawer
+  const showDrawer = () => setOpen(true);
+  const closeDrawer = () => setOpen(false);
+
+  const onFilter = (data: any) => {
+    console.log("Filter Data: ", data);
+    setMinPrice(data.priceRange[0]);
+    setMaxPrice(data.priceRange[1]);
+    setStartDate(data.dateRange[0]);
+    setEndDate(data.dateRange[1]);
+    setBrand(data.selectedBrand);
+    
+  }
+
   return (
+  <>
     <div className="space-y-6">
       {/* Search Bar */}
-      <div className="flex justify-center">
-        <Search
-          placeholder="Search products..."
-          allowClear
-          enterButton="Search"
-          size="large"
-          onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm
-          className="w-[50%]"
-        />
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 px-4 py-6">
+        {/* Search Input */}
+        <div className="w-full sm:w-1/2">
+          <Search
+            placeholder="Search products..."
+            allowClear
+            enterButton="Search"
+            size="large"
+            onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm
+            className="w-full"
+          />
+        </div>
+        <Button type="primary" icon={<FilterOutlined/>} onClick={showDrawer}>
+        Filters
+      </Button>
+        {/* Sort Order Select */}
+        <div className="w-full sm:w-1/4">
+          <Select
+            defaultValue={sortOrder}
+            onChange={(value) => setSortOrder(value)}
+            options={[
+              { value: "lowToHigh", label: "Price: Low to High" },
+              { value: "HighToLow", label: "Price: High to Low" },
+            ]}
+            className="w-full"
+          />
+        </div>
+
+        {/* Creation Order Select */}
+        <div className="w-full sm:w-1/4">
+          <Select
+            defaultValue={creationOrder}
+            onChange={(value) => setCreationOrder(value)}
+            options={[
+              { value: "newest", label: "Newest First" },
+              { value: "oldest", label: "Oldest First" },
+            ]}
+            className="w-full"
+          />
+        </div>
       </div>
 
       {/* Loader While Fetching Data */}
@@ -83,6 +145,10 @@ console.log(debouncedSearchTerm)
         </>
       )}
     </div>
+  
+    <ProductFilters open={open} onClose={closeDrawer} onFilter={onFilter}/>
+  
+  </>
   );
 };
 
