@@ -37,15 +37,43 @@ return (
 
     {/* Image Section with Hover Effects */}
     <div className="relative w-full h-40 rounded-2xl flex items-center justify-center mb-4 overflow-hidden group">
-      <Swiper modules={[Navigation, Pagination]} onSwiper={(swiper) => (swiperRef.current = swiper)} spaceBetween={10} slidesPerView={1} loop>
-        {product?.productImages?.map((img: string, index: number) => (
-          <SwiperSlide key={index}>
-            <div className="w-full h-full flex items-center justify-center bg-gray-100 transition-transform duration-300 group-hover:scale-105">
-              <Image src={img} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" preview={false} />
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+  <Swiper
+    modules={[Navigation, Pagination]}
+    onSwiper={(swiper) => (swiperRef.current = swiper)}
+    spaceBetween={10}
+    slidesPerView={1}
+    loop
+  >
+    {/* If feature image exists, show it first */}
+    {product?.productFeatureImage ? (
+      <SwiperSlide>
+        <div className="w-full h-full flex items-center justify-center bg-gray-100 transition-transform duration-300 group-hover:scale-105">
+          <Image
+            src={product.productFeatureImage}
+            alt="Feature Image"
+            className="w-full h-full object-cover"
+            preview={false}
+          />
+        </div>
+      </SwiperSlide>
+    ) : null}
+
+    {/* Loop through and display product images */}
+    {product?.productImages?.map((img: string, index: number) => (
+      <SwiperSlide key={index}>
+        <div className="w-full h-full flex items-center justify-center bg-gray-100 transition-transform duration-300 group-hover:scale-105">
+          <Image
+            src={img}
+            alt={`Slide ${index + 1}`}
+            className="w-full h-full object-cover"
+            preview={false}
+          />
+        </div>
+      </SwiperSlide>
+    ))}
+  </Swiper>
+</div>
+
 
       {/* Compare & Quick View Icons */}
       <div className="absolute z-50 bottom-2 left-1/2 transform -translate-x-1/2 translate-y-4 flex gap-4 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
@@ -117,9 +145,8 @@ return (
       </div>
     </div>
   </div>
-    {/* <ProductQuickView isOpen={modalOpen} onClose={() => setModalOpen(false)} product={product} /> */}
+    // {/* <ProductQuickView isOpen={modalOpen} onClose={() => setModalOpen(false)} product={product} /> */}
 
-  </div>
   );
 };
 

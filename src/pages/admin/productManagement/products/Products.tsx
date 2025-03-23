@@ -185,7 +185,8 @@ const Products = () => {
       setProductFeatureImage(null);
       setLoading(false)
     } catch (error: any) {
-      console.error(error);
+      setLoading(false)
+
       Swal.fire({
         title: "Error!",
         text: `${error?.data?.message || error.data?.errorSource[0]?.message}`,
@@ -223,8 +224,7 @@ const Products = () => {
       productDescription: product?.productDescription,
       variant: product.variant?._id,
       variantcolor: product?.variantcolor?.map((item: any) => ({
-        label: item.name,
-        value: item._id,
+     value: item._id,
       })),
     });
     setProductImages(product?.productImages);
@@ -549,7 +549,7 @@ const Products = () => {
             label="Images"
             name="productImages"
             rules={[
-              { required: true, message: "please select product images." },
+              { required: editingProduct ? false : true, message: "please select product images." },
             ]}
           >
             <div className="space-y-2">
@@ -619,7 +619,7 @@ const Products = () => {
           )}
 
           {attributesForColor.length > 0 && (
-            <Form.Item name={`variantcolor`}>
+            <Form.Item name="variantcolor" label="Variant Colors">
               <Select
                 mode="multiple"
                 placeholder="Select variant colors"
