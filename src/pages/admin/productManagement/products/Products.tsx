@@ -223,9 +223,7 @@ const Products = () => {
       haveVarient: product?.haveVarient,
       productDescription: product?.productDescription,
       variant: product.variant?._id,
-      variantcolor: product?.variantcolor?.map((item: any) => ({
-     value: item._id,
-      })),
+      variantcolor: product?.variantcolor?.map((item: any) => item._id),
     });
     setProductImages(product?.productImages);
     setProductFeatureImage(product?.productFeatureImage);
