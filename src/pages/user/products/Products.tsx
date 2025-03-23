@@ -63,13 +63,12 @@ const Products = () => {
   const closeDrawer = () => setOpen(false);
 
   const onFilter = (data: any) => {
-    console.log("Filter Data: ", data);
     setMinPrice(data.priceRange[0]);
     setMaxPrice(data.priceRange[1]);
     setStartDate(data.dateRange[0]);
     setEndDate(data.dateRange[1]);
     setBrand(data.selectedBrand);
-    
+
   }
 
   return (
