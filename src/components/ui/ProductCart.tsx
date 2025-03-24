@@ -242,14 +242,7 @@ const ProductCard = ({
               ></span>
             ))}
           </div>
-          {/* Quantity Selector */}
-          <div className="mt-2 flex items-center gap-2">
-            <InputNumber
-              min={1}
-              defaultValue={1}
-              // onChange={(value) => setQuantity(value || 1)}
-            />
-          </div>
+         
           {/* Action Buttons */}
           <div className="mt-auto flex justify-between items-center pt-4">
             <Tooltip
