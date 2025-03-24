@@ -15,17 +15,44 @@ import { Tooltip, Image } from "antd";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ProductQuickView from "./ProductQuickView";
 import { useCompare } from "../../hooks/CompareContext";
+import {
+  useGetSinglewishlistDataQuery,
+  useWishlistPostMutation,
+} from "../../redux/api/wishlistApi/WishlistApi";
+import Swal from "sweetalert2";
 
 const ProductCard = ({ product }: any) => {
+  const [wishlistPost] = useWishlistPostMutation();
+  const { data: wishlistData } = useGetSinglewishlistDataQuery({
+    id: "60b8d6d5f4b88a001f07b82e",
+  });
   const swiperRef = useRef<SwiperType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isInWishlist, setIsWishListed] = useState(false);
   const { addToCompare } = useCompare();
   const discountPrice = product?.productOfferPrice
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
+
+  useEffect(() => {
+    setIsWishListed(wishlistData?.data?.products?.includes(product._id));
+  }, [wishlistData, product._id]);
+
+  const handleAddToWishlist = async () => {
+    try {
+      const res = await wishlistPost({
+        user: "60b8d6d5f4b88a001f07b82e",
+        product: product._id,
+      }).unwrap();
+      Swal.fire("Good job!", `${res.message}`, "success");
+    } catch (error) {
+      Swal.fire("Warning!", `${error?.data?.message}`, "warning");
+      console.error("Failed to add to wishlist", error);
+    }
+  };
 
   return (
     <div>
@@ -92,7 +119,10 @@ const ProductCard = ({ product }: any) => {
               </div>
             </Tooltip>
             <Tooltip title="Compare">
-              <div onClick={()=> addToCompare(product)} className="p-2 rounded-full bg-blue-500 cursor-pointer">
+              <div
+                onClick={() => addToCompare(product)}
+                className="p-2 rounded-full bg-blue-500 cursor-pointer"
+              >
                 <GitCompare className="text-white" size={15} />
               </div>
             </Tooltip>
@@ -140,7 +170,7 @@ const ProductCard = ({ product }: any) => {
           </div>
           <div>
             <p className="text-sm text-gray-500">
-             Category:  {product?.productCategory?.name}
+              Category: {product?.productCategory?.name}
             </p>
           </div>
 
@@ -175,9 +205,16 @@ const ProductCard = ({ product }: any) => {
 
           {/* Action Buttons */}
           <div className="mt-auto flex justify-between items-center pt-4">
-            <Tooltip title="Wishlist">
+            <Tooltip
+              title={`${
+                isInWishlist ? "Already Wishlisted" : "Add to Wishlist"
+              } `}
+            >
               <Heart
-                className="text-blue-500 transition duration-300 cursor-pointer"
+                onClick={handleAddToWishlist}
+                className={`text-blue-500  transition duration-300 cursor-pointer  ${
+                  isInWishlist ? "fill-current" : ""
+                }`}
                 size={24}
               />
             </Tooltip>
@@ -193,8 +230,12 @@ const ProductCard = ({ product }: any) => {
           </div>
         </div>
       </div>
-      
-      <ProductQuickView isOpen={modalOpen} onClose={() => setModalOpen(false)} product={product} />
+
+      <ProductQuickView
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        product={product}
+      />
     </div>
   );
 };

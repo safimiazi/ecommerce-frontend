@@ -10,6 +10,7 @@ const wishlistApi = baseApi.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["wishlist"],
     }),
     wishlistUpdate: build.mutation({
       query: ({ data, id }) => {
@@ -49,9 +50,10 @@ const wishlistApi = baseApi.injectEndpoints({
 
     getSinglewishlistData: build.query({
       query: ({ id }) => ({
-        url: `/wishlist/get_wishlist/${id}`,
+        url: `/wishlist/${id}`,
         method: "GET",
       }),
+      providesTags: ["wishlist"],
     }),
   }),
 
