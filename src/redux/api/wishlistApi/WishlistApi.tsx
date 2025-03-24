@@ -23,10 +23,13 @@ const wishlistApi = baseApi.injectEndpoints({
     }),
 
     wishlistDelete: build.mutation({
-      query: ({ id }) => ({
-        url: `/wishlist/${id}`,
-        method: "DELETE",
+      query: ({ userId, productId }) => ({
+        url: `/wishlist`,
+        method: "POST",
+        body: { userId, productId },
       }),
+      invalidatesTags: ["wishlist"],
+
     }),
     bulkDelete: build.mutation({
       query: ({ ids }) => ({
