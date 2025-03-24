@@ -13,7 +13,7 @@ import {
   Minus,
 } from "lucide-react";
 import truncateText from "../../utils/truncateText";
-import { Tooltip, Image, InputNumber } from "antd";
+import { Tooltip, Image } from "antd";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
@@ -28,7 +28,7 @@ import Swal from "sweetalert2";
 
 const ProductCard = ({
   product,
-  productCart,
+  cartItems,
   addToCart,
   updateQuantity,
   removeFromCart,
@@ -37,6 +37,8 @@ const ProductCard = ({
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: "60b8d6d5f4b88a001f07b82e",
   });
+
+  console.log("cartItems", cartItems)
   const swiperRef = useRef<SwiperType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [isInWishlist, setIsWishListed] = useState(false);
@@ -45,33 +47,32 @@ const ProductCard = ({
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
 
-  // Find if product is in cart and get its quantity
-  const cartItem = productCart.find(
-    (item: any) => item.product === product._id
-  );
-  const [quantity, setQuantity] = useState(cartItem?.quantity || 1);
+
+
+
+  const cartItem = cartItems.find(item => item.product === product._id);
 
   const handleAddToCart = () => {
-    if (cartItem) {
-      updateQuantity(product._id, quantity);
-    } else {
-      addToCart(product);
-    }
+    addToCart(product._id, 1, product.productSellingPrice);
   };
 
   const handleIncrement = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    updateQuantity(product._id, newQuantity);
+    const newQuantity = (cartItem?.quantity || 0) + 1;
+    if (cartItem) {
+      updateQuantity(product._id, newQuantity);
+    } else {
+      addToCart(product._id, 1, product.productSellingPrice);
+    }
   };
 
   const handleDecrement = () => {
-    if (quantity > 1) {
-      const newQuantity = quantity - 1;
-      setQuantity(newQuantity);
-      updateQuantity(product._id, newQuantity);
-    } else {
-      removeFromCart(product._id);
+    if (cartItem) {
+      const newQuantity = cartItem.quantity - 1;
+      if (newQuantity > 0) {
+        updateQuantity(product._id, newQuantity);
+      } else {
+        removeFromCart(product._id);
+      }
     }
   };
 
@@ -274,7 +275,7 @@ const ProductCard = ({
                   >
                     <Minus size={15}/>
                   </button>
-                  <div>{quantity}</div>
+                  <div>{cartItem.quantity}</div>
                   <button
                     onClick={handleIncrement}
                     className="px-2 py-1 bg-gray-200 rounded"

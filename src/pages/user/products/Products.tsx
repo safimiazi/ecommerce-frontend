@@ -6,12 +6,18 @@ import ProductCard from "../../../components/ui/ProductCart";
 import { Pagination, Spin, Input, Select, Button } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import ProductFilters from "../../../components/ui/ProductFilters";
+import { useSelector } from "react-redux";
+import { useCartActions } from "../../../hooks/UseCartActions";
+import { RootState } from "../../../redux/store";
 
 const { Search } = Input;
 
 const Products = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
+
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const { addToCart, updateQuantity, removeFromCart } = useCartActions();
 
   // 🔹 State for Pagination & Search
   const [pageIndex, setPageIndex] = useState(1);
@@ -69,64 +75,7 @@ const Products = () => {
     setBrand(data.selectedBrand);
   };
 
-  // Update the state initialization
-  const [productCart, setProductCart] = useState<
-    Array<{
-      product: string;
-      quantity: number;
-      price: number;
-      totalPrice: number;
-    }>
-  >([]);
-console.log("productCart", productCart);
-  // Add these helper functions
-  const addToCart = (product: any) => {
-    setProductCart((prevCart) => {
-      const existingItem = prevCart.find(
-        (item) => item.product === product._id
-      );
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.product === product._id
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-                totalPrice: (item.quantity + 1) * item.price,
-              }
-            : item
-        );
-      }
-      return [
-        ...prevCart,
-        {
-          product: product._id,
-          quantity: 1,
-          price: product.productSellingPrice,
-          totalPrice: product.productSellingPrice,
-        },
-      ];
-    });
-  };
 
-  const updateQuantity = (productId: string, newQuantity: number) => {
-    setProductCart((prevCart) =>
-      prevCart.map((item) =>
-        item.product === productId
-          ? {
-              ...item,
-              quantity: newQuantity,
-              totalPrice: newQuantity * item.price,
-            }
-          : item
-      )
-    );
-  };
-
-  const removeFromCart = (productId: string) => {
-    setProductCart((prevCart) =>
-      prevCart.filter((item) => item.product !== productId)
-    );
-  };
   const demoData = {
     user: "507f191e810c19729de860ec", // Demo user ID, replace with actual user ID
     products: [
@@ -199,7 +148,7 @@ console.log("productCart", productCart);
                 <ProductCard
                   key={product._id}
                   product={product}
-                  productCart={productCart}
+                  cartItems={cartItems}
                   addToCart={addToCart}
                   updateQuantity={updateQuantity}
                   removeFromCart={removeFromCart}

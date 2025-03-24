@@ -13,6 +13,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import categoryReducer from './features/category/categorySlice';
+import productCartReducer from './features/productCart/ProductCartSlice';
 
 const persistConfig = {
   key: 'auth',
@@ -26,6 +27,8 @@ export const store = configureStore({
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
     category: categoryReducer, // ✅ Changed "Category" to "category"
+    cart: productCartReducer,
+
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({
