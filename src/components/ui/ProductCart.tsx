@@ -38,7 +38,11 @@ const ProductCard = ({ product }: any) => {
     : null;
 
   useEffect(() => {
-    setIsWishListed(wishlistData?.data?.products?.includes(product._id));
+    if (wishlistData?.data?.products) {
+      setIsWishListed(
+        wishlistData.data.products.some((p) => p._id === product._id)
+      );
+    }
   }, [wishlistData, product._id]);
 
   const handleAddToWishlist = async () => {
@@ -210,13 +214,16 @@ const ProductCard = ({ product }: any) => {
                 isInWishlist ? "Already Wishlisted" : "Add to Wishlist"
               } `}
             >
+              <button disabled={isInWishlist} className="cursor-pointer">
               <Heart
-                onClick={handleAddToWishlist}
-                className={`text-blue-500  transition duration-300 cursor-pointer  ${
-                  isInWishlist ? "fill-current" : ""
-                }`}
-                size={24}
-              />
+              
+              onClick={handleAddToWishlist}
+              className={`text-blue-500  transition duration-300 cursor-pointer  ${
+                isInWishlist ? "fill-current" : ""
+              }`}
+              size={24}
+            />
+              </button>
             </Tooltip>
             <p className="text-blue-500 cursor-pointer underline">
               View Details
