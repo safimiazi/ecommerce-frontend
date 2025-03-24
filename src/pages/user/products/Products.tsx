@@ -69,6 +69,77 @@ const Products = () => {
     setBrand(data.selectedBrand);
   };
 
+  // Update the state initialization
+  const [productCart, setProductCart] = useState<
+    Array<{
+      product: string;
+      quantity: number;
+      price: number;
+      totalPrice: number;
+    }>
+  >([]);
+console.log("productCart", productCart);
+  // Add these helper functions
+  const addToCart = (product: any) => {
+    setProductCart((prevCart) => {
+      const existingItem = prevCart.find(
+        (item) => item.product === product._id
+      );
+      if (existingItem) {
+        return prevCart.map((item) =>
+          item.product === product._id
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+                totalPrice: (item.quantity + 1) * item.price,
+              }
+            : item
+        );
+      }
+      return [
+        ...prevCart,
+        {
+          product: product._id,
+          quantity: 1,
+          price: product.productSellingPrice,
+          totalPrice: product.productSellingPrice,
+        },
+      ];
+    });
+  };
+
+  const updateQuantity = (productId: string, newQuantity: number) => {
+    setProductCart((prevCart) =>
+      prevCart.map((item) =>
+        item.product === productId
+          ? {
+              ...item,
+              quantity: newQuantity,
+              totalPrice: newQuantity * item.price,
+            }
+          : item
+      )
+    );
+  };
+
+  const removeFromCart = (productId: string) => {
+    setProductCart((prevCart) =>
+      prevCart.filter((item) => item.product !== productId)
+    );
+  };
+  const demoData = {
+    user: "507f191e810c19729de860ec", // Demo user ID, replace with actual user ID
+    products: [
+      {
+        product: "507f191e810c19729de860ea", // Demo product ID, replace with actual product ID
+        quantity: 2,
+        variant: "507f191e810c19729de860eb", // Demo variant ID, replace with actual variant ID
+        price: 29.99,
+        totalPrice: 59.98, // price * quantity
+      },
+    ],
+  };
+
   return (
     <>
       <div className="space-y-6">
@@ -86,7 +157,7 @@ const Products = () => {
             />
           </div>
           <Button type="primary" icon={<FilterOutlined />} onClick={showDrawer}>
-           Advance Filters
+            Advance Filters
           </Button>
           {/* Sort Order Select */}
           <div className="w-full sm:w-1/4">
@@ -125,7 +196,14 @@ const Products = () => {
             {/* Product Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {products?.data?.result?.map((product: any) => (
-                <ProductCard key={product._id} product={product} />
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  productCart={productCart}
+                  addToCart={addToCart}
+                  updateQuantity={updateQuantity}
+                  removeFromCart={removeFromCart}
+                />
               ))}
             </div>
 

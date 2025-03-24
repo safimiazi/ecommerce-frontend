@@ -11,7 +11,7 @@ import {
   GitCompare,
 } from "lucide-react";
 import truncateText from "../../utils/truncateText";
-import { Tooltip, Image } from "antd";
+import { Tooltip, Image, InputNumber } from "antd";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
@@ -24,7 +24,13 @@ import {
 } from "../../redux/api/wishlistApi/WishlistApi";
 import Swal from "sweetalert2";
 
-const ProductCard = ({ product }: any) => {
+const ProductCard = ({
+  product,
+  productCart,
+  addToCart,
+  updateQuantity,
+  removeFromCart,
+}: any) => {
   const [wishlistPost] = useWishlistPostMutation();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: "60b8d6d5f4b88a001f07b82e",
@@ -36,6 +42,36 @@ const ProductCard = ({ product }: any) => {
   const discountPrice = product?.productOfferPrice
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
+
+  // Find if product is in cart and get its quantity
+  const cartItem = productCart.find(
+    (item: any) => item.product === product._id
+  );
+  const [quantity, setQuantity] = useState(cartItem?.quantity || 1);
+
+  const handleAddToCart = () => {
+    if (cartItem) {
+      updateQuantity(product._id, quantity);
+    } else {
+      addToCart(product);
+    }
+  };
+
+  const handleIncrement = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    updateQuantity(product._id, newQuantity);
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      updateQuantity(product._id, newQuantity);
+    } else {
+      removeFromCart(product._id);
+    }
+  };
 
   useEffect(() => {
     if (wishlistData?.data?.products) {
@@ -206,7 +242,14 @@ const ProductCard = ({ product }: any) => {
               ></span>
             ))}
           </div>
-
+          {/* Quantity Selector */}
+          <div className="mt-2 flex items-center gap-2">
+            <InputNumber
+              min={1}
+              defaultValue={1}
+              // onChange={(value) => setQuantity(value || 1)}
+            />
+          </div>
           {/* Action Buttons */}
           <div className="mt-auto flex justify-between items-center pt-4">
             <Tooltip
@@ -215,25 +258,46 @@ const ProductCard = ({ product }: any) => {
               } `}
             >
               <button disabled={isInWishlist} className="cursor-pointer">
-              <Heart
-              
-              onClick={handleAddToWishlist}
-              className={`text-blue-500  transition duration-300 cursor-pointer  ${
-                isInWishlist ? "fill-current" : ""
-              }`}
-              size={24}
-            />
+                <Heart
+                  onClick={handleAddToWishlist}
+                  className={`text-blue-500  transition duration-300 cursor-pointer  ${
+                    isInWishlist ? "fill-current" : ""
+                  }`}
+                  size={24}
+                />
               </button>
             </Tooltip>
             <p className="text-blue-500 cursor-pointer underline">
               View Details
             </p>
-            <Tooltip title="Add to Cart">
-              <ShoppingCart
-                className="text-blue-500 transition duration-300 cursor-pointer"
-                size={24}
-              />
-            </Tooltip>
+            <div>
+              {cartItem ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleDecrement}
+                    className="px-2 py-1 bg-gray-200 rounded"
+                  >
+                    -
+                  </button>
+                  <div>{quantity}</div>
+                  <button
+                    onClick={handleIncrement}
+                    className="px-2 py-1 bg-gray-200 rounded"
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
+                <Tooltip title="Add to Cart">
+                  <div onClick={handleAddToCart}>
+                    <ShoppingCart
+                      className="text-blue-500 transition duration-300 cursor-pointer"
+                      size={24}
+                    />
+                  </div>
+                </Tooltip>
+              )}
+            </div>
           </div>
         </div>
       </div>
