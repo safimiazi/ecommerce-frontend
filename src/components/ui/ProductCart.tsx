@@ -9,6 +9,8 @@ import {
   ShoppingCart,
   Eye,
   GitCompare,
+  Plus,
+  Minus,
 } from "lucide-react";
 import truncateText from "../../utils/truncateText";
 import { Tooltip, Image, InputNumber } from "antd";
@@ -270,14 +272,14 @@ const ProductCard = ({
                     onClick={handleDecrement}
                     className="px-2 py-1 bg-gray-200 rounded"
                   >
-                    -
+                    <Minus size={15}/>
                   </button>
                   <div>{quantity}</div>
                   <button
                     onClick={handleIncrement}
                     className="px-2 py-1 bg-gray-200 rounded"
                   >
-                    +
+                    <Plus size={15}/>
                   </button>
                 </div>
               ) : (
