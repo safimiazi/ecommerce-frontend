@@ -11,6 +11,7 @@ import { NavLink } from "react-router-dom";
 import Account from "../ui/Account";
 import { useCompare } from "../../hooks/CompareContext";
 import { useGetSinglewishlistDataQuery } from "../../redux/api/wishlistApi/WishlistApi";
+import { useGetSinglecartDataQuery } from "../../redux/api/cartApi/CartApi";
 
 const Top = ({
   setIsMobileMenuOpen,
@@ -23,6 +24,8 @@ const Top = ({
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: "60b8d6d5f4b88a001f07b82e", // User ID
   });
+    const { data: userCartData } = useGetSinglecartDataQuery(null);
+  
   return (
     <div className="h-16 border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
       <button
@@ -76,7 +79,7 @@ const Top = ({
           </div>
         </Badge>
 
-        <Badge color="blue" count={5}>
+        <Badge color="blue" count={userCartData?.data?.products?.length}>
           <div className="p-2 rounded-full bg-gray-200">
             <ShoppingCart
               className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"

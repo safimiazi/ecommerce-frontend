@@ -4,12 +4,15 @@ import { GitCompare, Heart, ShoppingCart } from "lucide-react";
 import Account from "../ui/Account";
 import { useCompare } from "../../hooks/CompareContext";
 import { useGetSinglewishlistDataQuery } from "../../redux/api/wishlistApi/WishlistApi";
+import { useGetSinglecartDataQuery } from "../../redux/api/cartApi/CartApi";
 
 const BottomNav = ({ showCart, setWishlistOpen, setCompareOpen }: any) => {
   const { compareList } = useCompare();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: "60b8d6d5f4b88a001f07b82e",
   });
+      const { data: userCartData } = useGetSinglecartDataQuery(null);
+  
   return (
     <div className="py-4 md:z-[1000] border-t border-gray-200 fixed bottom-0 w-full bg-white flex justify-around items-center md:hidden shadow-lg">
       <Badge color="blue" count={wishlistData?.data?.products?.length}>
@@ -31,7 +34,7 @@ const BottomNav = ({ showCart, setWishlistOpen, setCompareOpen }: any) => {
           />
         </div>
       </Badge>
-      <Badge color="blue" count={5}>
+      <Badge color="blue" count={userCartData?.data?.products?.length}>
         <div className="p-2 rounded-full bg-gray-200">
           <ShoppingCart
             className="text-gray-600 hover:text-blue-500 transition  duration-300 cursor-pointer"

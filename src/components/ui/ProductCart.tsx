@@ -47,30 +47,28 @@ const ProductCard = ({ product }: any) => {
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
   const [cartProduct, setCartProduct] = useState(null);
-
+console.log(cartProduct)
   useEffect(() => {
     setCartProduct(
-      userCartData?.data?.products.find((p: any) => p.product === product._id)
+      userCartData?.data?.products?.find((p: any) => p.product._id === product._id)
     );
-  });
+  },[userCartData]);
 
   const handleAddToCart = async (status: any) => {
     try {
-      let res: any;
       if (status === "addToCart") {
-        res = await cartPost({
+         await cartPost({
           product: product._id,
           quantity: 1,
           price: product?.productSellingPrice,
         }).unwrap();
       } else if (status === "removeToCart") {
-        res = await cartRemove({
+      await cartRemove({
           product: product._id,
         }).unwrap();
       }
 
-      alert(res.message);
-      Swal.fire("Good job!", `${res.message}`, "success");
+   
     } catch (error) {
       console.error("Failed to add to cart", error);
       Swal.fire("Warning!", `${error?.data?.message}`, "warning");
