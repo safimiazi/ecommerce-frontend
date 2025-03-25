@@ -6,18 +6,16 @@ import ProductCard from "../../../components/ui/ProductCart";
 import { Pagination, Spin, Input, Select, Button } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import ProductFilters from "../../../components/ui/ProductFilters";
-import { useSelector } from "react-redux";
-import { useCartActions } from "../../../hooks/UseCartActions";
-import { RootState } from "../../../redux/store";
 
 const { Search } = Input;
+
+
+
 
 const Products = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
 
-  const cartItems = useSelector((state: RootState) => state.cart.items);
-  const { addToCart, updateQuantity, removeFromCart } = useCartActions();
 
   // 🔹 State for Pagination & Search
   const [pageIndex, setPageIndex] = useState(1);
@@ -46,6 +44,8 @@ const Products = () => {
     startDate,
     endDate,
   });
+
+
   // 🔹 Handle Page Change
   const handlePageChange = (page: number, size?: number) => {
     setPageIndex(page);
@@ -76,18 +76,12 @@ const Products = () => {
   };
 
 
-  const demoData = {
-    user: "507f191e810c19729de860ec", // Demo user ID, replace with actual user ID
-    products: [
-      {
-        product: "507f191e810c19729de860ea", // Demo product ID, replace with actual product ID
-        quantity: 2,
-        variant: "507f191e810c19729de860eb", // Demo variant ID, replace with actual variant ID
-        price: 29.99,
-        totalPrice: 59.98, // price * quantity
-      },
-    ],
-  };
+
+
+    
+  
+
+
 
   return (
     <>
@@ -148,10 +142,7 @@ const Products = () => {
                 <ProductCard
                   key={product._id}
                   product={product}
-                  cartItems={cartItems}
-                  addToCart={addToCart}
-                  updateQuantity={updateQuantity}
-                  removeFromCart={removeFromCart}
+               
                 />
               ))}
             </div>

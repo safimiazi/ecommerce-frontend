@@ -25,20 +25,20 @@ import {
   useWishlistPostMutation,
 } from "../../redux/api/wishlistApi/WishlistApi";
 import Swal from "sweetalert2";
+import {
+  useCartPostMutation,
+  useCartRemoveMutation,
+  useGetSinglecartDataQuery,
+} from "../../redux/api/cartApi/CartApi";
 
-const ProductCard = ({
-  product,
-  cartItems,
-  addToCart,
-  updateQuantity,
-  removeFromCart,
-}: any) => {
+const ProductCard = ({ product }: any) => {
   const [wishlistPost] = useWishlistPostMutation();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: "60b8d6d5f4b88a001f07b82e",
   });
-
-  console.log("cartItems", cartItems)
+  const [cartPost] = useCartPostMutation();
+  const [cartRemove] = useCartRemoveMutation();
+  const { data: userCartData } = useGetSinglecartDataQuery();
   const swiperRef = useRef<SwiperType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [isInWishlist, setIsWishListed] = useState(false);
@@ -46,33 +46,34 @@ const ProductCard = ({
   const discountPrice = product?.productOfferPrice
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
+  const [cartProduct, setCartProduct] = useState(null);
 
+  useEffect(() => {
+    setCartProduct(
+      userCartData?.data?.products.find((p: any) => p.product === product._id)
+    );
+  });
 
-
-
-  const cartItem = cartItems.find(item => item.product === product._id);
-
-  const handleAddToCart = () => {
-    addToCart(product._id, 1, product.productSellingPrice);
-  };
-
-  const handleIncrement = () => {
-    const newQuantity = (cartItem?.quantity || 0) + 1;
-    if (cartItem) {
-      updateQuantity(product._id, newQuantity);
-    } else {
-      addToCart(product._id, 1, product.productSellingPrice);
-    }
-  };
-
-  const handleDecrement = () => {
-    if (cartItem) {
-      const newQuantity = cartItem.quantity - 1;
-      if (newQuantity > 0) {
-        updateQuantity(product._id, newQuantity);
-      } else {
-        removeFromCart(product._id);
+  const handleAddToCart = async (status: any) => {
+    try {
+      let res: any;
+      if (status === "addToCart") {
+        res = await cartPost({
+          product: product._id,
+          quantity: 1,
+          price: product?.productSellingPrice,
+        }).unwrap();
+      } else if (status === "removeToCart") {
+        res = await cartRemove({
+          product: product._id,
+        }).unwrap();
       }
+
+      alert(res.message);
+      Swal.fire("Good job!", `${res.message}`, "success");
+    } catch (error) {
+      console.error("Failed to add to cart", error);
+      Swal.fire("Warning!", `${error?.data?.message}`, "warning");
     }
   };
 
@@ -245,7 +246,14 @@ const ProductCard = ({
               ></span>
             ))}
           </div>
-         
+          <div>
+            {product?.productStock > 0 ? (
+              <p className="text-green-500">In Stock</p>
+            ) : (
+              <p className="text-red-500">Out of Stock</p>
+            )}
+          </div>
+
           {/* Action Buttons */}
           <div className="mt-auto flex justify-between items-center pt-4">
             <Tooltip
@@ -267,31 +275,37 @@ const ProductCard = ({
               View Details
             </p>
             <div>
-              {cartItem ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleDecrement}
-                    className="px-2 py-1 bg-gray-200 rounded"
-                  >
-                    <Minus size={15}/>
-                  </button>
-                  <div>{cartItem.quantity}</div>
-                  <button
-                    onClick={handleIncrement}
-                    className="px-2 py-1 bg-gray-200 rounded"
-                  >
-                    <Plus size={15}/>
-                  </button>
+              {product?.productStock > 0 ? (
+                <div>
+                  {cartProduct ? (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleAddToCart("removeToCart")}
+                        className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
+                      >
+                        <Minus size={15} />
+                      </button>
+                      <div>{cartProduct?.quantity || 0}</div>
+                      <button
+                        onClick={() => handleAddToCart("addToCart")}
+                        className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
+                      >
+                        <Plus size={15} />
+                      </button>
+                    </div>
+                  ) : (
+                    <Tooltip title="Add to Cart">
+                      <div onClick={() => handleAddToCart("addToCart")}>
+                        <ShoppingCart
+                          className="text-blue-500 transition duration-300 cursor-pointer"
+                          size={24}
+                        />
+                      </div>
+                    </Tooltip>
+                  )}
                 </div>
               ) : (
-                <Tooltip title="Add to Cart">
-                  <div onClick={handleAddToCart}>
-                    <ShoppingCart
-                      className="text-blue-500 transition duration-300 cursor-pointer"
-                      size={24}
-                    />
-                  </div>
-                </Tooltip>
+                ""
               )}
             </div>
           </div>
