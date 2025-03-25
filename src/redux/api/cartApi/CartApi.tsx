@@ -33,10 +33,10 @@ const cartApi = baseApi.injectEndpoints({
     }),
 
     cartDelete: build.mutation({
-      query: ({ userId, productId }) => ({
-        url: `/cart`,
+      query: ({ id }) => ({
+        url: `/cart/product_cart_delete`,
         method: "POST",
-        body: { userId, productId },
+        body: { id },
       }),
       invalidatesTags: ["cart"],
     }),
