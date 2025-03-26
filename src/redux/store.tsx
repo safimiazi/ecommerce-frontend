@@ -14,7 +14,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import categoryReducer from './features/category/categorySlice';
 import productCartReducer from './features/productCart/ProductCartSlice';
-
+import loginRegistrationReducer from './features/auth/loginRegistrationSlice';
 const persistConfig = {
   key: 'auth',
   storage,
@@ -28,6 +28,7 @@ export const store = configureStore({
     auth: persistedAuthReducer,
     category: categoryReducer, // ✅ Changed "Category" to "category"
     cart: productCartReducer,
+    loginRegistration: loginRegistrationReducer,
 
   },
   middleware: (getDefaultMiddlewares) =>

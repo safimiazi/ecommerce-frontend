@@ -18,8 +18,14 @@ import {
   useGetSinglecartDataQuery,
 } from "../../../redux/api/cartApi/CartApi";
 import { Minus, Plus } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { openModal } from "../../../redux/features/auth/loginRegistrationSlice";
 
 const Details = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth);
+
   const { id } = useParams(); // Assuming id is the product id from the URL. You can change this based on your requirements.
   const { data: productDetails } = useGetSingleproductDataQuery({
     id,
@@ -40,6 +46,8 @@ const Details = () => {
   }, [userCartData]);
 
   const handleAddToCart = async (status: any) => {
+    if (!user) return dispatch(openModal("login"));
+
     try {
       if (status === "addToCart") {
         await cartPost({
@@ -199,7 +207,7 @@ const Details = () => {
               ) : (
                 <button
                   onClick={() => handleAddToCart("addToCart")}
-                  className="mt-6 px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 border border-blue-500 rounded-lg transition relative overflow-hidden shadow-md shadow-blue-500/50 hover:scale-105 hover:shadow-blue-400 active:scale-95"
+                  className="mt-6 px-6 cursor-pointer py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 border border-blue-500 rounded-lg transition relative overflow-hidden shadow-md shadow-blue-500/50 hover:scale-105 hover:shadow-blue-400 active:scale-95"
                 >
                   <span className="relative z-10 text-lg font-bold tracking-wide">
                     Add to Cart

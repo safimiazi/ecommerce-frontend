@@ -31,8 +31,14 @@ import {
   useGetSinglecartDataQuery,
 } from "../../redux/api/cartApi/CartApi";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { openModal } from "../../redux/features/auth/loginRegistrationSlice";
+import { RootState } from "../../redux/store";
 
 const ProductCard = ({ product }: any) => {
+  const dispatch = useDispatch();
+  const {user} = useSelector((state: RootState) => state.auth) 
+
   const [wishlistPost] = useWishlistPostMutation();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: "60b8d6d5f4b88a001f07b82e",
@@ -48,7 +54,6 @@ const ProductCard = ({ product }: any) => {
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
   const [cartProduct, setCartProduct] = useState(null);
-console.log(cartProduct)
   useEffect(() => {
     setCartProduct(
       userCartData?.data?.products?.find((p: any) => p.product._id === product._id)
@@ -56,6 +61,8 @@ console.log(cartProduct)
   },[userCartData]);
 
   const handleAddToCart = async (status: any) => {
+    if(!user) return dispatch(openModal("login"))
+
     try {
       if (status === "addToCart") {
          await cartPost({
@@ -85,6 +92,8 @@ console.log(cartProduct)
   }, [wishlistData, product._id]);
 
   const handleAddToWishlist = async () => {
+
+    if(!user) return dispatch(openModal("login"))
     try {
       const res = await wishlistPost({
         user: "60b8d6d5f4b88a001f07b82e",

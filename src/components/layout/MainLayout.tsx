@@ -9,6 +9,7 @@ import WishlistDrawer from "../ui/WishlistDrawer";
 import CompareDrawer from "../ui/CompareDrawer";
 import ShopingBag from "../ui/ShopingBag";
 import { MainSidebar } from "../common/MainSidebar";
+import AuthModal from "../common/AuthModal";
 
 const MainLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,8 +24,11 @@ const MainLayout = () => {
   const closeCart = () => {
     setCartOpen(false);
   };
+
+
   return (
     <>
+    <AuthModal />
       <div>
         {/* top */}
         <div className=" md:block border-b z-10 md:z-[1000] sticky top-0 border-gray-200">
