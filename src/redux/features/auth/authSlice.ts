@@ -3,11 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export type TUser = {
   userId: string;
-  email: string;
-  nid: string;
+  phone: string;
   role: string;
-  iat: number;
-  exp: number;
+  // iat: number;
+  // exp: number;
 };
 
 type TAuthState = {

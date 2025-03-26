@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Form, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -5,14 +6,55 @@ import {
   changeStatus,
   closeModal,
 } from "../../redux/features/auth/loginRegistrationSlice";
+import {
+  useCustomerRegistrationMutation,
+  useUserLoginMutation,
+} from "../../redux/api/authApi/AuthApi";
+import Swal from "sweetalert2";
+import { setUser } from "../../redux/features/auth/authSlice";
 
 const PhoneAuthForm = () => {
   const dispatch = useDispatch();
   const { status } = useSelector((state: RootState) => state.loginRegistration);
+  const [customerRegistration, { isLoading: regisLoading }] =
+    useCustomerRegistrationMutation();
+  const [userLogin, { isLoading: loginLoading }] = useUserLoginMutation();
+  const handleSubmit = async (values: any) => {
+    try {
+      if (status === "login") {
+        const result: any = await userLogin({
+          phone: values?.phone,
+        }).unwrap();
+        dispatch(setUser({token: result?.data.token, user: {
+            userId: result?.data?.user?._id,
+            phone: result?.data?.user?.phone,
+            role: result?.data?.user?.role,
+        }}));
+        Swal.fire({
+          title: "Good job!",
+          text: `${result?.message}`,
+          icon: "success",
+        });
+        dispatch(closeModal());
+        return;
+      }
+      const result: any = await customerRegistration({
+        phone: values?.phone,
+      }).unwrap();
 
-  const handleSubmit = (values: any) => {
-    console.log("Form Values:", values);
-    dispatch(closeModal());
+      Swal.fire({
+        title: "Good job!",
+        text: `${result?.message}`,
+        icon: "success",
+      });
+      dispatch(closeModal());
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error!",
+        text: error?.data?.message,
+        icon: "error",
+      });
+    }
   };
 
   // Bangladeshi Phone Number Validation
@@ -37,7 +79,12 @@ const PhoneAuthForm = () => {
         <Input placeholder="Enter your phone number" />
       </Form.Item>
 
-      <Button type="primary" htmlType="submit" block>
+      <Button
+        loading={status === "login" ? loginLoading : regisLoading}
+        type="primary"
+        htmlType="submit"
+        block
+      >
         {status === "login" ? "Login" : "Register"}
       </Button>
 
