@@ -1,17 +1,68 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal, Image } from "antd";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
+import { useCartPostMutation, useCartRemoveMutation, useGetSinglecartDataQuery } from "../../redux/api/cartApi/CartApi";
+import { Minus, Plus } from "lucide-react";
 
 const ProductQuickView = ({ isOpen, onClose, product }: any) => {
+      const [cartPost] = useCartPostMutation();
+      const [cartRemove] = useCartRemoveMutation();
+  const { data: userCartData } = useGetSinglecartDataQuery(null);
+  
   const swiperRef = useRef<SwiperType | null>(null);
   const discountPrice = product?.productOfferPrice
     ? product?.productSellingPrice - product?.productOfferPrice
     : null;
+
+
+      const [cartProduct, setCartProduct] = useState(null);
+    console.log(cartProduct)
+      useEffect(() => {
+        setCartProduct(
+          userCartData?.data?.products?.find((p: any) => p.product._id === product._id)
+        );
+      },[userCartData]);
+    
+      const handleAddToCart = async (status: any) => {
+        try {
+          if (status === "addToCart") {
+             await cartPost({
+              product: product._id,
+              quantity: 1,
+              price: product?.productSellingPrice,
+            }).unwrap();
+          } else if (status === "removeToCart") {
+          await cartRemove({
+              product: product._id,
+            }).unwrap();
+          }
+    
+       
+        } catch (error) {
+          console.error("Failed to add to cart", error);
+          Swal.fire("Warning!", `${error?.data?.message}`, "warning");
+        }
+      };
+
+
+
+        const handleAddToWishlist = async () => {
+          try {
+            const res = await wishlistPost({
+              user: "60b8d6d5f4b88a001f07b82e",
+              product: product._id,
+            }).unwrap();
+            Swal.fire("Good job!", `${res.message}`, "success");
+          } catch (error) {
+            Swal.fire("Warning!", `${error?.data?.message}`, "warning");
+            console.error("Failed to add to wishlist", error);
+          }
+        };
 
   return (
     <Modal open={isOpen} onCancel={onClose} footer={null} centered>
@@ -96,8 +147,38 @@ const ProductQuickView = ({ isOpen, onClose, product }: any) => {
 
           {/* Action Buttons */}
           <div className="mt-4 flex justify-between items-center">
-            <button className="py-2 px-4 rounded border text-blue-500">Wishlist</button>
-            <button className="py-2 px-4 rounded bg-blue-500 text-white">Add to Cart</button>
+            <button                   onClick={handleAddToWishlist}
+ className="py-2 px-4 rounded border text-blue-500">Wishlist</button>
+            <div>
+              {product?.productStock > 0 ? (
+                <div>
+                  {cartProduct ? (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleAddToCart("removeToCart")}
+                        className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
+                      >
+                        <Minus size={15} />
+                      </button>
+                      <div>{cartProduct?.quantity || 0}</div>
+                      <button
+                        onClick={() => handleAddToCart("addToCart")}
+                        className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
+                      >
+                        <Plus size={15} />
+                      </button>
+                    </div>
+                  ) : (
+                      <div onClick={() => handleAddToCart("addToCart")}>
+                      <button className="py-2 px-4 rounded bg-blue-500 text-white">Add to Cart</button>
+
+                      </div>
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
       </div>
