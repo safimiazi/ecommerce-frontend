@@ -30,6 +30,7 @@ import {
   useCartRemoveMutation,
   useGetSinglecartDataQuery,
 } from "../../redux/api/cartApi/CartApi";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }: any) => {
   const [wishlistPost] = useWishlistPostMutation();
@@ -269,9 +270,9 @@ console.log(cartProduct)
                 />
               </button>
             </Tooltip>
-            <p className="text-blue-500 cursor-pointer underline">
+            <Link to={`${`/details/${product?._id}`}`} className="text-blue-500 cursor-pointer underline">
               View Details
-            </p>
+            </Link>
             <div>
               {product?.productStock > 0 ? (
                 <div>

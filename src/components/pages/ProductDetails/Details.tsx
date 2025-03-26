@@ -10,24 +10,19 @@ import "swiper/css/bundle";
 import LeftNavigationButton from "../../ui/LeftNavigationButton";
 import RightNavigartionButton from "../../ui/RightNavigartionButton";
 import ImageZoom from "../../ui/ImageZoom";
+import { useGetSingleproductDataQuery } from "../../../redux/api/productApi/ProductApi";
+import { useParams } from "react-router-dom";
 
 const Details = () => {
+  const { id } = useParams(); // Assuming id is the product id from the URL. You can change this based on your requirements.
+  const {data: productDetails} = useGetSingleproductDataQuery({
+    id,
+  })
+  console.log(productDetails)
   const [currentImage, setCurrentImage] = useState(null);
   const swiperRef = useRef<SwiperType | null>(null);
 
-  const product = {
-    name: "Apple iMac 27",
-    description:
-      "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-    price: "$1199",
-    colors: ["black", "blue", "pink", "green"],
-    image: [
-      "https://walkarfootwear.com/images/thumbnails/435/537/detailed/165/30-2.jpg",
-      "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "https://cdn2.arogga.com/eyJidWNrZXQiOiJhcm9nZ2EiLCJrZXkiOiJQcm9kdWN0LXBfaW1hZ2VzXC83Njc0MVwvNzY3NDEtMTAwLWVzc2VuY2UtZWF1LWRlLXBhcmZ1bS0xMDBtbC1lYXUtZGUtcGFyZnVtLWxhLW11c2UtbWVuLW9yaWdpbmFsLWltYWdoMmV6emg1ZG54OHktbTg0ejllLmpwZWciLCJlZGl0cyI6W119",
-    ],
-  };
+
 
   return (
     <div className="flex gap-4 p-4 items-start justify-center md:flex-row flex-col">
@@ -35,7 +30,15 @@ const Details = () => {
       <div className="flex-1 flex flex-col gap-4 justify-center items-center  max-w-[500px]">
         {/* Image Zoom */}
         <div className="h-96 cursor-move w-96 border border-gray-200 flex items-center justify-center">
-          <ImageZoom image={currentImage ? currentImage : product.image[0]} />
+        <ImageZoom
+  image={
+    currentImage
+      ? currentImage
+      : productDetails?.data?.productFeatureImage
+      ? productDetails?.data?.productFeatureImage
+      : productDetails?.data?.productImages?.[0]
+  }
+/>
         </div>
 
         {/* Thumbnail Slider */}
@@ -49,7 +52,7 @@ const Details = () => {
             spaceBetween={10}
             slidesPerView={3}
           >
-            {product.image.map((img, index) => (
+            {productDetails?.data?.productImages?.map((img, index) => (
               <SwiperSlide key={index}>
                 <div
                   onClick={() => setCurrentImage(img)}
@@ -67,36 +70,71 @@ const Details = () => {
         </div>
       </div>
 
-      {/* Product Details Section */}
-      <div className="flex-1 border border-gray-200 rounded p-6">
-        <h1 className="text-2xl font-bold text-gray-800">{product.name}</h1>
-        <p className="text-lg text-gray-600 mt-2">{product.description}</p>
-        <p className="text-xl font-semibold text-green-600 mt-4">
-          {product.price}
-        </p>
+    {/* Product Details Section */}
+<div className="flex-1 border border-gray-200 rounded-lg p-6  bg-white">
+  {/* Product Name */}
+  <h1 className="text-3xl font-bold text-gray-900">{productDetails?.data?.productName}</h1>
+  
+  {/* Brand & Category */}
+  <p className="text-lg text-gray-500 mt-1">
+    <span className="font-semibold">Brand:</span> {productDetails?.data?.productBrand?.name} |  
+    <span className="font-semibold"> Category:</span> {productDetails?.data?.productCategory?.name}
+  </p>
 
-        {/* Color Options */}
-        <div className="mt-4">
-          <h3 className="text-gray-700 font-semibold mb-2">Choose a Color:</h3>
-          <div className="flex gap-3">
-            {product.colors.map((color, index) => (
-              <span
-                key={index}
-                className={`w-8 h-8 rounded-full border-2 border-gray-300 cursor-pointer transition hover:border-blue-500`}
-                style={{ backgroundColor: color }}
-              ></span>
-            ))}
-          </div>
-        </div>
+  {/* Product Description */}
+  <p className="text-md text-gray-700 mt-3 leading-relaxed">
+    {productDetails?.data?.productDescription}
+  </p>
 
-        <button className="mt-6 px-6 py-2 text-white bg-gradient-to-r from-blue-500 to-blue-700 border border-blue-500 rounded transition relative overflow-hidden shadow-lg shadow-blue-500/50 animate-pulse hover:scale-110 hover:shadow-blue-400 active:scale-95">
-          <span className="relative z-10 text-lg font-bold tracking-wide">
-            Add to Cart
-          </span>
-          {/* Glow Effect */}
-          <span className="absolute inset-0 bg-blue-400 opacity-50 blur-2xl animate-ping"></span>
-        </button>
+  {/* Pricing Details */}
+  <div className="mt-4">
+    <p className="text-xl font-semibold text-green-600">
+      ${productDetails?.data?.productSellingPrice}
+    </p>
+    {productDetails?.data?.productOfferPrice > 0 && (
+      <p className="text-md text-gray-500 line-through">
+        ${productDetails?.data?.productOfferPrice}
+      </p>
+    )}
+  </div>
+
+  {/* SKU, Weight, Unit */}
+  <div className="mt-4 grid grid-cols-3 gap-4 text-sm text-gray-600">
+    <p><span className="font-medium">SKU:</span> {productDetails?.data?.skuCode}</p>
+    <p><span className="font-medium">Stock:</span> {productDetails?.data?.productWeight}</p>
+  </div>
+
+  {/* Stock Status */}
+  <p className={`mt-4 text-lg font-semibold ${productDetails?.data?.productStock > 0 ? 'text-green-500' : 'text-red-500'}`}>
+    {productDetails?.data?.productStock > 0 ? 'In Stock' : 'Out of Stock'}
+  </p>
+
+  {/* Color Options */}
+  {productDetails?.data?.variantcolor?.length > 0 && (
+    <div className="mt-4">
+      <h3 className="text-gray-700 font-semibold mb-2">Choose a Color:</h3>
+      <div className="flex gap-3">
+        {productDetails?.data?.variantcolor.map((color, index) => (
+          <span
+            key={index}
+            className="w-8 h-8 rounded-full border-2 border-gray-300 cursor-pointer transition hover:border-blue-500"
+            style={{ backgroundColor: color }}
+          ></span>
+        ))}
       </div>
+    </div>
+  )}
+
+  {/* Add to Cart Button */}
+  <button className="mt-6 px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 border border-blue-500 rounded-lg transition relative overflow-hidden shadow-md shadow-blue-500/50 hover:scale-105 hover:shadow-blue-400 active:scale-95">
+    <span className="relative z-10 text-lg font-bold tracking-wide">
+      Add to Cart
+    </span>
+    {/* Glow Effect */}
+    <span className="absolute inset-0 bg-blue-400 opacity-50 blur-2xl animate-ping"></span>
+  </button>
+</div>
+
     </div>
   );
 };

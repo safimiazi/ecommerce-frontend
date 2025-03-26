@@ -17,7 +17,7 @@ const ShopingBag = ({ showCart }: any) => {
         {userCartData?.data?.products?.length} items
       </span>
       <div className="text-base font-bold flex items-center gap-0.5">
-        <span>৳</span> <span>{userCartData?.data?.cartTotalCost}</span>
+        <span>$</span> <span>{userCartData?.data?.cartTotalCost}</span>
       </div>
     </div>
   );
