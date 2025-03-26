@@ -81,7 +81,9 @@ const CartDrawer = ({ open, onClose }) => {
       {cartProducts.length === 0 && <div>No products in your cart</div>}
 
       <div>
-        <div className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-center justify-between relative mb-3">
+      {
+        userCartData?.data?.cartTotalCost && (
+          <div className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-center justify-between relative mb-3">
           <button className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
             Proceed to Checkout
           </button>
@@ -92,6 +94,8 @@ const CartDrawer = ({ open, onClose }) => {
             </span>
           </Title>
         </div>
+        )
+      }
 
         <div className="grid grid-cols-1 gap-4">
           {cartProducts.map((cartItem, inx) => {

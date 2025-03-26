@@ -7,7 +7,7 @@ const ShopingBag = ({showCart}: any) => {
 
   return (
     
-      <div onClick={showCart} className="fixed z-[700] right-4 top-3/4 -translate-y-1/2 bg-blue-500 text-white rounded-lg shadow-lg p-2 w-20 flex flex-col items-center">
+      <div onClick={showCart} className="fixed cursor-pointer z-[700] right-4 top-3/4 -translate-y-1/2 bg-blue-500 text-white rounded-lg shadow-lg p-2 w-20 flex flex-col items-center">
         <div className="bg-white p-1.5 rounded-full shadow-md hover:rotate-6 transition-transform">
           <ShoppingCart size={24} className="text-blue-600" />
         </div>
