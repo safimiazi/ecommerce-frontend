@@ -22,10 +22,13 @@ const loginRegisrationSlice = createSlice({
         closeModal: (state) => {
             state.isModalOpen = false;
         },
+        changeStatus: (state, action) => {
+            state.status = action.payload;
+        },
        
     },
 })
 
-export const { openModal, closeModal } = loginRegisrationSlice.actions;
+export const { openModal, closeModal, changeStatus } = loginRegisrationSlice.actions;
 
 export default loginRegisrationSlice.reducer;

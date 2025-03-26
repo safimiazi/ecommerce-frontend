@@ -3,6 +3,7 @@ import { Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../redux/features/auth/loginRegistrationSlice";
+import NormalUserAuthForm from "./NormalUserAuthForm";
 
 const AuthModal = () => {
   const dispatch = useDispatch();
@@ -16,9 +17,7 @@ const AuthModal = () => {
       onCancel={() => dispatch(closeModal())}
       footer={null}
     >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+      <NormalUserAuthForm/>
     </Modal>
   );
 };
