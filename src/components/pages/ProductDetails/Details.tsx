@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/react"; // ✅ Import SwiperType correctly
@@ -12,6 +12,12 @@ import RightNavigartionButton from "../../ui/RightNavigartionButton";
 import ImageZoom from "../../ui/ImageZoom";
 import { useGetSingleproductDataQuery } from "../../../redux/api/productApi/ProductApi";
 import { useParams } from "react-router-dom";
+import {
+  useCartPostMutation,
+  useCartRemoveMutation,
+  useGetSinglecartDataQuery,
+} from "../../../redux/api/cartApi/CartApi";
+import { Minus, Plus } from "lucide-react";
 
 const Details = () => {
   const { id } = useParams(); // Assuming id is the product id from the URL. You can change this based on your requirements.
@@ -21,7 +27,36 @@ const Details = () => {
   console.log(productDetails);
   const [currentImage, setCurrentImage] = useState(null);
   const swiperRef = useRef<SwiperType | null>(null);
+  const { data: userCartData } = useGetSinglecartDataQuery();
+  const [cartProduct, setCartProduct] = useState(null);
+  const [cartPost, { isLoading: posting }] = useCartPostMutation();
+  const [cartRemove, { isLoading: removing }] = useCartRemoveMutation();
+  useEffect(() => {
+    setCartProduct(
+      userCartData?.data?.products?.find(
+        (p: any) => p.product._id === productDetails?.data?._id
+      )
+    );
+  }, [userCartData]);
 
+  const handleAddToCart = async (status: any) => {
+    try {
+      if (status === "addToCart") {
+        await cartPost({
+          product: productDetails?.data?._id,
+          quantity: 1,
+          price: productDetails?.data?.productSellingPrice,
+        }).unwrap();
+      } else if (status === "removeToCart") {
+        await cartRemove({
+          product: productDetails?.data?._id,
+        }).unwrap();
+      }
+    } catch (error) {
+      console.error("Failed to add to cart", error);
+      Swal.fire("Warning!", `${error?.data?.message}`, "warning");
+    }
+  };
   return (
     <div className="flex gap-4 p-4 items-start justify-center md:flex-row flex-col">
       {/* Product Image Section */}
@@ -140,15 +175,44 @@ const Details = () => {
             </div>
           </div>
         )}
-
-        {/* Add to Cart Button */}
-        <button className="mt-6 px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 border border-blue-500 rounded-lg transition relative overflow-hidden shadow-md shadow-blue-500/50 hover:scale-105 hover:shadow-blue-400 active:scale-95">
-          <span className="relative z-10 text-lg font-bold tracking-wide">
-            Add to Cart
-          </span>
-          {/* Glow Effect */}
-          <span className="absolute inset-0 bg-blue-400 opacity-50 blur-2xl animate-ping"></span>
-        </button>
+        <div className="mt-4">
+          {productDetails?.data?.productStock > 0 ? (
+            <div>
+              {cartProduct ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    disabled={removing}
+                    onClick={() => handleAddToCart("removeToCart")}
+                    className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
+                  >
+                    <Minus size={25} />
+                  </button>
+                  <div>{cartProduct?.quantity || 0}</div>
+                  <button
+                    disabled={posting}
+                    onClick={() => handleAddToCart("addToCart")}
+                    className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
+                  >
+                    <Plus size={25} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => handleAddToCart("addToCart")}
+                  className="mt-6 px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 border border-blue-500 rounded-lg transition relative overflow-hidden shadow-md shadow-blue-500/50 hover:scale-105 hover:shadow-blue-400 active:scale-95"
+                >
+                  <span className="relative z-10 text-lg font-bold tracking-wide">
+                    Add to Cart
+                  </span>
+                  {/* Glow Effect */}
+                  <span className="absolute inset-0 bg-blue-400 opacity-50 blur-2xl animate-ping"></span>
+                </button>
+              )}
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     </div>
   );

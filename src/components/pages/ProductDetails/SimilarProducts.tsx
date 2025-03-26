@@ -107,7 +107,7 @@ export default function SimilarProducts() {
       <MaxWidth>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">
-            Offer Products
+            Similar Products
           </h2>
           <p className="text-blue-500 hover:underline transition-colors duration-500 cursor-pointer">
             All Products
