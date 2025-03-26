@@ -36,8 +36,8 @@ const ProductCard = ({ product }: any) => {
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: "60b8d6d5f4b88a001f07b82e",
   });
-  const [cartPost] = useCartPostMutation();
-  const [cartRemove] = useCartRemoveMutation();
+  const [cartPost , {isLoading : posting}] = useCartPostMutation();
+  const [cartRemove, {isLoading: removing}] = useCartRemoveMutation();
   const { data: userCartData } = useGetSinglecartDataQuery();
   const swiperRef = useRef<SwiperType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -278,6 +278,7 @@ console.log(cartProduct)
                   {cartProduct ? (
                     <div className="flex items-center gap-2">
                       <button
+                      disabled={removing}
                         onClick={() => handleAddToCart("removeToCart")}
                         className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
                       >
@@ -285,6 +286,7 @@ console.log(cartProduct)
                       </button>
                       <div>{cartProduct?.quantity || 0}</div>
                       <button
+                      disabled={posting}
                         onClick={() => handleAddToCart("addToCart")}
                         className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
                       >
@@ -293,12 +295,12 @@ console.log(cartProduct)
                     </div>
                   ) : (
                     <Tooltip title="Add to Cart">
-                      <div onClick={() => handleAddToCart("addToCart")}>
+                    <button disabled={posting}  onClick={() => handleAddToCart("addToCart")}>
                         <ShoppingCart
                           className="text-blue-500 transition duration-300 cursor-pointer"
                           size={24}
                         />
-                      </div>
+                    </button>
                     </Tooltip>
                   )}
                 </div>
