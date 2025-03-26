@@ -41,7 +41,7 @@ const ProductCard = ({ product }: any) => {
 
   const [wishlistPost] = useWishlistPostMutation();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
-    id: "60b8d6d5f4b88a001f07b82e",
+    id: user?.userId,
   });
   const [cartPost , {isLoading : posting}] = useCartPostMutation();
   const [cartRemove, {isLoading: removing}] = useCartRemoveMutation();
