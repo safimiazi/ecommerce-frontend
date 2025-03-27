@@ -12,6 +12,8 @@ import Account from "../ui/Account";
 import { useCompare } from "../../hooks/CompareContext";
 import { useGetSinglewishlistDataQuery } from "../../redux/api/wishlistApi/WishlistApi";
 import { useGetSinglecartDataQuery } from "../../redux/api/cartApi/CartApi";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const Top = ({
   setIsMobileMenuOpen,
@@ -20,11 +22,12 @@ const Top = ({
   setWishlistOpen,
   setCompareOpen,
 }: any) => {
+  const { user } = useSelector((state: RootState) => state.auth);
+
   const { compareList } = useCompare();
-  const { data: wishlistData } = useGetSinglewishlistDataQuery({
-  });
-    const { data: userCartData } = useGetSinglecartDataQuery(null);
-  
+  const { data: wishlistData } = useGetSinglewishlistDataQuery({});
+  const { data: userCartData } = useGetSinglecartDataQuery(null);
+
   return (
     <div className="h-16 border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
       <button
@@ -87,10 +90,7 @@ const Top = ({
             />
           </div>
         </Badge>
-
-      <Account/>
-
-
+        {user && user !== null &&(<Account />)}
       </div>
     </div>
   );

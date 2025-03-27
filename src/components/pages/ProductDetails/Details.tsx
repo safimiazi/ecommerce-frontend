@@ -149,10 +149,7 @@ const Details = () => {
             <span className="font-medium">SKU:</span>{" "}
             {productDetails?.data?.skuCode}
           </p>
-          <p>
-            <span className="font-medium">Stock:</span>{" "}
-            {productDetails?.data?.productWeight}
-          </p>
+      
         </div>
 
         {/* Stock Status */}
@@ -177,7 +174,7 @@ const Details = () => {
                 <span
                   key={index}
                   className="w-8 h-8 rounded-full border-2 border-gray-300 cursor-pointer transition hover:border-blue-500"
-                  style={{ backgroundColor: color }}
+                  style={{ backgroundColor: color.colorCode }}
                 ></span>
               ))}
             </div>
