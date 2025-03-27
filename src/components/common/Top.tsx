@@ -22,7 +22,6 @@ const Top = ({
 }: any) => {
   const { compareList } = useCompare();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
-    id: "60b8d6d5f4b88a001f07b82e", // User ID
   });
     const { data: userCartData } = useGetSinglecartDataQuery(null);
   

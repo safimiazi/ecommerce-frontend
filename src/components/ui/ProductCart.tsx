@@ -40,7 +40,6 @@ const ProductCard = ({ product }: any) => {
   const { user } = useSelector((state: RootState) => state.auth);
   const [wishlistPost] = useWishlistPostMutation();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
-    id: user?.userId,
   });
   const [cartPost, { isLoading: posting }] = useCartPostMutation();
   const [cartRemove, { isLoading: removing }] = useCartRemoveMutation();
@@ -62,13 +61,13 @@ const ProductCard = ({ product }: any) => {
   }, [userCartData]);
 
   const handleAddToCart = async (status: any) => {
-    
+
     if (!user) return dispatch(openModal("login"));
 
     try {
       if (status === "addToCart") {
         await cartPost({
-          product: product._id,
+          product: product?._id,
           quantity: 1,
           price: product?.productSellingPrice,
         }).unwrap();
@@ -95,7 +94,6 @@ const ProductCard = ({ product }: any) => {
     if (!user) return dispatch(openModal("login"));
     try {
       const res = await wishlistPost({
-        user: user?.userId,
         product: product._id,
       }).unwrap();
       Swal.fire("Good job!", `${res.message}`, "success");

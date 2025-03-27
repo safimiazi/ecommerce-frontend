@@ -20,7 +20,6 @@ const ProductQuickView = ({ isOpen, onClose, product }: any) => {
   const { data: userCartData } = useGetSinglecartDataQuery(null);
   const [isInWishlist, setIsWishListed] = useState(false);
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
-    id: "60b8d6d5f4b88a001f07b82e",
   });
   const swiperRef = useRef<SwiperType | null>(null);
   const discountPrice = product?.productOfferPrice

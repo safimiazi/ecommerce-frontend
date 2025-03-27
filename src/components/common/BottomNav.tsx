@@ -9,7 +9,7 @@ import { useGetSinglecartDataQuery } from "../../redux/api/cartApi/CartApi";
 const BottomNav = ({ showCart, setWishlistOpen, setCompareOpen }: any) => {
   const { compareList } = useCompare();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
-    id: "60b8d6d5f4b88a001f07b82e",
+    
   });
       const { data: userCartData } = useGetSinglecartDataQuery(null);
   

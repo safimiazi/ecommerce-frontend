@@ -21,7 +21,6 @@ const { Title } = Typography;
 
 const WishlistDrawer = ({ onClose, open }: any) => {
   const { data: wishlistData, isLoading, error } = useGetSinglewishlistDataQuery({
-    id: "60b8d6d5f4b88a001f07b82e", // user id
   });
 
   const [wishlistDelete] = useWishlistDeleteMutation();

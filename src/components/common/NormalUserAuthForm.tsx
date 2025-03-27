@@ -25,6 +25,8 @@ const PhoneAuthForm = () => {
         const result: any = await userLogin({
           phone: values?.phone,
         }).unwrap();
+
+     
         dispatch(setUser({token: result?.data.token, user: {
             userId: result?.data?.user?._id,
             phone: result?.data?.user?.phone,

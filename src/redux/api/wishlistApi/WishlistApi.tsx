@@ -52,8 +52,8 @@ const wishlistApi = baseApi.injectEndpoints({
     }),
 
     getSinglewishlistData: build.query({
-      query: ({ id }) => ({
-        url: `/wishlist/${id}`,
+      query: () => ({
+        url: `/wishlist/for_single_user`,
         method: "GET",
       }),
       providesTags: ["wishlist"],
