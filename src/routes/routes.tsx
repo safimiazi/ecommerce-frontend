@@ -7,6 +7,7 @@ import { routeGenerator } from "../utils/routesGenerator";
 import LoginRegistration from "../pages/auth/LoginRegistration";
 import { adminPaths } from "./admin.routes";
 import Products from "../pages/user/products/Products";
+import CheckOut from "../pages/user/checkout/CheckOut";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
         path: "/details/:id",
         element: <ProductDetails />,
       },
+      {
+        path: "/cart/checkout",
+        element: <CheckOut/>,
+      }
     ],
   },
   {
