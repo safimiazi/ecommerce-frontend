@@ -37,14 +37,13 @@ import { RootState } from "../../redux/store";
 
 const ProductCard = ({ product }: any) => {
   const dispatch = useDispatch();
-  const {user} = useSelector((state: RootState) => state.auth) 
-
+  const { user } = useSelector((state: RootState) => state.auth);
   const [wishlistPost] = useWishlistPostMutation();
   const { data: wishlistData } = useGetSinglewishlistDataQuery({
     id: user?.userId,
   });
-  const [cartPost , {isLoading : posting}] = useCartPostMutation();
-  const [cartRemove, {isLoading: removing}] = useCartRemoveMutation();
+  const [cartPost, { isLoading: posting }] = useCartPostMutation();
+  const [cartRemove, { isLoading: removing }] = useCartRemoveMutation();
   const { data: userCartData } = useGetSinglecartDataQuery();
   const swiperRef = useRef<SwiperType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -56,27 +55,28 @@ const ProductCard = ({ product }: any) => {
   const [cartProduct, setCartProduct] = useState(null);
   useEffect(() => {
     setCartProduct(
-      userCartData?.data?.products?.find((p: any) => p.product._id === product._id)
+      userCartData?.data?.products?.find(
+        (p: any) => p.product._id === product._id
+      )
     );
-  },[userCartData]);
+  }, [userCartData]);
 
   const handleAddToCart = async (status: any) => {
-    if(!user) return dispatch(openModal("login"))
+    
+    if (!user) return dispatch(openModal("login"));
 
     try {
       if (status === "addToCart") {
-         await cartPost({
+        await cartPost({
           product: product._id,
           quantity: 1,
           price: product?.productSellingPrice,
         }).unwrap();
       } else if (status === "removeToCart") {
-      await cartRemove({
+        await cartRemove({
           product: product._id,
         }).unwrap();
       }
-
-   
     } catch (error) {
       console.error("Failed to add to cart", error);
       Swal.fire("Warning!", `${error?.data?.message}`, "warning");
@@ -92,11 +92,10 @@ const ProductCard = ({ product }: any) => {
   }, [wishlistData, product._id]);
 
   const handleAddToWishlist = async () => {
-
-    if(!user) return dispatch(openModal("login"))
+    if (!user) return dispatch(openModal("login"));
     try {
       const res = await wishlistPost({
-        user: "60b8d6d5f4b88a001f07b82e",
+        user: user?.userId,
         product: product._id,
       }).unwrap();
       Swal.fire("Good job!", `${res.message}`, "success");
@@ -279,7 +278,10 @@ const ProductCard = ({ product }: any) => {
                 />
               </button>
             </Tooltip>
-            <Link to={`${`/details/${product?._id}`}`} className="text-blue-500 cursor-pointer underline">
+            <Link
+              to={`${`/details/${product?._id}`}`}
+              className="text-blue-500 cursor-pointer underline"
+            >
               View Details
             </Link>
             <div>
@@ -288,7 +290,7 @@ const ProductCard = ({ product }: any) => {
                   {cartProduct ? (
                     <div className="flex items-center gap-2">
                       <button
-                      disabled={removing}
+                        disabled={removing}
                         onClick={() => handleAddToCart("removeToCart")}
                         className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
                       >
@@ -296,7 +298,7 @@ const ProductCard = ({ product }: any) => {
                       </button>
                       <div>{cartProduct?.quantity || 0}</div>
                       <button
-                      disabled={posting}
+                        disabled={posting}
                         onClick={() => handleAddToCart("addToCart")}
                         className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
                       >
@@ -305,12 +307,15 @@ const ProductCard = ({ product }: any) => {
                     </div>
                   ) : (
                     <Tooltip title="Add to Cart">
-                    <button disabled={posting}  onClick={() => handleAddToCart("addToCart")}>
+                      <button
+                        disabled={posting}
+                        onClick={() => handleAddToCart("addToCart")}
+                      >
                         <ShoppingCart
                           className="text-blue-500 transition duration-300 cursor-pointer"
                           size={24}
                         />
-                    </button>
+                      </button>
                     </Tooltip>
                   )}
                 </div>
