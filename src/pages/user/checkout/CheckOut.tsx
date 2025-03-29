@@ -31,6 +31,7 @@ import {
 import Swal from "sweetalert2";
 import truncateText from "../../../utils/truncateText";
 import { useApplyCouponMutation } from "../../../redux/api/paymentApi/PaymentApi";
+import OrderPlacement from "../../../components/common/OrderPlacement";
 
 const { Title, Text } = Typography;
 
@@ -149,6 +150,15 @@ const CheckOut = () => {
       </MaxWidth>
     );
   }
+
+  const [paymentType, setPaymentType] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [transactionId, setTransactionId] = useState<string | null>(null);
+
+    useEffect(() => {
+      setPaymentMethod(null);
+      setTransactionId(null);
+    }, [paymentType]);
 
   return (
     <MaxWidth>
@@ -393,7 +403,6 @@ const CheckOut = () => {
                     {appliedCoupon && (
                       <p
                         type="link"
-                        
                         onClick={handleRemoveCoupon}
                         className="p-0 text-red-500 cursor-pointer"
                       >
@@ -404,38 +413,23 @@ const CheckOut = () => {
                 </Card>
               </Col>
 
-              {/* Customer Information */}
+              {/* order placement */}
               <Col span={24}>
-                <Card title="Customer Information" bordered={false}>
-                  <Space direction="vertical" className="w-full" size="middle">
-                    <Input placeholder="Full Name" />
-                    <Input placeholder="Email" />
-                    <Input placeholder="Phone Number" />
-                    <Input.TextArea placeholder="Shipping Address" rows={3} />
-
-                    <Divider orientation="left">Payment Method</Divider>
-
-                    <Radio.Group defaultValue="cod" className="w-full">
-                      <Space direction="vertical" className="w-full">
-                        <Radio value="cod">Cash on Delivery</Radio>
-                        <Radio value="card">Credit/Debit Card</Radio>
-                        <Radio value="mobile">Mobile Payment</Radio>
-                      </Space>
-                    </Radio.Group>
-                  </Space>
-                </Card>
-              </Col>
-
-              {/* Proceed to Payment */}
-              <Col span={24}>
-                <Button
-                  type="primary"
-                  size="large"
-                  block
-                  className="h-12 bg-orange-500 hover:bg-orange-600"
-                >
-                  Proceed to Payment
-                </Button>
+                <OrderPlacement
+                  paymentType={paymentType}
+                  paymentMethod={paymentMethod}
+                  transactionId={transactionId}
+                  setPaymentType={setPaymentType}
+                  setPaymentMethod={setPaymentMethod}
+                  setTransactionId={setTransactionId}
+                  deliveryLocation={deliveryLocation}
+                  shippingFee={shippingFee}
+                  cartProducts={cartProducts}
+                  subTotal={subTotal}
+                  total={total}
+                  appliedCoupon={appliedCoupon}
+                  discountAmount={discountAmount}
+                />
               </Col>
             </Row>
           </Col>
