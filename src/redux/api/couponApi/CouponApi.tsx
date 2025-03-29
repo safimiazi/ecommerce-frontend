@@ -10,6 +10,7 @@ const couponApi = baseApi.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["coupon"],
     }),
     couponUpdate: build.mutation({
       query: ({ data, id }) => {
@@ -19,21 +20,17 @@ const couponApi = baseApi.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["coupon"],
     }),
 
     couponDelete: build.mutation({
-      query: ({ id }) => ({
-        url: `/coupon/${id}`,
-        method: "DELETE",
-      }),
-    }),
-    bulkDelete: build.mutation({
-      query: ({ ids }) => ({
-        url: `/coupon/bulk`,
+      query: (id ) => ({
+        url: `/coupon/delete/${id}`,
         method: "POST",
-        body: { ids },
       }),
+      invalidatesTags: ["coupon"],
     }),
+
     getcouponData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
         url: "/coupon/get-all",
@@ -45,6 +42,7 @@ const couponApi = baseApi.injectEndpoints({
           isDelete,
         },
       }),
+      providesTags: ["coupon"], // ক্যাশিং ��িকমতো কা�� করবে
     }),
   }),
 
@@ -55,6 +53,5 @@ export const {
   useCouponPostMutation,
   useCouponUpdateMutation,
   useCouponDeleteMutation,
-  useBulkDeleteMutation,
   useGetcouponDataQuery,
 } = couponApi;

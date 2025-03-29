@@ -30,6 +30,7 @@ const Coupon = () => {
       pageIndex: pagination.pageIndex,
       pageSize: pagination.pageSize,
       search: globalFilter,
+      isDelete: false,
     });
     const [couponPost] = useCouponPostMutation();
     const [couponUpdate] = useCouponUpdateMutation();
@@ -60,7 +61,7 @@ const Coupon = () => {
 
   const deleteMultiple = async (ids: string[]) => {
     try {
-      await Promise.all(ids.map((id) => deleteCoupon(id).unwrap()));
+      await Promise.all(ids.map((id) => couponDelete(id).unwrap()));
       Swal.fire({
         title: "Success!",
         text: `${ids.length} coupons deleted successfully`,

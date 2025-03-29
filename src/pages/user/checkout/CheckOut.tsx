@@ -3,25 +3,25 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import MaxWidth from "../../../wrapper/MaxWidth";
-import { 
-  Image, 
-  Input, 
-  Card, 
-  Button, 
-  Radio, 
-  Space, 
-  Divider, 
-  Typography, 
-  Row, 
+import {
+  Image,
+  Input,
+  Card,
+  Button,
+  Radio,
+  Space,
+  Divider,
+  Typography,
+  Row,
   Col,
   Spin,
-  message 
+  message,
 } from "antd";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
 import { ArrowLeft, ArrowRight, Delete, Minus, Plus } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useCartDeleteMutation,
   useCartPostMutation,
@@ -30,6 +30,7 @@ import {
 } from "../../../redux/api/cartApi/CartApi";
 import Swal from "sweetalert2";
 import truncateText from "../../../utils/truncateText";
+import { useApplyCouponMutation } from "../../../redux/api/paymentApi/PaymentApi";
 
 const { Title, Text } = Typography;
 
@@ -39,13 +40,79 @@ const CheckOut = () => {
   const [cartPost, { isLoading: posting }] = useCartPostMutation();
   const [cartRemove, { isLoading: removing }] = useCartRemoveMutation();
   const [cartDelete] = useCartDeleteMutation();
-console.log("removing", removing)
+  const [applyCoupon] = useApplyCouponMutation();
   const swiperRefs = useRef([]);
-  
+  const [discountType, setDiscountType] = useState<"coupon" | "giftcard">(
+    "coupon"
+  );
+  const [deliveryLocation, setDeliveryLocation] = useState<
+    "inside" | "outside"
+  >("inside");
+  const [code, setCode] = useState("");
+  const [shippingFee, setShippingFee] = useState(0.0);
+
+  const [total, setTotal] = useState(0.0);
+  const [subTotal, setSubTotal] = useState(0.0);
+
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+
+  // Calculate totals
+  useEffect(() => {
+    // Calculate subtotal from cart data
+    const calculatedSubTotal = userCartData?.data?.cartTotalCost || 0;
+    setSubTotal(calculatedSubTotal);
+
+    // Calculate shipping fee based on location
+    const calculatedShippingFee = deliveryLocation === "inside" ? 50 : 100;
+    setShippingFee(calculatedShippingFee);
+
+    // Calculate total with discount
+    const calculatedTotal =
+      calculatedSubTotal + calculatedShippingFee - discountAmount;
+    setTotal(calculatedTotal > 0 ? calculatedTotal : 0); // Ensure total doesn't go negative
+  }, [userCartData, deliveryLocation, discountAmount]);
+
+  // Handle coupon application
+  const handleApply = async () => {
+    if (!code.trim()) {
+      message.warning("Please enter a code");
+      return;
+    }
+
+    try {
+      if (discountType === "coupon") {
+        const response = await applyCoupon({
+          code,
+          cartTotal: subTotal, // Use current subtotal
+        }).unwrap();
+
+        if (response.success) {
+          setDiscountAmount(response.data.discountAmount);
+          setAppliedCoupon(response.data.coupon);
+          message.success(`Coupon ${code} applied successfully!`);
+        }
+      } else {
+        // Gift card logic would go here
+        message.success(`Gift card ${code} applied!`);
+      }
+    } catch (error) {
+      message.error(error.data?.message || "Failed to apply discount");
+    }
+  };
+
+  // Remove coupon
+  const handleRemoveCoupon = () => {
+    setDiscountAmount(0);
+    setAppliedCoupon(null);
+    setCode("");
+    message.success("Coupon removed successfully");
+  };
+
   const handleDeleteProduct = async (productId) => {
     try {
       await cartDelete({ id: productId }).unwrap();
-      message.success('Product removed from cart');
+      message.success("Product removed from cart");
     } catch (error) {
       console.error("Failed to remove product", error);
       Swal.fire("Warning!", `${error?.data?.message}`, "warning");
@@ -60,12 +127,12 @@ console.log("removing", removing)
           quantity: 1,
           price: product?.productSellingPrice,
         }).unwrap();
-        message.success('Added to cart');
+        message.success("Added to cart");
       } else if (status === "removeToCart") {
         await cartRemove({
           product: product?._id,
         }).unwrap();
-        message.success('Removed from cart');
+        message.success("Removed from cart");
       }
     } catch (error) {
       console.error("Failed to add to cart", error);
@@ -86,15 +153,17 @@ console.log("removing", removing)
   return (
     <MaxWidth>
       <div className="p-6">
-        <Title level={2} className="mb-6">Checkout</Title>
-        
+        <Title level={2} className="mb-6">
+          Checkout
+        </Title>
+
         <Row gutter={24}>
           {/* Order Summary */}
           <Col xs={24} lg={10}>
-            <Card 
-              title="Order Summary" 
+            <Card
+              title="Order Summary"
               bordered={false}
-              headStyle={{ border: 'none' }}
+              headStyle={{ border: "none" }}
               className="mb-6"
             >
               {cartProducts.length === 0 ? (
@@ -109,7 +178,7 @@ console.log("removing", removing)
                       swiperRefs.current[inx] = null;
                     }
                     return (
-                      <Card 
+                      <Card
                         key={inx}
                         hoverable
                         className="relative"
@@ -121,7 +190,9 @@ console.log("removing", removing)
                             <div className="relative w-20 h-20 rounded-lg overflow-hidden">
                               <Swiper
                                 modules={[Navigation, Pagination]}
-                                onSwiper={(swiper) => (swiperRefs.current[inx] = swiper)}
+                                onSwiper={(swiper) =>
+                                  (swiperRefs.current[inx] = swiper)
+                                }
                                 spaceBetween={10}
                                 slidesPerView={1}
                                 loop
@@ -151,15 +222,19 @@ console.log("removing", removing)
 
                             {/* Navigation Buttons */}
                             <div className="mt-2 flex justify-center items-center gap-2">
-                              <Button 
-                                size="small" 
-                                icon={<ArrowLeft size={14} />} 
-                                onClick={() => swiperRefs.current[inx]?.slidePrev()}
+                              <Button
+                                size="small"
+                                icon={<ArrowLeft size={14} />}
+                                onClick={() =>
+                                  swiperRefs.current[inx]?.slidePrev()
+                                }
                               />
-                              <Button 
-                                size="small" 
-                                icon={<ArrowRight size={14} />} 
-                                onClick={() => swiperRefs.current[inx]?.slideNext()}
+                              <Button
+                                size="small"
+                                icon={<ArrowRight size={14} />}
+                                onClick={() =>
+                                  swiperRefs.current[inx]?.slideNext()
+                                }
                               />
                             </div>
                           </div>
@@ -169,36 +244,43 @@ console.log("removing", removing)
                             <Text strong className="block mb-1">
                               {truncateText(product?.productName, 30)}
                             </Text>
-                            <Text type="secondary" className="block mb-2 text-xs">
+                            <Text
+                              type="secondary"
+                              className="block mb-2 text-xs"
+                            >
                               {product?.skuCode}
                             </Text>
-                            
+
                             <Text strong className="block mb-2">
                               ${cartItem?.totalPrice}
                             </Text>
 
                             <Space>
-                              <Button 
-                                size="small" 
-                                icon={<Minus size={15} />} 
-                                onClick={() => handleAddToCart("removeToCart", product)}
+                              <Button
+                                size="small"
+                                icon={<Minus size={15} />}
+                                onClick={() =>
+                                  handleAddToCart("removeToCart", product)
+                                }
                                 loading={removing}
                               />
                               <Text>{cartItem?.quantity || 0}</Text>
-                              <Button 
-                                size="small" 
-                                icon={<Plus size={15} />} 
-                                onClick={() => handleAddToCart("addToCart", product)}
+                              <Button
+                                size="small"
+                                icon={<Plus size={15} />}
+                                onClick={() =>
+                                  handleAddToCart("addToCart", product)
+                                }
                                 loading={posting}
                               />
                             </Space>
                           </div>
                         </div>
-                        
-                        <Button 
+
+                        <Button
                           danger
-                          type="text" 
-                          icon={<Delete size={18} />} 
+                          type="text"
+                          icon={<Delete size={18} />}
                           onClick={() => handleDeleteProduct(product._id)}
                           className="absolute top-2 right-2"
                         />
@@ -216,25 +298,59 @@ console.log("removing", removing)
               {/* Discount Section */}
               <Col span={24}>
                 <Card title="Discount Options" bordered={false}>
-                  <Radio.Group defaultValue="coupon" className="w-full mb-4">
-                    <Space direction="vertical" className="w-full">
-                      <Radio value="coupon">Apply Coupon</Radio>
-                      <Input placeholder="Enter Coupon Code" />
-                      
-                      <Radio value="giftcard">Apply Gift Card</Radio>
-                      <Input placeholder="Enter Gift Card Code" />
-                    </Space>
-                  </Radio.Group>
+                  <div className="w-full">
+                    <Radio.Group
+                      value={discountType}
+                      onChange={(e) => {
+                        setDiscountType(e.target.value);
+                        setCode(""); // টাইপ পরিবর্তন করলে কোড রিসেট করুন
+                      }}
+                      className="w-full mb-4"
+                    >
+                      <Space direction="vertical" className="w-full">
+                        <Radio value="coupon">Apply Coupon</Radio>
+                        <Radio value="giftcard">Apply Gift Card</Radio>
+                      </Space>
+                    </Radio.Group>
+
+                    <div className="flex mt-3">
+                      <Input
+                        placeholder={
+                          discountType === "coupon"
+                            ? "Enter Coupon Code"
+                            : "Enter Gift Card Code"
+                        }
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        className="w-full mb-2"
+                      />
+
+                      <Button
+                        type="primary"
+                        onClick={handleApply}
+                        className="w-40"
+                      >
+                        Apply{" "}
+                        {discountType === "coupon" ? "Coupon" : "Gift Card"}
+                      </Button>
+                    </div>
+                  </div>
                 </Card>
               </Col>
 
               {/* Delivery Section */}
               <Col span={24}>
                 <Card title="Delivery Options" bordered={false}>
-                  <Radio.Group defaultValue="standard" className="w-full">
+                  <Radio.Group
+                    value={deliveryLocation}
+                    onChange={(e) => {
+                      setDeliveryLocation(e.target.value);
+                    }}
+                    className="w-full"
+                  >
                     <Space direction="vertical" className="w-full">
-                      <Radio value="standard">Standard Delivery (3-5 business days)</Radio>
-                      <Radio value="express">Express Delivery (1-2 business days)</Radio>
+                      <Radio value="inside">Inside Dhaka</Radio>
+                      <Radio value="outside">Outside Dhaka</Radio>
                     </Space>
                   </Radio.Group>
                 </Card>
@@ -246,17 +362,44 @@ console.log("removing", removing)
                   <Space direction="vertical" className="w-full">
                     <div className="flex justify-between">
                       <Text>Subtotal</Text>
-                      <Text>${cartProducts.reduce((sum, item) => sum + item.totalPrice, 0).toFixed(2)}</Text>
+                      <Text>${subTotal.toFixed(2)}</Text>
                     </div>
+
+                    {appliedCoupon && (
+                      <div className="flex justify-between">
+                        <Text>
+                          Discount ({appliedCoupon.code}:{" "}
+                          {appliedCoupon.discountType === "percentage"
+                            ? `${discountAmount}%`
+                            : `$${discountAmount}`}
+                          )
+                        </Text>
+                        <Text>-${discountAmount.toFixed(2)}</Text>
+                      </div>
+                    )}
+
                     <div className="flex justify-between">
                       <Text>Shipping</Text>
-                      <Text>$20.00</Text>
+                      <Text>${shippingFee.toFixed(2)}</Text>
                     </div>
+
                     <Divider className="my-2" />
-                    <div className="flex justify-between">
+
+                    <div className="flex justify-between font-semibold text-lg">
                       <Text strong>Total</Text>
-                      <Text strong>${(cartProducts.reduce((sum, item) => sum + item.totalPrice, 0) + 20).toFixed(2)}</Text>
+                      <Text strong>${total.toFixed(2)}</Text>
                     </div>
+
+                    {appliedCoupon && (
+                      <p
+                        type="link"
+                        
+                        onClick={handleRemoveCoupon}
+                        className="p-0 text-red-500 cursor-pointer"
+                      >
+                        Remove Coupon
+                      </p>
+                    )}
                   </Space>
                 </Card>
               </Col>
@@ -269,9 +412,9 @@ console.log("removing", removing)
                     <Input placeholder="Email" />
                     <Input placeholder="Phone Number" />
                     <Input.TextArea placeholder="Shipping Address" rows={3} />
-                    
+
                     <Divider orientation="left">Payment Method</Divider>
-                    
+
                     <Radio.Group defaultValue="cod" className="w-full">
                       <Space direction="vertical" className="w-full">
                         <Radio value="cod">Cash on Delivery</Radio>
@@ -285,9 +428,9 @@ console.log("removing", removing)
 
               {/* Proceed to Payment */}
               <Col span={24}>
-                <Button 
-                  type="primary" 
-                  size="large" 
+                <Button
+                  type="primary"
+                  size="large"
                   block
                   className="h-12 bg-orange-500 hover:bg-orange-600"
                 >
