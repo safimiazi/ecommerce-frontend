@@ -219,7 +219,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
               placeholder="Select a category"
               options={
                 categories?.data?.result.map((item: any) => ({
-                  label: `${item.name} (${item.type.toUpperCase()})`,
+                  label: `${item.name} (${item?.type?.toUpperCase()})`,
                   value: item._id,
                 })) || []
               }
@@ -238,7 +238,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
               placeholder="Select products"
               options={
                 product?.data?.result.map((item: any) => ({
-                  label: `${item.name} (${item.type.toUpperCase()})`,
+                  label: `${item.productName}`,
                   value: item._id,
                 })) || []
               }

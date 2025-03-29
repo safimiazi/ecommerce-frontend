@@ -177,8 +177,7 @@ const Coupon = () => {
         endDate: values.dateRange[1].toISOString(),
       };
 
-      console.log(couponData);
-      return;
+  
 
       if (editingCoupon) {
         await couponUpdate({
