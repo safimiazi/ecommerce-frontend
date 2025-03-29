@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
@@ -10,14 +10,14 @@ import {
   Space,
   Row,
   Col,
-  Typography,
   Alert,
-} from 'antd';
-import moment from 'moment';
-import { FormInstance } from 'antd/lib/form';
+} from "antd";
+import dayjs from "dayjs";
+import { FormInstance } from "antd/lib/form";
+import { useGetproductDataQuery } from "../../../redux/api/productApi/ProductApi";
+import { useGetCategoryDataQuery } from "../../../redux/api/categoryApi/CategoryApi";
 
 const { Option } = Select;
-const { Text } = Typography;
 
 interface CouponFormProps {
   onSubmit: (values: any) => void;
@@ -26,8 +26,10 @@ interface CouponFormProps {
 }
 
 const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
+  const { data: product } = useGetproductDataQuery({ isDelete: false });
+  const { data: categories } = useGetCategoryDataQuery({ isDelete: false });
   const [form] = Form.useForm();
-  const [discountType, setDiscountType] = useState<string>('percentage');
+  const [discountType, setDiscountType] = useState<string>("percentage");
   const [showMaxDiscount, setShowMaxDiscount] = useState<boolean>(false);
 
   useEffect(() => {
@@ -35,12 +37,12 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
       form.setFieldsValue({
         ...initialValues,
         dateRange: initialValues.dateRange || [
-          moment(initialValues.startDate),
-          moment(initialValues.endDate)
-        ]
+          dayjs(initialValues.startDate),
+          dayjs(initialValues.endDate),
+        ],
       });
-      setDiscountType(initialValues.discountType || 'percentage');
-      setShowMaxDiscount(initialValues.discountType === 'percentage');
+      setDiscountType(initialValues.discountType || "percentage");
+      setShowMaxDiscount(initialValues.discountType === "percentage");
     }
   }, [initialValues, form]);
 
@@ -55,16 +57,16 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
 
   const handleDiscountTypeChange = (value: string) => {
     setDiscountType(value);
-    setShowMaxDiscount(value === 'percentage');
+    setShowMaxDiscount(value === "percentage");
     // Reset max discount when switching types
-    if (value !== 'percentage') {
+    if (value !== "percentage") {
       form.setFieldsValue({ maxDiscountAmount: null });
     }
   };
 
-  const disabledDate = (current: moment.Moment) => {
+  const disabledDate = (current: dayjs.Dayjs) => {
     // Can not select days before today
-    return current && current < moment().startOf('day');
+    return current && current < dayjs().startOf("day");
   };
 
   return (
@@ -73,7 +75,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        discountType: 'percentage',
+        discountType: "percentage",
         minOrderAmount: 0,
         isActive: true,
       }}
@@ -84,10 +86,10 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
             name="code"
             label="Coupon Code"
             rules={[
-              { required: true, message: 'Please input coupon code!' },
+              { required: true, message: "Please input coupon code!" },
               {
                 pattern: /^[A-Z0-9]+$/,
-                message: 'Only uppercase letters and numbers allowed',
+                message: "Only uppercase letters and numbers allowed",
               },
             ]}
           >
@@ -98,7 +100,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
           <Form.Item
             name="name"
             label="Coupon Name"
-            rules={[{ required: true, message: 'Please input coupon name!' }]}
+            rules={[{ required: true, message: "Please input coupon name!" }]}
           >
             <Input placeholder="e.g., Summer Sale 2023" />
           </Form.Item>
@@ -126,17 +128,17 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
           <Form.Item
             name="discountValue"
             label={
-              discountType === 'percentage'
-                ? 'Discount Percentage'
-                : 'Discount Amount'
+              discountType === "percentage"
+                ? "Discount Percentage"
+                : "Discount Amount"
             }
             rules={[
-              { required: true, message: 'Please input discount value!' },
+              { required: true, message: "Please input discount value!" },
               {
                 validator: (_, value) => {
-                  if (discountType === 'percentage' && value > 100) {
+                  if (discountType === "percentage" && value > 100) {
                     return Promise.reject(
-                      'Percentage discount cannot exceed 100%'
+                      "Percentage discount cannot exceed 100%"
                     );
                   }
                   return Promise.resolve();
@@ -146,9 +148,9 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
           >
             <InputNumber
               min={0}
-              max={discountType === 'percentage' ? 100 : undefined}
-              style={{ width: '100%' }}
-              addonAfter={discountType === 'percentage' ? '%' : '$'}
+              max={discountType === "percentage" ? 100 : undefined}
+              style={{ width: "100%" }}
+              addonAfter={discountType === "percentage" ? "%" : "$"}
             />
           </Form.Item>
         </Col>
@@ -160,7 +162,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
           label="Maximum Discount Amount (Optional)"
           tooltip="Maximum amount that can be discounted (for percentage discounts)"
         >
-          <InputNumber min={0} style={{ width: '100%' }} prefix="$" />
+          <InputNumber min={0} style={{ width: "100%" }} prefix="$" />
         </Form.Item>
       )}
 
@@ -169,17 +171,17 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
         label="Minimum Order Amount"
         tooltip="Minimum cart total required to apply this coupon"
       >
-        <InputNumber min={0} style={{ width: '100%' }} prefix="$" />
+        <InputNumber min={0} style={{ width: "100%" }} prefix="$" />
       </Form.Item>
 
       <Form.Item
         name="dateRange"
         label="Validity Period"
-        rules={[{ required: true, message: 'Please select date range!' }]}
+        rules={[{ required: true, message: "Please select date range!" }]}
       >
         <DatePicker.RangePicker
-          style={{ width: '100%' }}
-        //   disabledDate={disabledDate}
+          style={{ width: "100%" }}
+          disabledDate={disabledDate}
           showTime={false}
           format="YYYY-MM-DD"
         />
@@ -192,15 +194,11 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
             label="Usage Limit (Optional)"
             tooltip="Maximum number of times this coupon can be used"
           >
-            <InputNumber min={1} style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: "100%" }} />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name="isActive"
-            label="Status"
-            valuePropName="checked"
-          >
+          <Form.Item name="isActive" label="Status" valuePropName="checked">
             <Select>
               <Option value={true}>Active</Option>
               <Option value={false}>Inactive</Option>
@@ -208,11 +206,51 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
           </Form.Item>
         </Col>
       </Row>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name="categories"
+            label="Applicable Categories"
+            rules={[{ required: false }]}
+          >
+            <Select
+              mode="multiple"
+              loading={!categories}
+              placeholder="Select a category"
+              options={
+                categories?.data?.result.map((item: any) => ({
+                  label: `${item.name} (${item.type.toUpperCase()})`,
+                  value: item._id,
+                })) || []
+              }
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            name="products"
+            label="Specific Products"
+            rules={[{ required: false }]}
+          >
+            <Select
+              mode="multiple"
+              loading={!product}
+              placeholder="Select products"
+              options={
+                product?.data?.result.map((item: any) => ({
+                  label: `${item.name} (${item.type.toUpperCase()})`,
+                  value: item._id,
+                })) || []
+              }
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit">
-            {initialValues ? 'Update Coupon' : 'Create Coupon'}
+            {initialValues ? "Update Coupon" : "Create Coupon"}
           </Button>
           <Button htmlType="button" onClick={() => form.resetFields()}>
             Reset
@@ -220,15 +258,16 @@ const CouponForm: React.FC<CouponFormProps> = ({ onSubmit, initialValues }) => {
         </Space>
       </Form.Item>
 
-      {discountType === 'percentage' && !form.getFieldValue('maxDiscountAmount') && (
-        <Alert
-          message="Recommendation"
-          description="Consider setting a maximum discount amount for percentage coupons to control your discount exposure."
-          type="info"
-          showIcon
-          style={{ marginBottom: 16 }}
-        />
-      )}
+      {discountType === "percentage" &&
+        !form.getFieldValue("maxDiscountAmount") && (
+          <Alert
+            message="Recommendation"
+            description="Consider setting a maximum discount amount for percentage coupons to control your discount exposure."
+            type="info"
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+        )}
     </Form>
   );
 };

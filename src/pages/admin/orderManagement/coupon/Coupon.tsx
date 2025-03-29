@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {  useState } from "react";
+import { useState } from "react";
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -10,34 +10,30 @@ import {
 import { Button, Drawer, Dropdown, Menu, Popconfirm, Tag, Badge } from "antd";
 import CustomTable from "../../../../components/common/CustomTable";
 import MaxWidth from "../../../../wrapper/MaxWidth";
-// import { 
-//   useCreateCouponMutation, 
-//   useDeleteCouponMutation,
-//   useGetCouponsQuery,
-//   useUpdateCouponMutation 
-// } from "../../../../redux/api/couponApi";
+
 import Swal from "sweetalert2";
 import moment from "moment";
 import CouponForm from "../../../../components/pages/coupon/CouponForm";
+import { useCouponDeleteMutation, useCouponPostMutation, useCouponUpdateMutation, useGetcouponDataQuery } from "../../../../redux/api/couponApi/CouponApi";
 
 const Coupon = () => {
-//   const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
-//   const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openCouponDrawer, setOpenCouponDrawer] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState<any | null>(null);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
 
-  // API Calls
-//   const { data: couponData, refetch } = useGetCouponsQuery({
-//     pageIndex: pagination.pageIndex,
-//     pageSize: pagination.pageSize,
-//     search: globalFilter,
-//   });
-//   const [createCoupon] = useCreateCouponMutation();
-//   const [updateCoupon] = useUpdateCouponMutation();
-//   const [deleteCoupon] = useDeleteCouponMutation();
+//   API Calls
+    const { data: couponData, refetch } = useGetcouponDataQuery({
+      pageIndex: pagination.pageIndex,
+      pageSize: pagination.pageSize,
+      search: globalFilter,
+    });
+    const [couponPost] = useCouponPostMutation();
+    const [couponUpdate] = useCouponUpdateMutation();
+    const [couponDelete] = useCouponDeleteMutation();
 
   const handleEdit = (coupon: any) => {
     setEditingCoupon(coupon);
@@ -46,7 +42,7 @@ const Coupon = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteCoupon(id).unwrap();
+      await couponDelete(id).unwrap();
       Swal.fire({
         title: "Success!",
         text: "Coupon deleted successfully",
@@ -64,7 +60,7 @@ const Coupon = () => {
 
   const deleteMultiple = async (ids: string[]) => {
     try {
-      await Promise.all(ids.map(id => deleteCoupon(id).unwrap()));
+      await Promise.all(ids.map((id) => deleteCoupon(id).unwrap()));
       Swal.fire({
         title: "Success!",
         text: `${ids.length} coupons deleted successfully`,
@@ -94,8 +90,8 @@ const Coupon = () => {
             <Menu.Item
               key="details"
               onClick={() => {
-                // setSelectedCoupon(row);
-                // setIsModalVisible(true);
+                setSelectedCoupon(row);
+                setIsModalVisible(true);
               }}
             >
               <EyeOutlined /> Details
@@ -132,26 +128,24 @@ const Coupon = () => {
       header: "DISCOUNT",
       Cell: ({ row }: any) => (
         <span>
-          {row.discountType === 'percentage' 
-            ? `${row.discountValue}%` 
+          {row.discountType === "percentage"
+            ? `${row.discountValue}%`
             : `$${row.discountValue}`}
         </span>
       ),
     },
     {
       header: "MIN. ORDER",
-      Cell: ({ row }: any) => (
-        <span>${row.minOrderAmount || 0}</span>
-      ),
+      Cell: ({ row }: any) => <span>${row.minOrderAmount || 0}</span>,
     },
     {
       header: "STATUS",
       Cell: ({ row }: any) => {
         const isActive = moment(row.endDate).isAfter() && row.isActive;
         return (
-          <Badge 
-            status={isActive ? 'success' : 'error'} 
-            text={isActive ? 'Active' : 'Inactive'} 
+          <Badge
+            status={isActive ? "success" : "error"}
+            text={isActive ? "Active" : "Inactive"}
           />
         );
       },
@@ -160,8 +154,8 @@ const Coupon = () => {
       header: "VALIDITY",
       Cell: ({ row }: any) => (
         <div>
-          {moment(row.startDate).format('MMM D, YYYY')} -{' '}
-          {moment(row.endDate).format('MMM D, YYYY')}
+          {moment(row.startDate).format("MMM D, YYYY")} -{" "}
+          {moment(row.endDate).format("MMM D, YYYY")}
         </div>
       ),
     },
@@ -169,7 +163,7 @@ const Coupon = () => {
       header: "USAGE",
       Cell: ({ row }: any) => (
         <span>
-          {row.usedCount || 0} / {row.usageLimit || '∞'}
+          {row.usedCount || 0} / {row.usageLimit || "∞"}
         </span>
       ),
     },
@@ -183,15 +177,21 @@ const Coupon = () => {
         endDate: values.dateRange[1].toISOString(),
       };
 
+      console.log(couponData);
+      return;
+
       if (editingCoupon) {
-        await updateCoupon({ id: editingCoupon._id, data: couponData }).unwrap();
+        await couponUpdate({
+          id: editingCoupon._id,
+          data: couponData,
+        }).unwrap();
         Swal.fire({
           title: "Success!",
           text: "Coupon updated successfully",
           icon: "success",
         });
       } else {
-        await createCoupon(couponData).unwrap();
+        await couponPost(couponData).unwrap();
         Swal.fire({
           title: "Success!",
           text: "Coupon created successfully",
@@ -212,8 +212,8 @@ const Coupon = () => {
 
   return (
     <MaxWidth>
-      <Button 
-        type="primary" 
+      <Button
+        type="primary"
         icon={<PlusOutlined />}
         onClick={() => {
           setEditingCoupon(null);
@@ -226,7 +226,7 @@ const Coupon = () => {
 
       <CustomTable
         columns={customColumns}
-        // data={couponData?.data || []}
+         data={couponData?.data || []}
         pagination={pagination}
         onPaginationChange={(pageIndex, pageSize) =>
           setPagination({ pageIndex, pageSize })
@@ -235,7 +235,7 @@ const Coupon = () => {
         enableBulkDelete={true}
         globalFilter={globalFilter}
         onFilterChange={setGlobalFilter}
-        // totalRecordCount={couponData?.meta?.total || 0}
+        totalRecordCount={couponData?.meta?.total || 0}
         selectedRows={selectedRows}
         setSelectedRows={setSelectedRows}
       />
@@ -249,16 +249,20 @@ const Coupon = () => {
         width={600}
         destroyOnClose
       >
-     <CouponForm 
-  onSubmit={handleFormSubmit}
-  initialValues={editingCoupon ? {
-    ...editingCoupon,
-    dateRange: [
-      moment(editingCoupon.startDate),
-      moment(editingCoupon.endDate)
-    ]
-  } : null}
-/>
+        <CouponForm
+          onSubmit={handleFormSubmit}
+          initialValues={
+            editingCoupon
+              ? {
+                  ...editingCoupon,
+                  dateRange: [
+                    moment(editingCoupon.startDate),
+                    moment(editingCoupon.endDate),
+                  ],
+                }
+              : null
+          }
+        />
       </Drawer>
     </MaxWidth>
   );
