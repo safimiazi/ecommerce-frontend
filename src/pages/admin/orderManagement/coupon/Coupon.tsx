@@ -225,7 +225,7 @@ const Coupon = () => {
 
       <CustomTable
         columns={customColumns}
-         data={couponData?.data || []}
+         data={couponData?.data?.result || []}
         pagination={pagination}
         onPaginationChange={(pageIndex, pageSize) =>
           setPagination({ pageIndex, pageSize })

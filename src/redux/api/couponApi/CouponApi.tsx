@@ -36,7 +36,7 @@ const couponApi = baseApi.injectEndpoints({
     }),
     getcouponData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
-        url: "/coupon",
+        url: "/coupon/get-all",
         method: "GET",
         params: {
           limit: pageSize,
