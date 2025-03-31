@@ -8,6 +8,8 @@ import LoginRegistration from "../pages/auth/LoginRegistration";
 import { adminPaths } from "./admin.routes";
 import Products from "../pages/user/products/Products";
 import CheckOut from "../pages/user/checkout/CheckOut";
+import PaymentSuccess from "../pages/user/checkout/PaymentSuccess";
+import PaymentFail from "../pages/user/checkout/PaymentFail";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,14 @@ const router = createBrowserRouter([
       {
         path: "/products/:id",
         element: <Products />,
+      },
+      {
+        path: "/payment/success/:tran_id",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/payment/fail/:tran_id",
+        element: <PaymentFail />,
       },
       {
         path: "/details/:id",
