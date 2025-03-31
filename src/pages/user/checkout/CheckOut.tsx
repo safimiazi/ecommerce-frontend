@@ -36,6 +36,11 @@ import OrderPlacement from "../../../components/common/OrderPlacement";
 const { Title, Text } = Typography;
 
 const CheckOut = () => {
+    const [paymentType, setPaymentType] = useState<string | null>(null);
+    const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+    const [transactionId, setTransactionId] = useState<string | null>(null);
+  
+
   const { data: userCartData, isLoading } = useGetSinglecartDataQuery(null);
   const cartProducts = userCartData?.data?.products || [];
   const [cartPost, { isLoading: posting }] = useCartPostMutation();
@@ -57,6 +62,12 @@ const CheckOut = () => {
 
   const [discountAmount, setDiscountAmount] = useState(0);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+
+
+  useEffect(() => {
+    setPaymentMethod(null);
+    setTransactionId(null);
+  }, [paymentType]);
 
   // Calculate totals
   useEffect(() => {
@@ -151,14 +162,7 @@ const CheckOut = () => {
     );
   }
 
-  const [paymentType, setPaymentType] = useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
-  const [transactionId, setTransactionId] = useState<string | null>(null);
 
-    useEffect(() => {
-      setPaymentMethod(null);
-      setTransactionId(null);
-    }, [paymentType]);
 
   return (
     <MaxWidth>

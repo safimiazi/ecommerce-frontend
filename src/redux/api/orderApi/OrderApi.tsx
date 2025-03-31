@@ -4,14 +4,14 @@ const orderApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     placeOrder: build.mutation({
       query: (orderData) => ({
-        url: "/orders",
+        url: "/orders/create",
         method: "POST",
         body: orderData,
       }),
     }),
     initiateSSLCommerz: build.mutation({
       query: (orderData) => ({
-        url: "/payment/sslcommerz",
+        url: "/orders/sslcommerz",
         method: "POST",
         body: orderData,
       }),

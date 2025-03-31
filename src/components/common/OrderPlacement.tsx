@@ -5,6 +5,7 @@ import {
   useInitiateSSLCommerzMutation,
   usePlaceOrderMutation,
 } from "../../redux/api/orderApi/OrderApi";
+import Swal from "sweetalert2";
 
 // cartTypes.ts
 export interface CartItem {
@@ -136,14 +137,15 @@ const OrderPlacement: React.FC<OrderPlacementProps> = ({
         }
       } else {
 
-        console.log("Failed to initialize payment gateway", orderData);
-        return
+    
         const response = await placeOrder(orderData).unwrap();
-
         if (response.success) {
-          message.success("Order placed successfully!");
-          // Optionally redirect to order confirmation page
-          // navigate(`/order-confirmation/${response.orderId}`);
+          Swal.fire(
+            `${response.message}`,
+            `Order ID: ${response.data._id}`,
+            "success"
+          )
+         
         }
       }
     } catch (error: any) {
