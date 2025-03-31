@@ -129,34 +129,40 @@ const OrderPlacement: React.FC<OrderPlacementProps> = ({
     try {
       if (paymentType === "SSLCommerz") {
         const response = await initiateSSLCommerz(orderData).unwrap();
-
-        if (response?.GatewayPageURL) {
-          window.location.href = response.GatewayPageURL;
+        console.log(response);
+        if (response?.data.payment_url) {
+          window.location.href = response.data.payment_url;
         } else {
-          throw new Error("Failed to initialize payment gateway");
+          Swal.fire(
+            "Failed to initialize payment gateway",
+            "Please try again later",
+            "error"
+          );
         }
       } else {
-
-    
         const response = await placeOrder(orderData).unwrap();
         if (response.success) {
           Swal.fire(
             `${response.message}`,
             `Order ID: ${response.data._id}`,
             "success"
-          )
-         
+          );
         }
       }
     } catch (error: any) {
-      message.error(error.data?.message || "Failed to place order");
-      console.error("Order submission error:", error);
+      Swal.fire(
+        error.message
+          ? `${error.message} `
+          : "Failed to initialize payment gateway",
+        "Please try again later",
+        "error"
+      );
     }
   };
 
   return (
     <>
-      <Card title="Customer Information" bordered={false}>
+      <Card title="Customer Information" >
         <Space direction="vertical" className="w-full" size="middle">
           <Input
             className="w-full"
