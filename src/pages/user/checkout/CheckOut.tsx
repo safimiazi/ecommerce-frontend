@@ -102,14 +102,26 @@ const CheckOut = () => {
         if (response.success) {
           setDiscountAmount(response.data.discountAmount);
           setAppliedCoupon(response.data.coupon);
-          message.success(`Coupon ${code} applied successfully!`);
+          Swal.fire({
+            title: `Coupon ${response.data.code} applied successfully!`,
+            text: `Discount: ${response.data.discountAmount}`,
+            icon: "success",
+          })
         }
       } else {
         // Gift card logic would go here
-        message.success(`Gift card ${code} applied!`);
+        Swal.fire({
+          title: `Gift card ${code} applied!`,
+          text: `Amount: ${response.data.appliedAmount}`,
+          icon: "success",
+        })
       }
     } catch (error) {
-      message.error(error.data?.message || "Failed to apply discount");
+      Swal.fire({
+        title: "Error!",
+        text: error.data?.message || "Failed to apply discount",
+        icon: "error",
+      })
     }
   };
 
