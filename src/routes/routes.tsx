@@ -10,6 +10,7 @@ import Products from "../pages/user/products/Products";
 import CheckOut from "../pages/user/checkout/CheckOut";
 import PaymentSuccess from "../pages/user/checkout/PaymentSuccess";
 import PaymentFail from "../pages/user/checkout/PaymentFail";
+import PaymentCancelled from "../pages/user/checkout/PaymentCancelled";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/payment/fail/:tran_id",
         element: <PaymentFail />,
+      },
+      {
+        path: "/payment/cancelled/:tran_id",
+        element: <PaymentCancelled />,
       },
       {
         path: "/details/:id",
