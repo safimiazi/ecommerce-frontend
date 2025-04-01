@@ -53,7 +53,7 @@ const Details = () => {
         await cartPost({
           product: productDetails?.data?._id,
           quantity: 1,
-          price: productDetails?.data?.productSellingPrice,
+          price:productDetails?.data?.product?.productOfferPrice || productDetails?.data?.productSellingPrice,
         }).unwrap();
       } else if (status === "removeToCart") {
         await cartRemove({

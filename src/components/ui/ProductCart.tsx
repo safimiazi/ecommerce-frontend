@@ -48,9 +48,20 @@ const ProductCard = ({ product }: any) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isInWishlist, setIsWishListed] = useState(false);
   const { addToCompare } = useCompare();
-  const discountPrice = product?.productOfferPrice
-    ? product?.productSellingPrice - product?.productOfferPrice
-    : null;
+  const calculateDiscountPercentage = () => {
+    if (!product?.productOfferPrice || !product?.productSellingPrice) return 0;
+    
+    const offerPrice = Number(product.productOfferPrice);
+    const sellingPrice = Number(product.productSellingPrice);
+    
+    if (offerPrice <= 0 || sellingPrice <= 0) return 0;
+    
+    return Math.floor(((sellingPrice - offerPrice) / sellingPrice) * 100);
+  };
+  
+  const discountPercentage = calculateDiscountPercentage();
+  console.log("discountPercentage", discountPercentage)
+  
   const [cartProduct, setCartProduct] = useState(null);
   useEffect(() => {
     setCartProduct(
@@ -69,7 +80,7 @@ const ProductCard = ({ product }: any) => {
         await cartPost({
           product: product?._id,
           quantity: 1,
-          price: product?.productSellingPrice,
+          price:product?.productOfferPrice || product?.productSellingPrice,
         }).unwrap();
       } else if (status === "removeToCart") {
         await cartRemove({
@@ -108,14 +119,11 @@ const ProductCard = ({ product }: any) => {
   {/* Product Image Section */}
   <div className="duration-300 group flex flex-col rounded-xl h-full bg-white relative">
     {/* Discount Badge */}
-    {discountPrice ? (
-      <span className="absolute z-50 top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-        {Math.floor(
-          (product?.productOfferPrice / product?.productSellingPrice) * 100
-        )}
-        % OFF
-      </span>
-    ) : ""}
+    {discountPercentage > 0 && (
+  <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full z-10">
+    {discountPercentage}% OFF
+  </span>
+)}
 
     {/* Image Gallery with Swiper */}
     <div className="relative w-full h-40 rounded-2xl flex items-center justify-center mb-2 overflow-hidden group">
@@ -223,20 +231,23 @@ const ProductCard = ({ product }: any) => {
         Category: {product?.productCategory?.name}
       </p>
     </div>
-
-    {/* Pricing */}
-    <div className="mt-2 flex items-center gap-2">
-      {discountPrice ? (
-        <>
-          <p className="text-lg font-bold text-blue-500">${discountPrice}</p>
-          <p className="text-sm line-through text-gray-500">
-            ${product?.productSellingPrice}
-          </p>
-        </>
-      ) : (
-        <p className="text-lg font-bold">${product?.productSellingPrice}</p>
-      )}
-    </div>
+{/* Pricing */}
+<div className="mt-2 flex items-center gap-2">
+  {product?.productOfferPrice > 0 && product?.productOfferPrice < product?.productSellingPrice ? (
+    <>
+      <p className="text-lg font-bold text-blue-500">
+        ${product?.productOfferPrice} {/* Show offer price */}
+      </p>
+      <p className="text-sm line-through text-gray-500">
+        ${product?.productSellingPrice} {/* Show original price */}
+      </p>
+    </>
+  ) : (
+    <p className="text-lg font-bold">
+      ${product?.productSellingPrice} {/* Show only original price */}
+    </p>
+  )}
+</div>
 
     {/* Color Variants */}
     <div className="flex gap-2 mt-2">
@@ -317,7 +328,7 @@ const ProductCard = ({ product }: any) => {
                 <button
                   disabled={posting}
                   onClick={() => handleAddToCart("addToCart")}
-                  className="hover:scale-110 transition-transform"
+                  className="hover:scale-110 cursor-pointer transition-transform"
                   aria-label="Add to cart"
                 >
                   <ShoppingCart

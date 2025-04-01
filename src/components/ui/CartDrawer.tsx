@@ -49,7 +49,7 @@ const CartDrawer = ({ open, onClose }) => {
         await cartPost({
           product: product?._id,
           quantity: 1,
-          price: product?.productSellingPrice,
+          price:product?.productOfferPrice || product?.productSellingPrice,
         }).unwrap();
       } else if (status === "removeToCart") {
         await cartRemove({

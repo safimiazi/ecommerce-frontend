@@ -149,7 +149,7 @@ const CheckOut = () => {
         await cartPost({
           product: product?._id,
           quantity: 1,
-          price: product?.productSellingPrice,
+          price: product?.productOfferPrice || product?.productSellingPrice,
         }).unwrap();
         message.success("Added to cart");
       } else if (status === "removeToCart") {
