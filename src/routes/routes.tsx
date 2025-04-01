@@ -11,6 +11,8 @@ import CheckOut from "../pages/user/checkout/CheckOut";
 import PaymentSuccess from "../pages/user/checkout/PaymentSuccess";
 import PaymentFail from "../pages/user/checkout/PaymentFail";
 import PaymentCancelled from "../pages/user/checkout/PaymentCancelled";
+import BestSelling from "../pages/user/bestSelling/BestSelling";
+import OfferProducts from "../pages/user/offerProducts/OfferProducts";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: "/products/:id",
         element: <Products />,
+      },
+      {
+        path: "/best-selling",
+        element: <BestSelling />,
+      },
+      {
+        path: "/offer-products",
+        element: <OfferProducts />,
       },
       {
         path: "/payment/success/:tran_id",
