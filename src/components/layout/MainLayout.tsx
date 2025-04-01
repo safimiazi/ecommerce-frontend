@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import TopNav from "../common/TopNav";
+// import TopNav from "../common/TopNav";
 import Top from "../common/Top";
 import BottomNav from "../common/BottomNav";
 import { useState } from "react";
@@ -48,9 +48,9 @@ const MainLayout = () => {
           />
           </div>
           <div className="w-full min-w-0 flex  flex-col flex-1 ">
-            <header className="h-16 ">
+            {/* <header className="h-16 ">
               <TopNav />
-            </header>
+            </header> */}
             <main className="flex-1  p-6 bg-white">
               <Outlet />
 

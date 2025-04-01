@@ -29,7 +29,7 @@ const Top = ({
   const { data: userCartData } = useGetSinglecartDataQuery(null);
 
   return (
-    <div className="h-16 border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
+    <div className="h-16  border-b border-gray-200  flex items-center justify-between px-4 md:px-10 bg-white shadow-sm">
       <button
         type="button"
         className="md:hidden z-50 p-2  mr-2 rounded-lg bg-white dark:bg-[#0F0F12] shadow-md"
