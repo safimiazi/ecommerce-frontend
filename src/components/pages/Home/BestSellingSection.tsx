@@ -12,103 +12,25 @@ import RightNavigartionButton from "../../ui/RightNavigartionButton";
 import LeftNavigationButton from "../../ui/LeftNavigationButton";
 import SectionPadding from "../../../wrapper/SectionPadding";
 import ProductCard from "../../ui/ProductCart";
+import { useGetFilterProductsQuery } from "../../../redux/api/productApi/ProductApi";
 
-const products = [
-    {
-      name: "Apple iMac 27\"",
-      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-      price: "$1199",
-      colors: ["black", "blue", "pink", "green"],
-      image:[
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      ]
-       
-    },
-    {
-      name: "Apple iMac 27\"",
-      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-      price: "$1199",
-      colors: ["black", "blue", "pink", "green"],
-      image:[
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      ]
-       
-    },
-    {
-      name: "Apple iMac 27\"",
-      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-      price: "$1199",
-      colors: ["black", "blue", "pink", "green"],
-      image:[
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      ]
-       
-    },
-    {
-      name: "Apple iMac 27\"",
-      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-      price: "$1199",
-      colors: ["black", "blue", "pink", "green"],
-      image:[
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      ]
-       
-    },
-    {
-      name: "Apple iMac 27\"",
-      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-      price: "$1199",
-      colors: ["black", "blue", "pink", "green"],
-      image:[
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      ]
-       
-    },
-    {
-      name: "Apple iMac 27\"",
-      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-      price: "$1199",
-      colors: ["black", "blue", "pink", "green"],
-      image:[
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      ]
-       
-    },
-    {
-      name: "Apple iMac 27\"",
-      description: "Apple M3 Octa Core, 23.8inch, RAM 8GB, SSD 256GB, macOS Sonoma",
-      price: "$1199",
-      colors: ["black", "blue", "pink", "green"],
-      image:[
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/5846133/pexels-photo-5846133.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      ]
-       
-    },
-   
-  ];
+
 export default function BestSellingSection() {
   const swiperRef = useRef<SwiperType | null>(null);
+  const { data: offerProducts } = useGetFilterProductsQuery({
+    pageIndex: 1,
+    pageSize: 8,
+    isDelete: false,
+    isBestSelling: true,
+  });
+
 
   return (
     <SectionPadding>
       <MaxWidth>
        <div className="flex items-center justify-between mb-4">
        <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">
-          Best Selling This Week
+          Best Selling Products
         </h2>
         <p className="text-blue-500 hover:underline transition-colors duration-500 cursor-pointer">All Products</p>
        </div>
@@ -123,12 +45,12 @@ export default function BestSellingSection() {
             autoHeight={false}
             slidesPerView={2}
             breakpoints={{
-              640: { slidesPerView: 5 },
+              640: { slidesPerView: 4 },
             }}
             loop
             className="w-full h-full"
           >
-            {products.map((product, index) => (
+            {offerProducts?.data?.result.map((product, index) => (
               <SwiperSlide key={index}>
                       <ProductCard key={index} product={product} />
 
