@@ -16,10 +16,22 @@ const orderApi = baseApi.injectEndpoints({
         body: orderData,
       }),
     }),
+    getOrderData: build.query({
+      query: ({ pageIndex, pageSize, search, isDelete }) => ({
+        url: "/orders/get_orders",
+        method: "GET",
+        params: {
+          limit: pageSize,
+          page: pageIndex,
+          searchTerm: search,
+          isDelete,
+        },
+      }),
+    }),
   }),
 
   overrideExisting: false,
 });
 
-export const { usePlaceOrderMutation, useInitiateSSLCommerzMutation } =
+export const { usePlaceOrderMutation, useInitiateSSLCommerzMutation, useGetOrderDataQuery } =
   orderApi;

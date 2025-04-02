@@ -27,6 +27,7 @@ import Attribute from "../pages/admin/productManagement/attribute/Attribute";
 import Brand from "../pages/admin/productManagement/brand/Brand";
 import Unit from "../pages/admin/productManagement/unit/Unit";
 import Coupon from "../pages/admin/orderManagement/coupon/Coupon";
+import Order from "../pages/admin/orderManagement/order/Order";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -111,7 +112,13 @@ export const adminPaths: IAdminPath[] = [
         icon: UserCheck,
         path: "coupon",
         element: <Coupon/>,
-      }
+      },
+      {
+        name: "Order",
+        icon: UserCheck,
+        path: "order",
+        element: <Order/>,
+      },
     ],
   },
 
