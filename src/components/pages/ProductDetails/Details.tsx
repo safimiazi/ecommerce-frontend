@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { openModal } from "../../../redux/features/auth/loginRegistrationSlice";
 
-const Details = () => {
+const Details = ({handleSimillerProduct} : any) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
 
@@ -30,7 +30,12 @@ const Details = () => {
   const { data: productDetails } = useGetSingleproductDataQuery({
     id,
   });
-  console.log(productDetails);
+  
+  useEffect(()=> {
+    handleSimillerProduct(productDetails)
+  },[productDetails])
+
+
   const [currentImage, setCurrentImage] = useState(null);
   const swiperRef = useRef<SwiperType | null>(null);
   const { data: userCartData } = useGetSinglecartDataQuery();
