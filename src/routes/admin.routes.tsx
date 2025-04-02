@@ -14,11 +14,9 @@ import {
   Users,
   Archive,
   Tag,
-  Gift,
   HelpCircle,
   MessageCircle,
   MessageSquare,
-  DollarSign,
 } from "lucide-react";
 import Category from "../pages/admin/productManagement/category/Category";
 import Products from "../pages/admin/productManagement/products/Products";
@@ -107,12 +105,7 @@ export const adminPaths: IAdminPath[] = [
     path: "order-management",
     element: <Products/>,
     children: [
-      {
-        name: "Coupon",
-        icon: UserCheck,
-        path: "coupon",
-        element: <Coupon/>,
-      },
+  
       {
         name: "Order",
         icon: UserCheck,
@@ -188,17 +181,12 @@ export const adminPaths: IAdminPath[] = [
     element: "COUPONS_DISCOUNTS",
     children: [
       {
-        name: "Active Coupons",
-        icon: Gift,
-        path: "active-coupons",
-        element: "ACTIVE_COUPONS",
+        name: "Coupon",
+        icon: UserCheck,
+        path: "coupon",
+        element: <Coupon/>,
       },
-      {
-        name: "Discount Rules",
-        icon: DollarSign,
-        path: "discount-rules",
-        element: "DISCOUNT_RULES",
-      },
+
     ],
   },
 

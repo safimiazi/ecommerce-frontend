@@ -21,8 +21,8 @@ const orderApi = baseApi.injectEndpoints({
         url: "/orders/get_orders",
         method: "GET",
         params: {
-          limit: pageSize,
-          page: pageIndex,
+          pageSize,
+          pageIndex,
           searchTerm: search,
           isDelete,
         },
