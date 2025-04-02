@@ -16,11 +16,9 @@ import {
   Grid,
 } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
-import type { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
 import { useGetInventoryReportQuery } from "../../../../redux/api/reportApi/ReportApi";
 
-const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
 const { Option } = Select;
 const { useBreakpoint } = Grid;
@@ -58,23 +56,29 @@ interface InventoryReport {
 const InventoryReport: React.FC = () => {
   const screens = useBreakpoint();
   const [report, setReport] = useState<InventoryReport | null>(null);
-  const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(
-    null
-  );
+
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
-  const disabledDate: RangePickerProps["disabledDate"] = (current) => {
-    return current && current > dayjs().endOf("day");
-  };
+const [startDate, setStartDate] = useState<dayjs.Dayjs>(
+    dayjs().subtract(30, "days")
+  );
+  const [endDate, setEndDate] = useState<dayjs.Dayjs>(dayjs());
 
-  const params = dateRange
-    ? {
-        startDate: dateRange[0].toDate(),
-        endDate: dateRange[1].toDate(),
+
+  const handleDateChange =
+    (type: "start" | "end") => (date: dayjs.Dayjs | null) => {
+      if (!date) return;
+      if (type === "start") {
+        setStartDate(date);
+      } else {
+        setEndDate(date);
       }
-    : undefined;
+    };
 
-  const { data } = useGetInventoryReportQuery(params);
+  const { data } = useGetInventoryReportQuery({
+    startDate: startDate.format("YYYY-MM-DD"),
+    endDate: endDate.format("YYYY-MM-DD"),
+  });
 
   useEffect(() => {
     if (data) {
@@ -193,17 +197,24 @@ const InventoryReport: React.FC = () => {
             <Space size="large" direction={screens.md ? "horizontal" : "vertical"} style={{ width: '100%' }}>
               <div>
                 <Text strong>Date Range</Text>
-                <div style={{ marginTop: 8 }}>
-                  <RangePicker
-                    disabledDate={disabledDate}
-                    onChange={(dates) =>
-                      setDateRange(
-                        dates && dates[0] && dates[1] ? [dates[0], dates[1]] : null
-                      )
-                    }
-                    style={{ width: screens.xs ? '100%' : 250 }}
-                  />
-                </div>
+                    <div className="flex flex-wrap gap-4 mb-6">
+                          <div>
+                            <label className="block mb-2">Start Date</label>
+                            <DatePicker
+                              value={startDate}
+                              onChange={handleDateChange("start")}
+                              className="w-full"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">End Date</label>
+                            <DatePicker
+                              value={endDate}
+                              onChange={handleDateChange("end")}
+                              className="w-full"
+                            />
+                          </div>
+                        </div>
               </div>
 
               <div>

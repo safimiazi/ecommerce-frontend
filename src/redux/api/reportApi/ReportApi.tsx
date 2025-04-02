@@ -6,13 +6,15 @@ const ReportApi = baseApi.injectEndpoints({
       query: (params) => ({
         url: "/report/inventory-report",
         method: "GET",
-        body: params,
+        params: params,
       }),
     }),
     getSalesReport: build.query({
       query: ({ startDate, endDate }) => ({
         url: "/report/sales-report",
-        body: { startDate, endDate },
+        method: "GET",
+
+        params: { startDate, endDate },
       }),
     }),
   }),

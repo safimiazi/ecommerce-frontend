@@ -1,8 +1,9 @@
 // SalesReportPage.tsx
-import React, { useState } from 'react';
-import { DatePicker, Card, Table, Spin } from 'antd';
-import dayjs from 'dayjs';
-import { useGetSalesReportQuery } from '../../../../redux/api/reportApi/ReportApi';
+import React, { useState } from "react";
+import { DatePicker, Card, Table, Spin ,Grid} from "antd";
+import dayjs from "dayjs";
+import { useGetSalesReportQuery } from "../../../../redux/api/reportApi/ReportApi";
+const { useBreakpoint } = Grid;
 
 interface SalesReport {
   summary: {
@@ -28,88 +29,92 @@ interface SalesReport {
 }
 
 const SalesReport: React.FC = () => {
-  const [startDate, setStartDate] = useState<dayjs.Dayjs>(dayjs().subtract(30, 'days'));
+    const screens = useBreakpoint();
+
+  const [startDate, setStartDate] = useState<dayjs.Dayjs>(
+    dayjs().subtract(30, "days")
+  );
   const [endDate, setEndDate] = useState<dayjs.Dayjs>(dayjs());
+
   const { data: report, isLoading } = useGetSalesReportQuery({
-    startDate: startDate.format('YYYY-MM-DD'),
-    endDate: endDate.format('YYYY-MM-DD')
+    startDate: startDate.format("YYYY-MM-DD"),
+    endDate: endDate.format("YYYY-MM-DD"),
   });
 
-  const handleDateChange = (type: 'start' | 'end') => (date: dayjs.Dayjs | null) => {
-    if (!date) return;
-    if (type === 'start') {
-      setStartDate(date);
-    } else {
-      setEndDate(date);
-    }
-  };
-
-
+  const handleDateChange =
+    (type: "start" | "end") => (date: dayjs.Dayjs | null) => {
+      if (!date) return;
+      if (type === "start") {
+        setStartDate(date);
+      } else {
+        setEndDate(date);
+      }
+    };
 
   const paymentMethodsColumns = [
     {
-      title: 'Payment Method',
-      dataIndex: 'method',
-      key: 'method',
+      title: "Payment Method",
+      dataIndex: "method",
+      key: "method",
     },
     {
-      title: 'Count',
-      dataIndex: 'count',
-      key: 'count',
+      title: "Count",
+      dataIndex: "count",
+      key: "count",
     },
   ];
 
   const topProductsColumns = [
     {
-      title: 'Product',
-      dataIndex: 'productName',
-      key: 'productName',
+      title: "Product",
+      dataIndex: "productName",
+      key: "productName",
     },
     {
-      title: 'SKU',
-      dataIndex: 'skuCode',
-      key: 'skuCode',
+      title: "SKU",
+      dataIndex: "skuCode",
+      key: "skuCode",
     },
     {
-      title: 'Quantity Sold',
-      dataIndex: 'quantitySold',
-      key: 'quantitySold',
+      title: "Quantity Sold",
+      dataIndex: "quantitySold",
+      key: "quantitySold",
     },
     {
-      title: 'Revenue',
-      dataIndex: 'totalRevenue',
-      key: 'totalRevenue',
+      title: "Revenue",
+      dataIndex: "totalRevenue",
+      key: "totalRevenue",
       render: (value: number) => `$${value.toFixed(2)}`,
     },
   ];
 
   const recentOrdersColumns = [
     {
-      title: 'Transaction ID',
-      dataIndex: 'transactionId',
-      key: 'transactionId',
+      title: "Transaction ID",
+      dataIndex: "transactionId",
+      key: "transactionId",
     },
     {
-      title: 'Customer',
-      dataIndex: 'customerName',
-      key: 'customerName',
+      title: "Customer",
+      dataIndex: "customerName",
+      key: "customerName",
     },
     {
-      title: 'Amount',
-      dataIndex: 'totalAmount',
-      key: 'totalAmount',
+      title: "Amount",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
       render: (value: number) => `$${value.toFixed(2)}`,
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
     },
     {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
-      render: (date: string) => dayjs(date).format('MMM D, YYYY h:mm A'),
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+      render: (date: string) => dayjs(date).format("MMM D, YYYY h:mm A"),
     },
   ];
 
@@ -121,7 +126,7 @@ const SalesReport: React.FC = () => {
             <label className="block mb-2">Start Date</label>
             <DatePicker
               value={startDate}
-              onChange={handleDateChange('start')}
+              onChange={handleDateChange("start")}
               className="w-full"
             />
           </div>
@@ -129,11 +134,10 @@ const SalesReport: React.FC = () => {
             <label className="block mb-2">End Date</label>
             <DatePicker
               value={endDate}
-              onChange={handleDateChange('end')}
+              onChange={handleDateChange("end")}
               className="w-full"
             />
           </div>
-     
         </div>
 
         {isLoading && <Spin tip="Generating report..." />}
@@ -145,15 +149,21 @@ const SalesReport: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-gray-50 p-4 rounded">
                   <h3 className="font-medium">Total Orders</h3>
-                  <p className="text-2xl">{report.summary.totalOrders}</p>
+                  <p className="text-2xl">
+                    {report?.data?.summary.totalOrders}
+                  </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded">
                   <h3 className="font-medium">Total Revenue</h3>
-                  <p className="text-2xl">${report.summary.totalRevenue.toFixed(2)}</p>
+                  <p className="text-2xl">
+                    ${report?.data?.summary.totalRevenue.toFixed(2)}
+                  </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded">
                   <h3 className="font-medium">Avg. Order Value</h3>
-                  <p className="text-2xl">${report.summary.averageOrderValue.toFixed(2)}</p>
+                  <p className="text-2xl">
+                    ${report?.data?.summary.averageOrderValue.toFixed(2)}
+                  </p>
                 </div>
               </div>
             </Card>
@@ -161,8 +171,12 @@ const SalesReport: React.FC = () => {
             {/* Payment Methods */}
             <Card title="Payment Methods">
               <Table
+                scroll={{ x: true }}
+                size={screens.xs ? "small" : "middle"}
                 columns={paymentMethodsColumns}
-                dataSource={Object.entries(report.summary.paymentMethods).map(([method, count]) => ({
+                dataSource={Object.entries(
+                  report?.data?.summary.paymentMethods
+                ).map(([method, count]) => ({
                   key: method,
                   method,
                   count,
@@ -174,11 +188,15 @@ const SalesReport: React.FC = () => {
             {/* Order Statuses */}
             <Card title="Order Statuses">
               <Table
+                scroll={{ x: true }}
+                size={screens.xs ? "small" : "middle"}
                 columns={[
-                  { title: 'Status', dataIndex: 'status', key: 'status' },
-                  { title: 'Count', dataIndex: 'count', key: 'count' },
+                  { title: "Status", dataIndex: "status", key: "status" },
+                  { title: "Count", dataIndex: "count", key: "count" },
                 ]}
-                dataSource={Object.entries(report.summary.orderStatuses).map(([status, count]) => ({
+                dataSource={Object.entries(
+                  report?.data?.summary.orderStatuses
+                ).map(([status, count]) => ({
                   key: status,
                   status,
                   count,
@@ -190,8 +208,10 @@ const SalesReport: React.FC = () => {
             {/* Top Products */}
             <Card title="Top Selling Products">
               <Table
+                scroll={{ x: true }}
+                size={screens.xs ? "small" : "middle"}
                 columns={topProductsColumns}
-                dataSource={report.topProducts}
+                dataSource={report?.data?.topProducts}
                 pagination={false}
               />
             </Card>
@@ -199,8 +219,10 @@ const SalesReport: React.FC = () => {
             {/* Recent Orders */}
             <Card title="Recent Orders">
               <Table
+                scroll={{ x: true }}
+                size={screens.xs ? "small" : "middle"}
                 columns={recentOrdersColumns}
-                dataSource={report.recentOrders}
+                dataSource={report?.data?.recentOrders}
                 pagination={false}
               />
             </Card>
@@ -212,4 +234,3 @@ const SalesReport: React.FC = () => {
 };
 
 export default SalesReport;
-
