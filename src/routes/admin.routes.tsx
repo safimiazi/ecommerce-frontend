@@ -11,7 +11,6 @@ import {
   Truck,
   Percent,
   PieChart,
-  Users,
   Archive,
   Tag,
   HelpCircle,
@@ -28,6 +27,9 @@ import Coupon from "../pages/admin/CouponsAndDiscount/coupon/Coupon";
 import Order from "../pages/admin/orderManagement/order/Order";
 import Customer from "../pages/admin/userManagement/Customer";
 import Cart from "../pages/admin/orderManagement/cart/Cart";
+import WishList from "../pages/admin/orderManagement/wishlist/WishList";
+import InventoryReport from "../pages/admin/reports/InventoryReport/InventoryReport";
+import SalesReport from "../pages/admin/reports/salesReport/SalesReport";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -109,6 +111,12 @@ export const adminPaths: IAdminPath[] = [
         path: "cart",
         element: <Cart/>,
       },
+      {
+        name: "Wishlist",
+        icon: ShoppingCart,
+        path: "wishlist",
+        element: <WishList/>,
+      },
     ],
   },
 
@@ -151,23 +159,18 @@ export const adminPaths: IAdminPath[] = [
     path: "reports",
     element: "REPORTS",
     children: [
+
       {
         name: "Sales Report",
         icon: PieChart,
         path: "sales-report",
-        element: "SALES_REPORT",
-      },
-      {
-        name: "Customer Report",
-        icon: Users,
-        path: "customer-report",
-        element: "CUSTOMER_REPORT",
+        element: <SalesReport/>,
       },
       {
         name: "Inventory Report",
         icon: Archive,
         path: "inventory-report",
-        element: "INVENTORY_REPORT",
+        element: <InventoryReport/>,
       },
     ],
   },

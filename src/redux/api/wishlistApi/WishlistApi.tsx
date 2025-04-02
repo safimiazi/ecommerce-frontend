@@ -31,6 +31,14 @@ const wishlistApi = baseApi.injectEndpoints({
       invalidatesTags: ["wishlist"],
 
     }),
+    wishlistSoftDelete: build.mutation({
+      query: ({ id }) => ({
+        url: `/wishlist/softDelete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["wishlist"],
+
+    }),
     bulkDelete: build.mutation({
       query: ({ ids }) => ({
         url: `/wishlist/bulk`,
@@ -40,7 +48,7 @@ const wishlistApi = baseApi.injectEndpoints({
     }),
     getwishlistData: build.query({
       query: ({ pageIndex, pageSize, search, isDelete }) => ({
-        url: "/wishlist",
+        url: "/wishlist/admin_get_wishlists",
         method: "GET",
         params: {
           limit: pageSize,
@@ -70,5 +78,6 @@ export const {
     useGetwishlistDataQuery,
     useBulkDeleteMutation,
     useGetSinglewishlistDataQuery,
+    useWishlistSoftDeleteMutation,
 
 } = wishlistApi;
