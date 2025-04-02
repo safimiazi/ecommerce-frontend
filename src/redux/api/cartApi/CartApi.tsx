@@ -59,6 +59,18 @@ const cartApi = baseApi.injectEndpoints({
         },
       }),
     }),
+    adminGetAllCart: build.query({
+      query: ({ pageIndex, pageSize, search, isDelete }) => ({
+        url: "/cart/admin_get_all_cart",
+        method: "GET",
+        params: {
+          limit: pageSize,
+          page: pageIndex,
+          searchTerm: search,
+          isDelete,
+        },
+      }),
+    }),
 
     getSinglecartData: build.query({
       query: () => ({
@@ -80,4 +92,5 @@ export const {
   useGetcartDataQuery,
   useBulkDeleteMutation,
   useCartRemoveMutation,
+  useAdminGetAllCartQuery,
 } = cartApi;

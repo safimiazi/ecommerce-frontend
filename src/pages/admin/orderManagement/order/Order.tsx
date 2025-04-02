@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {  useState } from "react";
-import { Form, Button, Popconfirm, Tag,  Space, Typography } from "antd";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { Typography } from "antd";
 import CustomTable from "../../../../components/common/CustomTable";
 import Swal from "sweetalert2";
 import { useGetOrderDataQuery } from "../../../../redux/api/orderApi/OrderApi";

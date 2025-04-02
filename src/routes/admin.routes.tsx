@@ -27,6 +27,7 @@ import Unit from "../pages/admin/productManagement/unit/Unit";
 import Coupon from "../pages/admin/CouponsAndDiscount/coupon/Coupon";
 import Order from "../pages/admin/orderManagement/order/Order";
 import Customer from "../pages/admin/userManagement/Customer";
+import Cart from "../pages/admin/orderManagement/cart/Cart";
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -43,12 +44,6 @@ export const adminPaths: IAdminPath[] = [
     element: "DASHBOARD",
   },
 
-  {
-    name: "Orders",
-    icon: ShoppingCart,
-    path: "orders",
-    element: "ORDERS",
-  },
   {
     name: "Product Management",
     icon: Package,
@@ -92,12 +87,7 @@ export const adminPaths: IAdminPath[] = [
         path: "attribute",
         element: <Attribute/>,
       },
-      {
-        name: "Live Chat",
-        icon: MessageSquare,
-        path: "live-chat",
-        element: "LIVE_CHAT",
-      },
+      
     ],
   },
   {
@@ -109,9 +99,15 @@ export const adminPaths: IAdminPath[] = [
   
       {
         name: "Order",
-        icon: UserCheck,
+        icon: ShoppingCart,
         path: "order",
         element: <Order/>,
+      },
+      {
+        name: "Cart",
+        icon: ShoppingCart,
+        path: "cart",
+        element: <Cart/>,
       },
     ],
   },
