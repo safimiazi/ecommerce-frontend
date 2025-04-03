@@ -17,9 +17,16 @@ const ReportApi = baseApi.injectEndpoints({
         params: { startDate, endDate },
       }),
     }),
+    getDashboardSummary: build.query({
+      query: () => ({
+        url: "/report/dashboard-summmary",
+        method: "GET",
+
+      }),
+    }),
   }),
 
   overrideExisting: false,
 });
 
-export const { useGetInventoryReportQuery, useGetSalesReportQuery } = ReportApi;
+export const { useGetInventoryReportQuery, useGetSalesReportQuery, useGetDashboardSummaryQuery } = ReportApi;

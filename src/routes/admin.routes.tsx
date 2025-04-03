@@ -30,6 +30,7 @@ import Cart from "../pages/admin/orderManagement/cart/Cart";
 import WishList from "../pages/admin/orderManagement/wishlist/WishList";
 import InventoryReport from "../pages/admin/reports/InventoryReport/InventoryReport";
 import SalesReport from "../pages/admin/reports/salesReport/SalesReport";
+import Dashboard from "../pages/admin/dashboard/Dashboard";
 
 export type IAdminPath = {
   name: string;
@@ -44,7 +45,7 @@ export const adminPaths: IAdminPath[] = [
     name: "Dashboard",
     icon: BarChart,
     path: "dashboard",
-    element: "DASHBOARD",
+    element: <Dashboard/>,
   },
   {
     name: "Product Management",
