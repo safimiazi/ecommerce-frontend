@@ -154,13 +154,13 @@ const SalesReport: React.FC = () => {
                   </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded">
-                  <h3 className="font-medium">Total Revenue</h3>
+                  <h3 className="font-medium">Total Revenue (with delivery cost)</h3>
                   <p className="text-2xl">
                     ${report?.data?.summary.totalRevenue.toFixed(2)}
                   </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded">
-                  <h3 className="font-medium">Avg. Order Value</h3>
+                  <h3 className="font-medium">Avg. Order Value (with delivery cost)</h3>
                   <p className="text-2xl">
                     ${report?.data?.summary.averageOrderValue.toFixed(2)}
                   </p>

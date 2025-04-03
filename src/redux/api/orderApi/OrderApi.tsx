@@ -9,6 +9,20 @@ const orderApi = baseApi.injectEndpoints({
         body: orderData,
       }),
     }),
+    confirmOrder: build.mutation({
+      query: ({orderId}) => ({
+        url: "/orders/admin_confirm_order",
+        method: "POST",
+        body: {orderId},
+      }),
+    }),
+    cancelOrder: build.mutation({
+      query: ({orderId}) => ({
+        url: "/orders/admin_cancel_order",
+        method: "POST",
+        body: {orderId},
+      }),
+    }),
     initiateSSLCommerz: build.mutation({
       query: (orderData) => ({
         url: "/orders/sslcommerz",
@@ -33,5 +47,5 @@ const orderApi = baseApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { usePlaceOrderMutation, useInitiateSSLCommerzMutation, useGetOrderDataQuery } =
+export const { usePlaceOrderMutation, useInitiateSSLCommerzMutation, useCancelOrderMutation, useGetOrderDataQuery , useConfirmOrderMutation} =
   orderApi;
