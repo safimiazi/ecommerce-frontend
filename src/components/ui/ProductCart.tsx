@@ -296,7 +296,7 @@ const ProductCard = ({ product }: any) => {
         to={`/details/${product?._id}`}
         className="text-blue-500 hover:text-blue-600 cursor-pointer underline transition-colors"
       >
-        View Details
+        Details
       </Link>
 
       {/* Cart Controls */}
