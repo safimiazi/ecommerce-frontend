@@ -1,11 +1,65 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import MaxWidth from "../../wrapper/MaxWidth";
+import { useAdminLoginMutation } from "../../redux/api/authApi/AuthApi";
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import { setAdmin } from "../../redux/features/auth/AdminAuthSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginRegistration() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [adminLogin] = useAdminLoginMutation();
+  const handleAuth = async (e: any) => {
+    e.preventDefault();
+
+    if (isLogin) {
+      try {
+        const result = (await adminLogin({
+          email,
+          password,
+        }).unwrap()) as any; // Using unwrap() to properly handle the promise
+        console.log(result);
+        dispatch(
+          setAdmin({
+            token: result?.data.token,
+            user: {
+              userId: result?.data.user?._id,
+              phone: result?.data.user?.phone,
+              role: result?.data.user?.role,
+              name: result?.data.user?.name,
+              email: result?.data.user?.email,
+              address: result?.data.user?.address,
+            },
+          })
+        );
+
+        // Wait for state to update and persist
+
+        Swal.fire({
+          title: "Logged In!",
+          text: result.message,
+          icon: "success",
+        }).then(() => {
+          navigate("/admin/dashboard"); // Redirect after successful login
+        });
+      } catch (error: any) {
+        Swal.fire({
+          title: "Login Failed",
+          text: error.data?.message || "An error occurred",
+          icon: "error",
+        });
+      }
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen  bg-gray-100 p-4">
@@ -53,6 +107,7 @@ export default function LoginRegistration() {
                   type="email"
                   placeholder="Enter email"
                   required
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full p-3 outline-none"
                 />
               </div>
@@ -63,6 +118,7 @@ export default function LoginRegistration() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   required
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full p-3 outline-none"
                 />
                 <button
@@ -86,7 +142,10 @@ export default function LoginRegistration() {
                 </div>
               )}
 
-              <button className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition">
+              <button
+                onClick={handleAuth}
+                className="w-full bg-gray-900 cursor-pointer text-white py-3 rounded-lg hover:bg-gray-800 transition"
+              >
                 {isLogin ? "Sign In" : "Register"}
               </button>
             </form>

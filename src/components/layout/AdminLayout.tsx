@@ -1,12 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import AdminSidebar from "../common/admin/AdminSidebar";
 import AdminTopbar from "../common/admin/AdminTopbar";
 import AdminFooter from "../common/admin/AdminFooter";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentAdmin } from "../../redux/features/auth/AdminAuthSlice";
 
 const AdminLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const admin = useSelector(selectCurrentAdmin);
 
+  // If no admin or not an admin, redirect (this is a secondary protection)
+  if (!admin || admin.role !== "admin") {
+    return <Navigate to="/auth" replace />;
+  }
   return (
     <div className="flex h-screen">
       <div className="md:w-64">

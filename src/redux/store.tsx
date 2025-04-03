@@ -15,21 +15,31 @@ import storage from 'redux-persist/lib/storage';
 import categoryReducer from './features/category/categorySlice';
 import productCartReducer from './features/productCart/ProductCartSlice';
 import loginRegistrationReducer from './features/auth/loginRegistrationSlice';
-const persistConfig = {
+import adminAuthReducer from './features/auth/AdminAuthSlice';
+
+// Persist configs
+const authPersistConfig = {
   key: 'auth',
   storage,
 };
 
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const adminAuthPersistConfig = {
+  key: 'adminAuth',
+  storage,
+};
+
+// Create persisted reducers
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedAdminAuthReducer = persistReducer(adminAuthPersistConfig, adminAuthReducer);
 
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
-    category: categoryReducer, // ✅ Changed "Category" to "category"
+    adminAuth: persistedAdminAuthReducer,
+    category: categoryReducer,
     cart: productCartReducer,
     loginRegistration: loginRegistrationReducer,
-
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({
@@ -39,9 +49,8 @@ export const store = configureStore({
     }).concat(baseApi.middleware),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
+// Type definitions
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
 
 export const persistor = persistStore(store);

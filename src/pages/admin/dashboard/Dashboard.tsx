@@ -16,15 +16,168 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-8">Dashboard Overview</h1>
-      
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* Total Products */}
+
+{/* Summary Cards - Updated with Profit */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Total Products (unchanged) */}
         <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
           <h3 className="text-gray-500 font-medium">Total Products</h3>
           <p className="text-3xl font-bold text-gray-800">{data?.data.summary.totalProducts}</p>
           <p className="text-sm text-gray-500 mt-2">Available in inventory</p>
         </div>
+        
+        {/* New Profit Card */}
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+          <h3 className="text-gray-500 font-medium">Today's Profit</h3>
+          <p className="text-3xl font-bold text-green-600">
+            {formatCurrency(data?.data.profit.today || 0)}
+          </p>
+          <div className="flex justify-between text-sm mt-2">
+            <span className="text-gray-500">Revenue: {formatCurrency(data?.data.revenue.today || 0)}</span>
+            <span className="text-gray-500">{data?.data.revenue.todayOrders} orders</span>
+          </div>
+        </div>
+        
+        {/* Monthly Financials Card */}
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+          <h3 className="text-gray-500 font-medium">Monthly Profit</h3>
+          <p className="text-3xl font-bold text-purple-600">
+            {formatCurrency(data?.data.profit.thisMonth || 0)}
+          </p>
+          <div className="flex justify-between text-sm mt-2">
+            <span className="text-gray-500">Revenue: {formatCurrency(data?.data.revenue.thisMonth || 0)}</span>
+            <span className="text-gray-500">{data?.data.summary.completedOrders} orders</span>
+          </div>
+        </div>
+        
+        {/* Orders Summary Card */}
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
+          <h3 className="text-gray-500 font-medium">Orders Summary</h3>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-3xl font-bold text-gray-800">{data?.data.summary.totalOrders}</p>
+              <div className="flex justify-between text-sm mt-2">
+                <span className="text-green-500">{data?.data.summary.completedOrders} completed</span>
+                <span className="text-yellow-500">{data?.data.summary.pendingOrders} pending</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-gray-500">Abandoned carts</p>
+              <p className="text-lg font-bold">{data?.data.summary.abandonedCarts}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Financial Comparison Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Profit Comparison Card */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Profit Analysis</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-green-50 p-4 rounded-lg">
+              <p className="text-gray-500">Today's Profit</p>
+              <p className="text-2xl font-bold text-green-600">
+                {formatCurrency(data?.data.profit.today || 0)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {data?.data.revenue.todayOrders} orders
+              </p>
+            </div>
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <p className="text-gray-500">Yesterday's Profit</p>
+              <p className="text-2xl font-bold text-blue-600">
+                {formatCurrency(data?.data.profit.yesterday || 0)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {data?.data.revenue.yesterday ? "Orders: N/A" : "No orders"}
+              </p>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <p className="text-gray-500">This Month</p>
+              <p className="text-2xl font-bold text-purple-600">
+                {formatCurrency(data?.data.profit.thisMonth || 0)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {data?.data.summary.completedOrders} completed orders
+              </p>
+            </div>
+            <div className="bg-orange-50 p-4 rounded-lg">
+              <p className="text-gray-500">Last Month</p>
+              <p className="text-2xl font-bold text-orange-600">
+                {formatCurrency(data?.data.profit.lastMonth || 0)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {data?.data.revenue.lastMonth ? "Orders: N/A" : "No orders"}
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Profit vs Revenue Card */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Profit vs Revenue</h3>
+          <div className="space-y-4">
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium text-gray-700">Today</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Profit: {formatCurrency(data?.data.profit.today || 0)}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  className="bg-green-600 h-2.5 rounded-full" 
+                  style={{ 
+                    width: `${data?.data.revenue.today ? 
+                      (Math.abs(data.data.profit.today) / data.data.revenue.today * 100) : 
+                      0}%` 
+                  }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Revenue: {formatCurrency(data?.data.revenue.today || 0)}
+              </p>
+            </div>
+            
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium text-gray-700">This Month</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Profit: {formatCurrency(data?.data.profit.thisMonth || 0)}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  className="bg-blue-600 h-2.5 rounded-full" 
+                  style={{ 
+                    width: `${data?.data.revenue.thisMonth ? 
+                      (Math.abs(data.data.profit.thisMonth) / data.data.revenue.thisMonth * 100) : 
+                      0}%` 
+                  }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Revenue: {formatCurrency(data?.data.revenue.thisMonth || 0)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      {/* ----------------------------------------- */}
+      
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* Total Products
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+          <h3 className="text-gray-500 font-medium">Total Products</h3>
+          <p className="text-3xl font-bold text-gray-800">{data?.data.summary.totalProducts}</p>
+          <p className="text-sm text-gray-500 mt-2">Available in inventory</p>
+        </div> */}
         
         {/* Total Brands */}
         <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
@@ -200,3 +353,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
