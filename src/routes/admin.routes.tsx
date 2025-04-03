@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  User,
   ShoppingCart,
   Package,
-  UserCheck,
-  Settings,
+  Users,
   BarChart,
-
-  CreditCard,
-  Truck,
   Percent,
   PieChart,
   Archive,
   Tag,
-  HelpCircle,
-  MessageCircle,
-  MessageSquare,
+  List,
+  Box,
+  Layers,
+  Ruler,
+  ListChecks,
+  Heart,
+  ClipboardList,
+  TrendingUp,
 } from "lucide-react";
 import Category from "../pages/admin/productManagement/category/Category";
 import Products from "../pages/admin/productManagement/products/Products";
@@ -30,6 +30,7 @@ import Cart from "../pages/admin/orderManagement/cart/Cart";
 import WishList from "../pages/admin/orderManagement/wishlist/WishList";
 import InventoryReport from "../pages/admin/reports/InventoryReport/InventoryReport";
 import SalesReport from "../pages/admin/reports/salesReport/SalesReport";
+
 export type IAdminPath = {
   name: string;
   icon: any;
@@ -41,172 +42,117 @@ export type IAdminPath = {
 export const adminPaths: IAdminPath[] = [
   {
     name: "Dashboard",
-    icon: User,
+    icon: BarChart,
     path: "dashboard",
     element: "DASHBOARD",
   },
-
   {
     name: "Product Management",
     icon: Package,
     path: "product-management",
-    element: <Products/>,
+    element: <Products />,
     children: [
       {
         name: "Brand",
-        icon: UserCheck,
+        icon: Tag,
         path: "brand",
-        element: <Brand/>,
+        element: <Brand />,
       },
       {
         name: "Category",
-        icon: UserCheck,
+        icon: Layers,
         path: "category",
-        element: <Category/>,
+        element: <Category />,
       },
       {
         name: "Unit",
-        icon: UserCheck,
+        icon: Ruler,
         path: "unit",
-        element: <Unit/>,
+        element: <Unit />,
       },
       {
         name: "Product",
-        icon: MessageCircle,
+        icon: Box,
         path: "product",
-        element: <Products/>
-
+        element: <Products />,
       },
       {
         name: "Attribute Option",
-        icon: MessageCircle,
+        icon: ListChecks,
         path: "attribute-option",
-        element: <AttributeOption/>,
+        element: <AttributeOption />,
       },
       {
         name: "Attribute",
-        icon: MessageCircle,
+        icon: List,
         path: "attribute",
-        element: <Attribute/>,
+        element: <Attribute />,
       },
-      
     ],
   },
   {
     name: "Order Management",
-    icon: Package,
+    icon: ShoppingCart,
     path: "order-management",
-    element: <Products/>,
+    element: <Products />,
     children: [
-  
       {
         name: "Order",
-        icon: ShoppingCart,
+        icon: ClipboardList,
         path: "order",
-        element: <Order/>,
+        element: <Order />,
       },
       {
         name: "Cart",
         icon: ShoppingCart,
         path: "cart",
-        element: <Cart/>,
+        element: <Cart />,
       },
       {
         name: "Wishlist",
-        icon: ShoppingCart,
+        icon: Heart,
         path: "wishlist",
-        element: <WishList/>,
+        element: <WishList />,
       },
     ],
   },
-
   {
     name: "Customers",
-    icon: UserCheck,
+    icon: Users,
     path: "customers",
-    element: <Customer/>,
-  },
-
-  {
-    name: "Settings",
-    icon: Settings,
-    path: "settings",
-    element: "SETTINGS",
-    children: [
-      {
-        name: "Payment Methods",
-        icon: CreditCard,
-        path: "payment-methods",
-        element: "PAYMENT_METHODS",
-      },
-      {
-        name: "Shipping Methods",
-        icon: Truck,
-        path: "shipping-methods",
-        element: "SHIPPING_METHODS",
-      },
-      {
-        name: "Tax Settings",
-        icon: Percent,
-        path: "tax-settings",
-        element: "TAX_SETTINGS",
-      },
-    ],
+    element: <Customer />,
   },
   {
     name: "Reports",
-    icon: BarChart,
+    icon: TrendingUp,
     path: "reports",
     element: "REPORTS",
     children: [
-
       {
         name: "Sales Report",
         icon: PieChart,
         path: "sales-report",
-        element: <SalesReport/>,
+        element: <SalesReport />,
       },
       {
         name: "Inventory Report",
         icon: Archive,
         path: "inventory-report",
-        element: <InventoryReport/>,
+        element: <InventoryReport />,
       },
     ],
   },
   {
     name: "Coupons & Discounts",
-    icon: Tag,
+    icon: Percent,
     path: "coupons-discounts",
     element: "COUPONS_DISCOUNTS",
     children: [
       {
         name: "Coupon",
-        icon: UserCheck,
+        icon: Tag,
         path: "coupon",
-        element: <Coupon/>,
-      },
-
-    ],
-  },
-
-  {
-    name: "Support",
-    icon: HelpCircle,
-    path: "support",
-    element: "SUPPORT",
-    children: [
-      {
-        name: "Ticket System",
-        icon: MessageCircle,
-        path: "ticket-system",
-        element: "TICKET_SYSTEM",
-      },
-      {
-        name: "Live Chat",
-        icon: MessageSquare,
-        path: "live-chat",
-        element: "LIVE_CHAT",
+        element: <Coupon />,
       },
     ],
   },
