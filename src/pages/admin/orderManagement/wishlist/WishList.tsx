@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Typography, Tag, Button, Popconfirm, Space, Card, Divider, Image, Badge } from "antd";
+import { Typography, Tag, Button, Popconfirm, Space, Card, Divider, Image } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import CustomTable from "../../../../components/common/CustomTable";
 import Swal from "sweetalert2";
@@ -18,9 +18,8 @@ const WishList = () => {
   });
   const [globalFilter, setGlobalFilter] = useState("");
   const [selectedWishlist, setSelectedWishlist] = useState<any>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 const [wishlistSoftDelete] =useWishlistSoftDeleteMutation()
-  const { data, isLoading } = useGetwishlistDataQuery({
+  const { data } = useGetwishlistDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
     isDelete: false,
@@ -29,7 +28,6 @@ const [wishlistSoftDelete] =useWishlistSoftDeleteMutation()
 
   const showWishlistDetails = (wishlist: any) => {
     setSelectedWishlist(wishlist);
-    setIsModalVisible(true);
   };
 
   const customColumns = [

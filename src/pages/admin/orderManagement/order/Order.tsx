@@ -10,7 +10,6 @@ import {
   Input,
   message,
   Tag,
-  Space,
   Card,
 } from "antd";
 import {
@@ -262,7 +261,7 @@ const Order = () => {
   const handleVerifyPayment = async () => {
     try {
       setConfirmLoading(true);
-      const values = await form.validateFields();
+      await form.validateFields();
 
       // API call to verify manual payment
       const res = await confirmOrder({
@@ -343,7 +342,7 @@ const Order = () => {
           onPaginationChange={(pageIndex, pageSize) =>
             setPagination({ pageIndex, pageSize })
           }
-          onBulkDelete={(selectedIds) => {
+          onBulkDelete={() => {
             // Bulk delete implementation
           }}
           enableBulkDelete={false}

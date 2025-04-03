@@ -31,7 +31,7 @@ const Brand = () => {
     pageSize: 10,
   });
   const [globalFilter, setGlobalFilter] = useState("");
-  const { data: data, refetch } = useGetbrandDataQuery({
+  const { data: data } = useGetbrandDataQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
     isDelete: false,

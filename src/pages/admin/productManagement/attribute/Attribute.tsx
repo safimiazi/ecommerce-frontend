@@ -37,9 +37,9 @@ const Attribute = () => {
     search: globalFilter,
   });
 
-  const [attributePost, { isLoading: isPostLoading }] =
+  const [attributePost] =
     useAttributePostMutation();
-  const [attributePut, { isLoading: isEditLoading }] =
+  const [attributePut] =
     useAttributePutMutation();
   const [attributeDelete, { isLoading: isDeleteLoading }] =
     useAttributeDeleteMutation();
@@ -219,7 +219,7 @@ const Attribute = () => {
     }
   };
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const deleteMultiple = async (ids: string[]) => {
+  const deleteMultiple = async () => {
 
  
   };
@@ -237,8 +237,8 @@ const Attribute = () => {
           onPaginationChange={(pageIndex, pageSize) =>
             setPagination({ pageIndex, pageSize })
           }
-          onBulkDelete={(selectedIds) => {
-            deleteMultiple(selectedIds);
+          onBulkDelete={() => {
+            deleteMultiple();
           }}
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}

@@ -18,9 +18,8 @@ const Cart = () => {
   });
   const [globalFilter, setGlobalFilter] = useState("");
   const [selectedCart, setSelectedCart] = useState<any>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const { data, isLoading } = useAdminGetAllCartQuery({
+  const { data } = useAdminGetAllCartQuery({
     pageIndex: pagination.pageIndex,
     pageSize: pagination.pageSize,
     isDelete: false,
@@ -29,7 +28,6 @@ const Cart = () => {
 
   const showCartDetails = (cart: any) => {
     setSelectedCart(cart);
-    setIsModalVisible(true);
   };
 
   const customColumns = [
@@ -47,7 +45,7 @@ const Cart = () => {
           </Button>
           <Popconfirm
             title="Delete this cart permanently?"
-            onConfirm={() => handleDelete(row._id)}
+            onConfirm={() => handleDelete()}
             okText="Delete"
             cancelText="Cancel"
           >
@@ -131,7 +129,7 @@ const Cart = () => {
     },
   ];
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async () => {
     try {
       // Implement actual delete API call here
       Swal.fire({

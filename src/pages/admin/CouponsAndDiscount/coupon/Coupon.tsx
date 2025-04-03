@@ -18,8 +18,7 @@ import CouponForm from "../../../../components/pages/coupon/CouponForm";
 import { useCouponDeleteMutation, useCouponPostMutation, useCouponUpdateMutation, useGetcouponDataQuery } from "../../../../redux/api/couponApi/CouponApi";
 
 const Coupon = () => {
-    const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openCouponDrawer, setOpenCouponDrawer] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState<any | null>(null);
@@ -91,10 +90,7 @@ const Coupon = () => {
             </Menu.Item>
             <Menu.Item
               key="details"
-              onClick={() => {
-                setSelectedCoupon(row);
-                setIsModalVisible(true);
-              }}
+           
             >
               <EyeOutlined /> Details
             </Menu.Item>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   Button,
   Drawer,
@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useGetCategoryDataQuery } from "../../../../redux/api/categoryApi/CategoryApi";
-import { useProductPostMutation, useProductPutMutation } from "../../../../redux/api/productApi/ProductApi";
+import { useProductPostMutation, useProductUpdateMutation } from "../../../../redux/api/productApi/ProductApi";
 
 const { TextArea } = Input;
 
@@ -29,7 +29,7 @@ const ProductModal = ({
   });
 
   const [fileList, setFileList] = useState<any[]>([]);
-  const [productPut] = useProductPutMutation();
+  const [productPut] = useProductUpdateMutation();
 
   // RTK Mutation Hook for creating product
   const [productPost, { isLoading }] = useProductPostMutation();
