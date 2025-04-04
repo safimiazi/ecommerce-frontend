@@ -11,7 +11,7 @@ import {
 // import { message } from "antd";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1",
+  baseUrl: "https://e-commerce-backend-one-delta.vercel.app/api/v1",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as any).auth.token;
