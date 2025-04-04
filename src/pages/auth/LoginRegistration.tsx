@@ -15,8 +15,8 @@ export default function LoginRegistration() {
 
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("mohibullamiazi@gmail.com");
+  const [password, setPassword] = useState("password");
   const [adminLogin] = useAdminLoginMutation();
   const handleAuth = async (e: any) => {
     e.preventDefault();
@@ -107,6 +107,7 @@ export default function LoginRegistration() {
                   type="email"
                   placeholder="Enter email"
                   required
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full p-3 outline-none"
                 />
@@ -118,6 +119,7 @@ export default function LoginRegistration() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   required
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full p-3 outline-none"
                 />

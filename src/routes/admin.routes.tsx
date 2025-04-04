@@ -16,6 +16,7 @@ import {
   Heart,
   ClipboardList,
   TrendingUp,
+  Images,
 } from "lucide-react";
 import Category from "../pages/admin/productManagement/category/Category";
 import Products from "../pages/admin/productManagement/products/Products";
@@ -31,6 +32,7 @@ import WishList from "../pages/admin/orderManagement/wishlist/WishList";
 import InventoryReport from "../pages/admin/reports/InventoryReport/InventoryReport";
 import SalesReport from "../pages/admin/reports/salesReport/SalesReport";
 import Dashboard from "../pages/admin/dashboard/Dashboard";
+import Carousel from "../pages/admin/Carousel";
 
 export type IAdminPath = {
   name: string;
@@ -122,6 +124,12 @@ export const adminPaths: IAdminPath[] = [
     icon: Users,
     path: "customers",
     element: <Customer />,
+  },
+  {
+    name: "Carousel",
+    icon: Images,
+    path: "carousel",
+    element: <Carousel />,
   },
   {
     name: "Reports",
