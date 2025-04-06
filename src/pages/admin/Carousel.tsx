@@ -39,7 +39,7 @@ const Carousel = () => {
 
   const [create, { isLoading: isPostLoading }] = useCreateCarouselMutation();
   const [update, { isLoading: isEditLoading }] = useUpdateMutation();
-  const [carouselSoftDelete, { isLoading: isDeleteLoading }] = useCarouselSoftDeleteMutation();
+  const [carouselSoftDelete] = useCarouselSoftDeleteMutation();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -50,10 +50,10 @@ const Carousel = () => {
     }
   }, [isEditLoading, isPostLoading]);
 
-  const handleEdit = (editData: any) => {
-    setEdit(editData);
-    setIsModalOpen(true);
-  };
+//   const handleEdit = (editData: any) => {
+//     setEdit(editData);
+//     setIsModalOpen(true);
+//   };
 
   const handleDelete = async (id: string) => {
     try {
@@ -209,7 +209,7 @@ const Carousel = () => {
   };
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const deleteMultiple = async (ids: string[]) => {};
+  const deleteMultiple = async () => {};
 
   return (
     <div style={{ padding: 20 }}>
@@ -225,8 +225,8 @@ const Carousel = () => {
           onPaginationChange={(pageIndex, pageSize) =>
             setPagination({ pageIndex, pageSize })
           }
-          onBulkDelete={(selectedIds) => {
-            deleteMultiple(selectedIds);
+          onBulkDelete={() => {
+            deleteMultiple();
           }}
           enableBulkDelete={true}
           selectedRows={selectedRows}
