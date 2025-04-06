@@ -35,7 +35,7 @@ const BrandSection = () => {
           <MaxWidth>
             <div className="py-12">
               <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">
-                Best Selling Products
+                Our Brands
               </h2>{" "}
               <Swiper
                 slidesPerView={2}
