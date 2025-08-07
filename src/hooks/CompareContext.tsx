@@ -9,15 +9,13 @@ interface CompareContextType {
   removeFromCompare: (productId: string) => void;
 }
 
+
+
+
 const CompareContext = createContext<CompareContextType | undefined>(undefined);
 
 export const CompareProvider = ({ children }: { children: any }) => {
 
-
-
-
-
-  
 
   const [compareList, setCompareList] = React.useState<any[]>([]);
 
