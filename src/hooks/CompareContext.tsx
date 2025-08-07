@@ -15,6 +15,8 @@ export const CompareProvider = ({ children }: { children: any }) => {
 
 
 
+
+
   
 
   const [compareList, setCompareList] = React.useState<any[]>([]);
