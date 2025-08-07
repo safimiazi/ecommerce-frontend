@@ -2,6 +2,7 @@ import React, { createContext, useEffect } from "react";
 import Swal from "sweetalert2";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 interface CompareContextType {
   compareList: any[];
   addToCompare: (product: any) => void;
@@ -11,6 +12,11 @@ interface CompareContextType {
 const CompareContext = createContext<CompareContextType | undefined>(undefined);
 
 export const CompareProvider = ({ children }: { children: any }) => {
+
+
+
+  
+
   const [compareList, setCompareList] = React.useState<any[]>([]);
 
   // LocalStorage থেকে compare list লোড করা
@@ -36,6 +42,10 @@ export const CompareProvider = ({ children }: { children: any }) => {
         icon: "warning",
       });
       return;
+      
+
+      
+
     } else {
       setCompareList((prevList) => {
         if (prevList.find((p) => p._id === product._id)) return prevList;
@@ -49,6 +59,8 @@ export const CompareProvider = ({ children }: { children: any }) => {
       prev.filter((product) => product._id !== productId)
     );
   };
+
+  
 
   return (
     <CompareContext.Provider
