@@ -8,7 +8,6 @@ export const useCartActions = () => {
 
 
   
-
   return {
     addToCart: (product: string, quantity: number, price: number) => 
       dispatch(addToCart({ product, quantity, price })),
