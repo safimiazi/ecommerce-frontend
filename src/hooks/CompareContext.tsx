@@ -18,8 +18,10 @@ export const CompareProvider = ({ children }: { children: any }) => {
 
   const [compareList, setCompareList] = React.useState<any[]>([]);
 
+
   // LocalStorage থেকে compare list লোড করা
   useEffect(() => {
+    
     const savedCompareList = localStorage.getItem("compareList");
     if (savedCompareList) {
       setCompareList(JSON.parse(savedCompareList));
