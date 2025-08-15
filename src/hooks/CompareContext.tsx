@@ -21,7 +21,7 @@ export const CompareProvider = ({ children }: { children: any }) => {
 
   // LocalStorage থেকে compare list লোড করা
   useEffect(() => {
-    
+
     const savedCompareList = localStorage.getItem("compareList");
     if (savedCompareList) {
       setCompareList(JSON.parse(savedCompareList));
@@ -33,7 +33,7 @@ export const CompareProvider = ({ children }: { children: any }) => {
     localStorage.setItem("compareList", JSON.stringify(compareList));
   }, [compareList]);
 
-  useEffect(() => {}, [compareList]);
+  useEffect(() => { }, [compareList]);
 
   const addToCompare = (product: any) => {
     if (compareList.length >= 2) {
@@ -43,9 +43,9 @@ export const CompareProvider = ({ children }: { children: any }) => {
         icon: "warning",
       });
       return;
-      
 
-      
+
+
 
     } else {
       setCompareList((prevList) => {
@@ -61,7 +61,7 @@ export const CompareProvider = ({ children }: { children: any }) => {
     );
   };
 
-  
+
 
   return (
     <CompareContext.Provider
