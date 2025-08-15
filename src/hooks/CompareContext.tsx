@@ -12,8 +12,6 @@ interface CompareContextType {
 
 const CompareContext = createContext<CompareContextType | undefined>(undefined);
 
-
-
 export const CompareProvider = ({ children }: { children: any }) => {
 
 
