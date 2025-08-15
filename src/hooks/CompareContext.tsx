@@ -7,6 +7,7 @@ interface CompareContextType {
   compareList: any[];
   addToCompare: (product: any) => void;
   
+  
   removeFromCompare: (productId: string) => void;
 }
 
