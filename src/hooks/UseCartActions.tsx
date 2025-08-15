@@ -7,10 +7,12 @@ export const useCartActions = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   return {
+
     addToCart: (product: string, quantity: number, price: number) =>
       dispatch(addToCart({ product, quantity, price })),
     updateQuantity: (product: string, quantity: number) =>
       dispatch(updateQuantity({ product, quantity })),
+    
     removeFromCart: (product: string) => dispatch(removeFromCart(product)),
     clearCart: () => dispatch(clearCart()),
   };
