@@ -49,7 +49,7 @@ export const adminPaths: IAdminPath[] = [
     path: "dashboard",
     element: <Dashboard/>,
   },
-  
+
   {
     name: "Product Management",
     icon: Package,
