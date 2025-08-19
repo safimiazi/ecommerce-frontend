@@ -46,10 +46,8 @@ export const adminPaths: IAdminPath[] = [
   {
     name: "Dashboard",
     icon: BarChart,
-
-
     path: "dashboard",
-    
+
     element: <Dashboard/>,
   },
   {
