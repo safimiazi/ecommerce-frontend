@@ -25,8 +25,9 @@ export const CompareProvider = ({ children }: { children: any }) => {
   useEffect(() => {
 
     const savedCompareList = localStorage.getItem("compareList");
+    
     if (savedCompareList) {
-      
+
       setCompareList(JSON.parse(savedCompareList));
     }
   }, []);
@@ -41,6 +42,7 @@ export const CompareProvider = ({ children }: { children: any }) => {
   const addToCompare = (product: any) => {
     if (compareList.length >= 2) {
       Swal.fire({
+        
         title: "Limit Reached!",
         text: "You can compare up to 2 products only.",
         icon: "warning",
