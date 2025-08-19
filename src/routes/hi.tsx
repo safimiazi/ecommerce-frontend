@@ -1,10 +1,8 @@
-const shorove = () => {
+const hi = () => {
     return (
         <div>
-
 
         </div>
     )
 }
-
-export default shorove;
+export default hi;
