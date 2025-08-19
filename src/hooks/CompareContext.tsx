@@ -39,10 +39,11 @@ export const CompareProvider = ({ children }: { children: any }) => {
 
   useEffect(() => { }, [compareList]);
 
+  
   const addToCompare = (product: any) => {
     if (compareList.length >= 2) {
       Swal.fire({
-        
+
         title: "Limit Reached!",
         text: "You can compare up to 2 products only.",
         icon: "warning",

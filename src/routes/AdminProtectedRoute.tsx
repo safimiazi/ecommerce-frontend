@@ -15,6 +15,7 @@ const AdminProtectedRoute = () => {
   if (admin.role !== "admin") {
     // User is not an admin, redirect to home or unauthorized page
     return <Navigate to="/" replace />;
+    
   }
 
   return <Outlet />;
