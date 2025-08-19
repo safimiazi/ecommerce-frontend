@@ -5,6 +5,7 @@ import { selectCurrentAdmin } from "../redux/features/auth/AdminAuthSlice";
 
 const AdminProtectedRoute = () => {
   const admin = useSelector(selectCurrentAdmin);
+  
   if (!admin) {
 
     // User not logged in, redirect to login
