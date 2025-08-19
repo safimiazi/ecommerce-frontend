@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 interface CompareContextType {
   compareList: any[];
+
   addToCompare: (product: any) => void;
   
   
@@ -25,6 +26,7 @@ export const CompareProvider = ({ children }: { children: any }) => {
 
     const savedCompareList = localStorage.getItem("compareList");
     if (savedCompareList) {
+      
       setCompareList(JSON.parse(savedCompareList));
     }
   }, []);
